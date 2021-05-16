@@ -1,0 +1,4 @@
+alias e=exit
+alias cls=clear
+alias ll='ls -lh' #list in human readable size formatsalias al='ls -a'
+alias al='ls -a'
