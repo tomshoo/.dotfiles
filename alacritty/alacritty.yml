@@ -1,21 +1,21 @@
 font:
   normal:
-    family: "monospace"
+    family: "Source Code Pro"
     style: Regular
 
   bold:
-    family: "monospace"
+    family: "Source Code Pro"
     style: Bold
 
   italic:
-    family: "monospace"
+    family: "Source Code Pro"
     style: Italic
 
   bold_italic:
-    family: "monospace"
+    family: "Source Code Pro"
     style: Bold Italic
 
-  size: 9
+  size: 8
   offset:
     x: 0
     y: 1
@@ -32,7 +32,7 @@ window:
 key_bindings:
   - { key: Slash, mods: Control, chars: "++" }
 
-background_opacity: 0.98
+background_opacity: 0.95
 
 schemes:
   argonaut: &argonaut # Default colors
@@ -167,7 +167,7 @@ schemes:
     normal:
       black: "0x232627"
       red: "0xed1515"
-      green: "0x11d116"
+      green: "0x1fd116"
       yellow: "0xf67400"
       blue: "0x1d99f3"
       magenta: "0x9b59b6"
@@ -1444,10 +1444,10 @@ schemes:
 # colors: *ayu_dark
 # colors: *base16_dark
 # colors: *blood_moon
-# colors: *breeze
+colors: *breeze
 # colors: *campbell
-# colors: *cobalt2
-# colors: *darkside
+##colors: *cobalt2
+###colors: *darkside
 # colors: *darktooth
 # colors: *dracula
 # colors: *gruvbox_light
@@ -1456,24 +1456,24 @@ schemes:
 # colors: *hyper
 # colors: *iceberg
 # colors: *ir_black
-# colors: *iterm2
-# colors: *kitty
+###colors: *iterm2
+##colors: *kitty
 # colors: *material
 # colors: *molokai_dark
 # colors: *monokai
 # colors: *monokai_pro
 # colors: *monokai_soda
-# colors: *new_moon
-# colors: *nord
-# colors: *nova
-# colors: *oceanic_next
-# colors: *one_dark
+##colors: *new_moon
+##colors: *nord
+##colors: *nova
+##colors: *oceanic_next
+##colors: *one_dark
 # colors: *oxide
 # colors: *pencil_light
-# colors: *pencil_dark
+##colors: *pencil_dark
 # colors: *seagull
 # colors: *seoul256
-# colors: *snazzy
+##colors: *snazzy
 # colors: *solarized_light
 # colors: *solarized_dark
 # colors: *sourcerer
@@ -1488,4 +1488,4 @@ schemes:
 # colors: *wombat
 # colors: *xterm
 # colors: *purify
-colors: *night_owl
+# colors: *night_owl
