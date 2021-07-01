@@ -1,0 +1,9 @@
+#!/bin/sh
+
+VOLUME=$(pamixer --get-volume-human)
+
+if [ "$VOLUME" == "0%" ]; then
+	echo "muted"
+else
+	echo $VOLUME
+fi
