@@ -1,0 +1,94 @@
+Config {
+
+   -- appearance
+     font =         "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
+     additionalFonts = [
+     	"xft:Source Code Pro:size=8:bold:antialias=true"
+     ]
+   , bgColor =      "#2f4f4f"
+   , fgColor =      "#969696"
+   , position =     Top
+   , border =       TopB
+   , borderColor =  "#2f4f4f"
+   , iconRoot =     "/home/user/.xmonad/"
+
+   -- layout
+   , sepChar =  "%"   -- delineator between plugin names and straight text
+   , alignSep = "}{"  -- separator between left-right alignment
+   , template = " <action=xdotool key super+d><icon=haskel.xpm/></action> | <fc=#f4f3ed>%UnsafeStdinReader%</fc> }{ <fn=1>| %battery% | %multicpu% | %memory% | <action=alacritty -e nmtui>%wlp2s0wi%</action> || %mydate% || Vol: %volume%</fn> || <action=xdotool key super+shift+a>[user]</action> "
+
+   -- general behavior
+   , lowerOnStart =     True    -- send to bottom of window stack on start
+   , hideOnStart =      False   -- start with window unmapped (hidden)
+   , allDesktops =      True    -- show on all desktops
+   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
+   , pickBroadest =     False   -- choose widest display (multi-monitor)
+   , persistent =       True    -- enable/disable hiding (True = disabled)
+
+   -- plugins
+   --   Numbers can be automatically colored according to their value. xmobar
+   --   decides color based on a three-tier/two-cutoff system, controlled by
+   --   command options:
+   --     --Low sets the low cutoff
+   --     --High sets the high cutoff
+   --
+   --     --low sets the color below --Low cutoff
+   --     --normal sets the color between --Low and --High cutoffs
+   --     --High sets the color above --High cutoff
+   --
+   --   The --template option controls how the plugin is displayed. Text
+   --   color can be set by enclosing in <fc></fc> tags. For more details
+   --   see http://projects.haskell.org/xmobar/#system-monitor-plugins.
+   , commands =
+
+        -- network activity monitor (dynamic interface resolution)
+        [ Run Wireless "wlp2s0" ["-t", "<essid>"] 10
+
+        -- cpu activity monitor
+        , Run MultiCpu       [ "--template" , "Cpu: <total0>%"
+                             , "--Low"      , "50"         -- units: %
+                             , "--High"     , "85"         -- units: %
+                             , "--low"      , "green"
+                             , "--normal"   , "darkorange"
+                             , "--high"     , "darkred"
+                             ] 10
+                             
+        -- memory usage monitor
+        , Run Memory         [ "--template" ,"Mem: <usedratio>%"
+                             , "--Low"      , "20"        -- units: %
+                             , "--High"     , "90"        -- units: %
+                             , "--low"      , "green"
+                             , "--normal"   , "darkorange"
+                             , "--high"     , "darkred"
+                             ] 10
+
+        -- battery monitor
+        , Run Battery        [ "--template" , "BAT0: <acstatus>"
+                             , "--Low"      , "10"        -- units: %
+                             , "--High"     , "80"        -- units: %
+                             , "--low"      , "darkred"
+                             , "--normal"   , "darkorange"
+                             , "--high"     , "green"
+
+                             , "--" -- battery specific options
+                                       -- discharging status
+                                       , "-o"	, "<fc=#66A566>DRN <left></fc>"
+                                       -- AC "on" status
+                                       , "-O"	, "<fc=#66A566>CHR <left></fc>"
+                                       -- charged status
+                                       , "-i"	, "<fc=#66A566>FULL</fc>"
+                             ] 50
+
+        -- time and date indicator
+        --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
+        , Run Date           "%a %F %H:%M" "mydate" 10
+
+        -- keyboard layout indicator
+        , Run Kbd            [ ("us(dvorak)" , "DV")
+                             , ("us"         , "<fc=#8B0000>US</fc>")
+                             ]
+                             
+        , Run Com "getvolume" [] "volume" 1
+        , Run UnsafeStdinReader
+        ]
+   }
