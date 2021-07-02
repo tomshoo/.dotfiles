@@ -14,6 +14,7 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.StackTile
 
 -- Layout Modifiers
+import XMonad.Layout.LayoutModifier
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Hidden
 import XMonad.Layout.Gaps
@@ -38,7 +39,6 @@ import XMonad.Actions.Promote
 import XMonad.Actions.NoBorders
 import qualified XMonad.Actions.TreeSelect as TS
 import qualified XMonad.Actions.FlexibleResize as Flex
-import qualified XMonad.Actions.FlexibleManipulate as FM
 
 -- Data
 import Data.Tree
@@ -238,7 +238,7 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
     , ((modm .|. shiftMask, xK_Down ), sendMessage $ WN.Swap D)
 
     -- TreeSelect bindings
-    , ((modm .|. shiftMask, xK_a), TS.treeselectAction tsDefaultConfig myTreeConf)
+    , ((modm .|. shiftMask, xK_a), TS.treeselectAction tsDefaultConfig myTreeActionConf)
 
     -- Launch Scratchpads
     , ((modm .|. shiftMask, xK_h), namedScratchpadAction scratchpads "HTop")
@@ -276,7 +276,8 @@ myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList $
 
     -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modm, button1), \w -> focus w >> FM.mouseWindow FM.linear w)
+    [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
+                                       >> windows W.shiftMaster))
 
     -- mod-button2, Raise the window to the top of the stack
     , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
@@ -294,14 +295,14 @@ scratchpads :: [NamedScratchpad]
 scratchpads =
   [
     NS "HTop" "alacritty -e htop" (resource =? "HTop") (customFloating $ W.RationalRect 0.9 0.9 0.8 0.8)
-    , NS "FileManager" "nautilus" (title =? "FileManager") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+    , NS "FileManager" "pcmanfm" (title =? "FileManager") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   ]
 
 ------------------------------------------------------------------------
 -- treeselect config
 
-myTreeConf :: [Tree (TS.TSNode  (X ()))]
-myTreeConf =
+myTreeActionConf :: [Tree (TS.TSNode  (X ()))]
+myTreeActionConf =
    [ Node (TS.TSNode "Lock Screen" "Lock the screen" (spawn "betterlockscreen --lock blur")) []
    , Node (TS.TSNode "Quit" "Exit the XMonad session" (io exitSuccess))[]
    , Node (TS.TSNode "Suspend" "Suspends the system" (spawn "systemctl suspend")) []
@@ -356,7 +357,7 @@ myLayout = smartBorders
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = renamed [Replace "[T]="]
-       $ smartSpacing 4
+       $ mySpacing
        $ ResizableTall nmaster delta ratio []
 
      -- The default number of windows in the master pane
@@ -370,12 +371,10 @@ myLayout = smartBorders
 
      -- Grid for center master layout
      cgrid    = renamed [Replace "[+G]"]
-       $ smartSpacing 4
-       $ Grid
+       $ mySpacing Grid
 
      grid = renamed [Replace "[+]G"]
-       $ smartSpacing 4
-       $ Grid
+       $ mySpacing Grid
 
      -- Mirror tiled settings
      flat = renamed [Replace "[W]="]
@@ -388,19 +387,22 @@ myLayout = smartBorders
      -- TwoPane Settings
      twoPane = renamed [Replace "[TP]"]
        $ addTabsBottomAlways shrinkText myTabConfig
-       $ smartSpacing 4
+       $ mySpacing
        $ TwoPane delta ratio
 
      binary = renamed [Replace "[1]0"]
-       $ smartSpacing 4 emptyBSP
+       $ mySpacing emptyBSP
 
      tab = renamed [Replace "[_]T"]
-       $ smartSpacing 4
+       $ mySpacing
        $ tabbedBottom shrinkText myTabConfig
 
      stack = renamed [Replace "[=]S"]
-       $ smartSpacing 4
+       $ mySpacing
        $ StackTile 3 delta ratio
+
+mySpacing :: l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
+mySpacing = spacingRaw True (Border 3 3 3 3) True (Border 4 4 4 4) True
 
 myTabConfig :: Theme
 myTabConfig = def {
@@ -478,6 +480,7 @@ myManageHook = composeAll
       , title     =? "Libreoffice"             --> doShift ( myWorkspaces !! 5 )
       , className =? "Evince"                  --> doShift ( myWorkspaces !! 5 )
       , className =? "Org.gnome.Nautilus"      --> doShift ( myWorkspaces !! 6 )
+      , className =? "Pcmanfm"                 --> doShift ( myWorkspaces !! 6 )
       , className =? "Rhythmbox"               --> doShift ( myWorkspaces !! 7 )
     ]
     <+> namedScratchpadManageHook scratchpads
