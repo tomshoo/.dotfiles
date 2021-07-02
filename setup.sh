@@ -13,6 +13,13 @@ else
     cd yay
     makepkg -si
     yay -Syu betterlockscreen
+fi
+
+echo "Setting up alacritty..."
+cp -r alacritty $HOME/.config/alacritty
+
+echo "Setting up rofi..."
+cp -r rofi $HOME/.config/rofi
 
 echo "Installing FontAwesome"
 mkdir $HOME/.fonts
