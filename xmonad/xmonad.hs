@@ -1,3 +1,6 @@
+-- Used in case while setting ppLayout
+{-# LANGUAGE LambdaCase #-}
+
 -- IMPORTS
 
 -- Default imports
@@ -22,6 +25,10 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Renamed
 import XMonad.Layout.ToggleLayouts
+import XMonad.Layout.Maximize
+import XMonad.Layout.Reflect
+import XMonad.Layout.MultiToggle.Instances
+import qualified XMonad.Layout.MultiToggle as MT
 import qualified XMonad.Layout.Fullscreen as FS
 import qualified XMonad.Layout.WindowNavigation as WN
 
@@ -31,12 +38,13 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat)
+import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat)
 import XMonad.Hooks.Place
 
 -- Actions
 import XMonad.Actions.Promote
 import XMonad.Actions.NoBorders
+import qualified XMonad.Actions.ConstrainedResize as CNT
 import qualified XMonad.Actions.TreeSelect as TS
 import qualified XMonad.Actions.FlexibleResize as Flex
 
@@ -152,9 +160,6 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
     -- Move focus to the previous window
     , ((modm,               xK_k     ), windows W.focusUp  )
 
-    -- Move focus to the master window
-    , ((modm,               xK_m     ), windows W.focusMaster  )
-
     -- Swap the focused window and the master window
     , ((modm,               xK_Return), promote)
 
@@ -216,8 +221,11 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
 
     -- Scratchpad Key bindings also uses rofi
     , ((modm .|. shiftMask, xK_minus), withFocused hideWindow)
+    , ((modm,               xK_minus), popNewestHiddenWindow)
     , ((modm .|. controlMask, xK_minus), popOldestHiddenWindow)
-    , ((modm,           xK_minus), popNewestHiddenWindow)
+
+    -- Maximize currently focused window
+    , ((modm,               xK_m), withFocused (sendMessage . maximizeRestore))
 
     -- Screenshot keys in xmonad
     , ((0,              xK_Print), spawn "scrot 'screenshot_%Y%m%d_%H%M%S%T.png' -e 'mv $f ~/Pictures/ && xclip -selection clipboard -t image/png -i ~/Pictures`ls -1 -t ~/Pictures | head -1`'")
@@ -258,6 +266,10 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
 
     -- Toggle Full screen mode
     , ((modm,                xK_f), sendMessage (Toggle "Full"))
+
+    -- Rotate layouts horizontally and vertically and/or mirror them
+    , ((modm .|. shiftMask, xK_backslash), sendMessage $ MT.Toggle REFLECTX)
+    , ((modm, xK_backslash), sendMessage $ MT.Toggle REFLECTY)
     ]
     ++
 
@@ -273,17 +285,17 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
 -- Mouse bindings: default actions bound to mouse events
 --
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
-myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList $
+myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 
     -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-                                       >> windows W.shiftMaster))
+    [ ((modm, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster)
 
     -- mod-button2, Raise the window to the top of the stack
     , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
 
     -- mod-button3, Set the window to floating mode and resize by dragging
     , ((modm, button3), \w -> focus w >> Flex.mouseResizeWindow w)
+    , ((modm .|. shiftMask, button3), \w -> focus w >> CNT.mouseResizeWindow w True)
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
@@ -303,12 +315,12 @@ scratchpads =
 
 myTreeActionConf :: [Tree (TS.TSNode  (X ()))]
 myTreeActionConf =
-   [ Node (TS.TSNode "Lock Screen" "Lock the screen" (spawn "betterlockscreen --lock blur")) []
-   , Node (TS.TSNode "Quit" "Exit the XMonad session" (io exitSuccess))[]
-   , Node (TS.TSNode "Suspend" "Suspends the system" (spawn "systemctl suspend")) []
-   , Node (TS.TSNode "Hibernate" "Send system to hibernation" (spawn "systemctl hibernate")) []
-   , Node (TS.TSNode "Shutdown" "Poweroff the system" (spawn "poweroff")) []
-   , Node (TS.TSNode "Restart"    "Restart the system"      (spawn "reboot")) []
+   [ Node (TS.TSNode "Lock Screen" "Lock the screen"            (spawn "betterlockscreen --lock blur")) []
+   , Node (TS.TSNode "Quit"        "Exit the XMonad session"    (io exitSuccess))[]
+   , Node (TS.TSNode "Suspend"     "Suspends the system"        (spawn "systemctl suspend")) []
+   , Node (TS.TSNode "Hibernate"   "Send system to hibernation" (spawn "systemctl hibernate")) []
+   , Node (TS.TSNode "Shutdown"    "Poweroff the system"        (spawn "poweroff")) []
+   , Node (TS.TSNode "Restart"     "Restart the system"         (spawn "reboot")) []
    ]
 
 tsDefaultConfig :: TS.TSConfig a
@@ -339,6 +351,10 @@ tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
 -- which denotes layout choice.
 --
 myLayout = smartBorders
+  $ MT.mkToggle (MT.single REFLECTX)
+  $ MT.mkToggle (MT.single REFLECTY)
+  $ MT.mkToggle (MT.single MIRROR)
+  $ maximize
   $ WN.windowNavigation
   $ toggleLayouts Full
   $ avoidStruts
@@ -349,6 +365,7 @@ myLayout = smartBorders
   ||| tab
   ||| full
   ||| stack
+  ||| stackmirr
   ||| grid
   ||| centerMaster cgrid
   ||| twoPane
@@ -399,23 +416,26 @@ myLayout = smartBorders
 
      stack = renamed [Replace "[=]S"]
        $ mySpacing
-       $ StackTile 3 delta ratio
+       $ StackTile 1 delta ratio
+
+     stackmirr = renamed [Replace "[|]S"]
+       $ Mirror stack
 
 mySpacing :: l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
-mySpacing = spacingRaw True (Border 3 3 3 3) True (Border 4 4 4 4) True
+mySpacing = spacingRaw True (Border 0 0 0 0) True (Border 4 4 4 4) True
 
 myTabConfig :: Theme
 myTabConfig = def {
-  activeColor = "#556064"
-  , inactiveColor = "#2F3D44"
-  , urgentColor = "#FDF6E3"
-  , activeBorderColor = "#454948"
+  activeColor           = "#556064"
+  , inactiveColor       = "#2F3D44"
+  , urgentColor         = "#FDF6E3"
+  , activeBorderColor   = "#454948"
   , inactiveBorderColor = "#454948"
-  , urgentBorderColor = "#268BD2"
-  , activeTextColor = "#80FFF9"
-  , inactiveTextColor = "#1ABC9C"
-  , urgentTextColor = "#1ABC9C"
-  , fontName = "xft:Source Code Pro:size=9"
+  , urgentBorderColor   = "#268BD2"
+  , activeTextColor     = "#80FFF9"
+  , inactiveTextColor   = "#1ABC9C"
+  , urgentTextColor     = "#1ABC9C"
+  , fontName            = "xft:Source Code Pro:size=9"
   }
 
 ------------------------------------------------------------------------
@@ -447,14 +467,16 @@ myManageHook = composeAll
       , className =? "zoom"                    --> doFloat
       , className =? "Lxappearance"            --> doFloat
       , className =? "Gnome-sound-recorder"    --> doFloat
-      , className =? "Pcmanfm"                 --> doFloat
-      , className =? "Thunar"                  --> doFloat
+      , className =? "Pcmanfm"                 --> doCenterFloat
+      , className =? "Thunar"                  --> doCenterFloat
       , className =? "BleachBit"               --> doFloat
       , className =? "Toolkit"                 --> doFloat
       , className =? "Org.gnome.Software"      --> doFloat
       , className =? "XTerm"                   --> doFloat
       , className =? "URxvt"                   --> doFloat
       , className =? "Xmessage"                --> doFloat
+      , className =? "lxqt-policykit-agent"    --> doCenterFloat
+      , className =? "Tor Browser"             --> doCenterFloat
 
       -- Rules by using resource names
       , resource  =? "desktop_window"          --> doIgnore
@@ -466,22 +488,26 @@ myManageHook = composeAll
       , isFullscreen                           --> doFullFloat
 
       -- Workspace rules for windows
-      , className =? "URxvt"                   --> doShift ( head myWorkspaces )
-      , className =? "XTerm"                   --> doShift ( head myWorkspaces )
-      , className =? "firefox"                 --> doShift ( myWorkspaces !! 1 )
-      , className =? "Tor Browser"             --> doShift ( myWorkspaces !! 1 )
-      , className =? "Emacs"                   --> doShift ( myWorkspaces !! 2 )
-      , className =? "vlc"                     --> doShift ( myWorkspaces !! 3 )
-      , className =? "obs"                     --> doShift ( myWorkspaces !! 3 )
-      , className =? "Lxappearance"            --> doShift ( myWorkspaces !! 4 )
-      , className =? "Nitrogen"                --> doShift ( myWorkspaces !! 4 )
-      , className =? "Eog"                     --> doShift ( myWorkspaces !! 4 )
-      , className =? "libreoffice"             --> doShift ( myWorkspaces !! 5 )
-      , title     =? "Libreoffice"             --> doShift ( myWorkspaces !! 5 )
-      , className =? "Evince"                  --> doShift ( myWorkspaces !! 5 )
-      , className =? "Org.gnome.Nautilus"      --> doShift ( myWorkspaces !! 6 )
-      , className =? "Pcmanfm"                 --> doShift ( myWorkspaces !! 6 )
-      , className =? "Rhythmbox"               --> doShift ( myWorkspaces !! 7 )
+      , className =? "URxvt"                   --> doShift ( head myWorkspaces ) <+> doF (W.greedyView ( head myWorkspaces ))
+      , className =? "XTerm"                   --> doShift ( head myWorkspaces ) <+> doF (W.greedyView ( head myWorkspaces ))
+      , className =? "firefox"                 --> doShift ( myWorkspaces !! 1 ) <+> doF (W.greedyView ( myWorkspaces !! 1 ))
+      , className =? "Tor Browser"             --> doShift ( myWorkspaces !! 1 ) <+> doF (W.greedyView ( myWorkspaces !! 1 ))
+      , className =? "VSCodium"                --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
+      , className =? "Emacs"                   --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
+      , className =? "Gvim"                    --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
+      , className =? "vlc"                     --> doShift ( myWorkspaces !! 3 ) <+> doF (W.greedyView ( myWorkspaces !! 3 ))
+      , className =? "obs"                     --> doShift ( myWorkspaces !! 3 ) <+> doF (W.greedyView ( myWorkspaces !! 3 ))
+      , className =? "Lxappearance"            --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+      , className =? "Nitrogen"                --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+      , className =? "Grub-customizer"         --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+      , className =? "Eog"                     --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+      , className =? "libreoffice"             --> doShift ( myWorkspaces !! 5 ) <+> doF (W.greedyView ( myWorkspaces !! 5 ))
+      , title     =? "Libreoffice"             --> doShift ( myWorkspaces !! 5 ) <+> doF (W.greedyView ( myWorkspaces !! 5 ))
+      , className =? "Evince"                  --> doShift ( myWorkspaces !! 5 ) <+> doF (W.greedyView ( myWorkspaces !! 5 ))
+      , className =? "Org.gnome.Nautilus"      --> doShift ( myWorkspaces !! 6 ) <+> doF (W.greedyView ( myWorkspaces !! 6 ))
+      , className =? "Pcmanfm"                 --> doShift ( myWorkspaces !! 6 ) <+> doF (W.greedyView ( myWorkspaces !! 6 ))
+      , className =? "Rhythmbox"               --> doShift ( myWorkspaces !! 7 ) <+> doF (W.greedyView ( myWorkspaces !! 7 ))
+      , className =? "discord"                 --> doShift ( myWorkspaces !! 8 ) <+> doF (W.greedyView ( myWorkspaces !! 8 ))
     ]
     <+> namedScratchpadManageHook scratchpads
     <+> FS.fullscreenManageHook
@@ -498,6 +524,7 @@ myManageHook = composeAll
 --
 myEventHook :: Event -> X All
 myEventHook = FS.fullscreenEventHook
+  <+> ewmhDesktopsEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -508,7 +535,7 @@ myEventHook = FS.fullscreenEventHook
 myLogHook :: X ()
 myLogHook = fadeInactiveLogHook fadeAmount
   where
-    fadeAmount = 0.8
+    fadeAmount = 0.95
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -537,16 +564,58 @@ myStartupHook = do
 myXmobarPP :: PP
 myXmobarPP = xmobarPP {
   ppHiddenNoWindows = xmobarColor "#f4f3ed" "" . clickable,
-  ppHidden = xmobarColor "#b4cfec" "" . clickable,
-  ppCurrent = xmobarColor "#57feff" "" . wrap "=] " " [=" ,
-  ppLayout = xmobarAction "xdotool key super+space" "1"
-    . xmobarAction "xdotool key super+shift+space" "3" ,
+  ppHidden          = xmobarColor "#b4cfec" "" . clickable,
+  ppCurrent         = xmobarColor "#57feff" "" . wrap "=] " " [=" ,
+  ppLayout          = xmobarAction "xdotool key super+space" "1"
+                      . xmobarAction "xdotool key super+shift+space" "3"
+                      . (\ x -> case x of
+                          "Maximize Hidden [T]="                   -> "[T]="
+                          "Maximize Hidden [1]0"                   -> "[1]0"
+                          "Maximize Hidden [_]T"                   -> "[_]T"
+                          "Maximize Hidden [*]F"                   -> "[*]F"
+                          "Maximize Hidden [=]S"                   -> "[=]S"
+                          "Maximize Hidden [+]G"                   -> "[+]G"
+                          "Maximize Hidden [+G]"                   -> "[+G]"
+                          "Maximize Hidden [TP]"                   -> "[TP]"
+                          "Maximize Hidden [W]="                   -> "[W]="
+                          "Maximize Hidden [|]S"                   -> "[|]S"
+                          "ReflectX Maximize Hidden [T]="          -> "<[T]="
+                          "ReflectX Maximize Hidden [1]0"          -> "<[1]0"
+                          "ReflectX Maximize Hidden [_]T"          -> "<[_]T"
+                          "ReflectX Maximize Hidden [*]F"          -> "<[*]F"
+                          "ReflectX Maximize Hidden [=]S"          -> "<[=]S"
+                          "ReflectX Maximize Hidden [+]G"          -> "<[+]G"
+                          "ReflectX Maximize Hidden [+G]"          -> "<[+G]"
+                          "ReflectX Maximize Hidden [TP]"          -> "<[TP]"
+                          "ReflectX Maximize Hidden [W]="          -> "<[W]="
+                          "ReflectX Maximize Hidden [|]S"          -> "<[|]S"
+                          "ReflectY Maximize Hidden [T]="          -> "v[T]="
+                          "ReflectY Maximize Hidden [1]0"          -> "v[1]0"
+                          "ReflectY Maximize Hidden [_]T"          -> "v[_]T"
+                          "ReflectY Maximize Hidden [*]F"          -> "v[*]F"
+                          "ReflectY Maximize Hidden [=]S"          -> "v[=]S"
+                          "ReflectY Maximize Hidden [+]G"          -> "v[+]G"
+                          "ReflectY Maximize Hidden [+G]"          -> "v[+G]"
+                          "ReflectY Maximize Hidden [TP]"          -> "v[TP]"
+                          "ReflectY Maximize Hidden [W]="          -> "v[W]="
+                          "ReflectY Maximize Hidden [|]S"          -> "v[|]S"
+                          "ReflectX ReflectY Maximize Hidden [T]=" -> "v<[T]="
+                          "ReflectX ReflectY Maximize Hidden [1]0" -> "v<[1]0"
+                          "ReflectX ReflectY Maximize Hidden [_]T" -> "v<[_]T"
+                          "ReflectX ReflectY Maximize Hidden [*]F" -> "v<[*]F"
+                          "ReflectX ReflectY Maximize Hidden [=]S" -> "v<[=]S"
+                          "ReflectX ReflectY Maximize Hidden [+]G" -> "v<[+]G"
+                          "ReflectX ReflectY Maximize Hidden [+G]" -> "v<[+G]"
+                          "ReflectX ReflectY Maximize Hidden [TP]" -> "v<[TP]"
+                          "ReflectX ReflectY Maximize Hidden [W]=" -> "v<[W]="
+                          "ReflectX ReflectY Maximize Hidden [|]S" -> "v<[|]S"
 
-  ppTitle = xmobarAction "xdotool key super+Tab" "1"
-    . xmobarColor "#32cd32" ""
-    . shorten 55,
 
-  ppSep = " ][ "
+                        ),
+  ppTitle           = xmobarAction "xdotool key super+Tab" "1"
+                      . xmobarColor "#32cd32" ""
+                      . shorten 55,
+  ppSep             = " ][ "
   }
 
 toggleStrutKey :: XConfig l -> (KeyMask, KeySym)

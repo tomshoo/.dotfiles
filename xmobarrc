@@ -3,7 +3,7 @@ Config {
    -- appearance
      font =         "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true,FontAwesome:size=11:antialias=true"
      additionalFonts = [
-     	"xft:Source Code Pro:size=8:bold:antialias=true"
+    "xft:Source Code Pro:size=8:bold:antialias=true"
      ]
    , bgColor =      "#2f4f4f"
    , fgColor =      "#969696"
@@ -15,7 +15,8 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = " <action=xdotool key super+d><icon=haskell_yellow.xpm/></action> | <fc=#f4f3ed>%UnsafeStdinReader%</fc> }{ <fn=1>| %battery% | %multicpu% | %memory% | <action=alacritty -e nmtui>%wlp2s0wi%</action> || %mydate% || Vol: %volume%</fn> || <action=xdotool key super+shift+a>[user]</action> "
+   , template = " <action=xdotool key
+   super+d><icon=haskell_yellow.xpm/></action> <fc=#f4f3ed>[ %UnsafeStdinReader% ]</fc> }{ <fn=1>[ %battery% ][ <action=xterm -e nmtui>%wlp2s0wi%</action> ][ %mydate% ][ <action=xdotool key XF86AudioMute>Vol: %volume%</action> ][ Brt: %brightness% ]|<action=xdotool key super+shift+a>[exit]</action></fn>"
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -52,7 +53,7 @@ Config {
                              , "--normal"   , "darkorange"
                              , "--high"     , "darkred"
                              ] 10
-                             
+
         -- memory usage monitor
         , Run Memory         [ "--template" ,"Mem: <usedratio>%"
                              , "--Low"      , "20"        -- units: %
@@ -87,8 +88,9 @@ Config {
         , Run Kbd            [ ("us(dvorak)" , "DV")
                              , ("us"         , "<fc=#8B0000>US</fc>")
                              ]
-                             
+
         , Run Com "getvolume" [] "volume" 1
+        , Run Com "light"     ["-G"] "brightness" 1
         , Run UnsafeStdinReader
         ]
    }
