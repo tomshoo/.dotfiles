@@ -1,4 +1,4 @@
--- Used in case while setting ppLayout
+-- used in case statement for showing layout in xmobar
 {-# LANGUAGE LambdaCase #-}
 
 -- IMPORTS
@@ -10,7 +10,6 @@ import Graphics.X11.ExtraTypes.XF86
 
 -- Extra layout settings for xmonad
 import XMonad.Layout.Grid
-import XMonad.Layout.CenteredMaster
 import XMonad.Layout.TwoPane
 import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.Tabbed
@@ -27,7 +26,6 @@ import XMonad.Layout.Renamed
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.Maximize
 import XMonad.Layout.Reflect
-import XMonad.Layout.MultiToggle.Instances
 import qualified XMonad.Layout.MultiToggle as MT
 import qualified XMonad.Layout.Fullscreen as FS
 import qualified XMonad.Layout.WindowNavigation as WN
@@ -38,7 +36,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat)
+import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Place
 
 -- Actions
@@ -106,10 +104,11 @@ myWorkspaces    = ["\xf120"
                   ,"\xf07c"
                   ,"\xf001"
                   ,"\xf086"
+                  ,"\xf109"
                   ]
 
 myWorkspaceIndices :: M.Map [Char] Integer
-myWorkspaceIndices = M.fromList $ zip myWorkspaces [1..] -- (,) == \x y -> (x,y)
+myWorkspaceIndices = M.fromList $ zip myWorkspaces [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] -- (,) == \x y -> (x,y)
 
 clickable :: [Char] -> [Char]
 clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
@@ -128,73 +127,20 @@ myFocusedBorderColor = "#ff0000"
 --
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
+    [ --deleted KeyBindings from the default config
+      ((modm .|. shiftMask, xK_c), return())
+    , ((modm .|. shiftMask, xK_j), return())
+    , ((modm .|. shiftMask, xK_k), return())
+    , ((modm,               xK_h), return())
+    , ((modm,               xK_l), return())
+    , ((modm,               xK_j), return())
+    , ((modm,               xK_k), return())
 
-    -- launch a terminal
-    [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
-
-    -- launch dmenu
-    , ((modm,               xK_p     ), spawn "dmenu_run")
-
-    -- launch gmrun
-    -- , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
-
-    -- close focused window
-    -- , ((modm .|. shiftMask, xK_c     ), kill)
+    -- Kill focused window
     , ((modm, xK_x), kill)
 
-     -- Rotate through the available layout algorithms
-    , ((modm,               xK_space ), sendMessage NextLayout)
-
-    --  Reset the layouts on the current workspace to default
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
-
-    -- Resize viewed windows to the correct size
-    , ((modm,               xK_n     ), refresh)
-
-    -- Move focus to the next window
-    , ((modm,               xK_Tab   ), windows W.focusDown)
-
-    -- Move focus to the next window
-    , ((modm,               xK_j     ), windows W.focusDown)
-
-    -- Move focus to the previous window
-    , ((modm,               xK_k     ), windows W.focusUp  )
-
-    -- Swap the focused window and the master window
+    -- Swap master window
     , ((modm,               xK_Return), promote)
-
-    -- Swap the focused window with the next window
-    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  )
-
-    -- Swap the focused window with the previous window
-    , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
-
-    -- Shrink the master area
-    , ((modm,               xK_h     ), sendMessage Shrink)
-
-    -- Expand the master area
-    , ((modm,               xK_l     ), sendMessage Expand)
-
-    -- Push window back into tiling
-    , ((modm,               xK_t     ), withFocused $ windows . W.sink)
-
-    -- Increment the number of windows in the master area
-    , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
-
-    -- Deincrement the number of windows in the master area
-    , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
-
-    -- Toggle the status bar gap
-    -- Use this binding with avoidStruts from Hooks.ManageDocks.
-    -- See also the statusBar function from Hooks.DynamicLog.
-    --
-    -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
-
-    -- Quit xmonad
-    , ((modm .|. shiftMask, xK_q     ), io exitSuccess)
-
-    -- Restart xmonad
-    , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
 
     -- Run xmessage with a summary of the default keybindings (useful for beginners)
     , ((modm .|. shiftMask, xK_slash ), spawn (myTerminal ++ " -e less /home/user/.xmonad/help.doc"))
@@ -250,7 +196,7 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
 
     -- Launch Scratchpads
     , ((modm .|. shiftMask, xK_h), namedScratchpadAction scratchpads "HTop")
-    , ((modm .|. shiftMask, xK_e), namedScratchpadAction scratchpads "FileManager")
+    , ((modm .|. shiftMask, xK_e), spawn "pcmanfm")
     , ((modm .|. shiftMask, xK_w), spawn "firefox")
 
     -- bsp layout controls
@@ -265,21 +211,22 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
     , ((modm .|. shiftMask,   xK_n    ), sendMessage MoveNode)
 
     -- Toggle Full screen mode
-    , ((modm,                xK_f), sendMessage (Toggle "Full"))
+    , ((modm,                xK_f), sendMessage (Toggle "Full") <+> sendMessage ToggleStruts)
 
-    -- Rotate layouts horizontally and vertically and/or mirror them
+    -- Rotate layouts horizontally and vertically
     , ((modm .|. shiftMask, xK_backslash), sendMessage $ MT.Toggle REFLECTX)
     , ((modm, xK_backslash), sendMessage $ MT.Toggle REFLECTY)
     ]
     ++
 
     --
-    -- mod-[1..9], Switch to workspace N
-    -- mod-shift-[1..9], Move client to workspace N
+    -- mod-[1..0], Switch to workspace N
+    -- mod-shift-[1..0], Move client to workspace N
     --
     [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_1, xK_2, xK_3, xK_4, xK_5, xK_6, xK_7, xK_8, xK_9, xK_0]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
+    ]
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
@@ -299,19 +246,17 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
-
 ------------------------------------------------------------------------
 -- Named Scratchpad Config
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
   [
-    NS "HTop" "alacritty -e htop" (resource =? "HTop") (customFloating $ W.RationalRect 0.9 0.9 0.8 0.8)
-    , NS "FileManager" "pcmanfm" (title =? "FileManager") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+    NS "HTop" "alacritty -t HTop -e htop" (title =? "HTop") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   ]
 
 ------------------------------------------------------------------------
--- treeselect config
+-- TreeSelect Actions Config
 
 myTreeActionConf :: [Tree (TS.TSNode  (X ()))]
 myTreeActionConf =
@@ -323,6 +268,7 @@ myTreeActionConf =
    , Node (TS.TSNode "Restart"     "Restart the system"         (spawn "reboot")) []
    ]
 
+-- TreeSelect Appearance config
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
                            , TS.ts_background   = 0xda3b3131
@@ -342,18 +288,9 @@ tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
 ------------------------------------------------------------------------
 -- Layouts:
 
--- You can specify and transform your layouts by modifying these values.
--- If you change layout bindings be sure to use 'mod-shift-space' after
--- restarting (with 'mod-q') to reset your layout state to the new
--- defaults, as xmonad preserves your old layout settings by default.
---
--- The available layouts.  Note that each layout is separated by |||,
--- which denotes layout choice.
---
 myLayout = smartBorders
   $ MT.mkToggle (MT.single REFLECTX)
   $ MT.mkToggle (MT.single REFLECTY)
-  $ MT.mkToggle (MT.single MIRROR)
   $ maximize
   $ WN.windowNavigation
   $ toggleLayouts Full
@@ -367,41 +304,29 @@ myLayout = smartBorders
   ||| stack
   ||| stackmirr
   ||| grid
-  ||| centerMaster cgrid
   ||| twoPane
   ||| flat
 
   where
-     -- default tiling algorithm partitions the screen into two panes
      tiled   = renamed [Replace "[T]="]
        $ mySpacing
        $ ResizableTall nmaster delta ratio []
 
-     -- The default number of windows in the master pane
      nmaster = 1
 
-     -- Default proportion of screen occupied by master pane
      ratio   = 1/2
 
-     -- Percent of screen to increment by when resizing panes
      delta   = 3/100
-
-     -- Grid for center master layout
-     cgrid    = renamed [Replace "[+G]"]
-       $ mySpacing Grid
 
      grid = renamed [Replace "[+]G"]
        $ mySpacing Grid
 
-     -- Mirror tiled settings
      flat = renamed [Replace "[W]="]
        $ Mirror tiled
 
-     -- Full settings
      full = renamed [Replace "[*]F"]
        $ noBorders Full
 
-     -- TwoPane Settings
      twoPane = renamed [Replace "[TP]"]
        $ addTabsBottomAlways shrinkText myTabConfig
        $ mySpacing
@@ -421,9 +346,11 @@ myLayout = smartBorders
      stackmirr = renamed [Replace "[|]S"]
        $ Mirror stack
 
+-- use spacingRaw instead of smartSpacing
 mySpacing :: l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
 mySpacing = spacingRaw True (Border 0 0 0 0) True (Border 4 4 4 4) True
 
+-- Theme settings for the tabbed layout
 myTabConfig :: Theme
 myTabConfig = def {
   activeColor           = "#556064"
@@ -441,18 +368,6 @@ myTabConfig = def {
 ------------------------------------------------------------------------
 -- Window rules:
 
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window. You can use this to, for example, always float a
--- particular program, or have a client always appear on a particular
--- workspace.
---
--- To find the property name associated with a program, use
--- > xprop | grep WM_CLASS
--- and click on the client you're interested in.
---
--- To match on the WM_NAME, you can use 'title' in the same way that
--- 'className' and 'resource' are used below.
---
 myManageHook :: Query (Endo WindowSet)
 myManageHook = composeAll
     [
@@ -460,23 +375,47 @@ myManageHook = composeAll
       className =? "MPlayer"                 --> doFloat
       , className =? "Gimp"                    --> doFloat
       , className =? "Org.gnome.Nautilus"      --> doFloat
-      , className =? "armitage-ArmitageMain"   --> doFloat
+        <+> doShift ( myWorkspaces !! 6 )
+        <+> doF (W.greedyView ( myWorkspaces !! 6 ))
+
+      , className =? "armitage-ArmitageMain"   --> doCenterFloat
       , className =? "Nitrogen"                --> doFloat
-      , className =? "burp-StartBurp"          --> doFloat
+        <+> doShift ( myWorkspaces !! 4 )
+        <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+
+      , className =? "burp-StartBurp"          --> doCenterFloat
       , className =? "Gnome-calculator"        --> doFloat
       , className =? "zoom"                    --> doFloat
       , className =? "Lxappearance"            --> doFloat
+        <+> doShift ( myWorkspaces !! 4 )
+        <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+
       , className =? "Gnome-sound-recorder"    --> doFloat
       , className =? "Pcmanfm"                 --> doCenterFloat
+        <+> doShift ( myWorkspaces !! 6 )
+        <+> doF (W.greedyView ( myWorkspaces !! 6 ))
+
       , className =? "Thunar"                  --> doCenterFloat
-      , className =? "BleachBit"               --> doFloat
+      , className =? "BleachBit"               --> doCenterFloat
       , className =? "Toolkit"                 --> doFloat
       , className =? "Org.gnome.Software"      --> doFloat
       , className =? "XTerm"                   --> doFloat
       , className =? "URxvt"                   --> doFloat
+        <+> doShift ( head myWorkspaces )
+        <+> doF (W.greedyView ( head myWorkspaces ))
+
       , className =? "Xmessage"                --> doFloat
       , className =? "lxqt-policykit-agent"    --> doCenterFloat
       , className =? "Tor Browser"             --> doCenterFloat
+        <+>  doShift ( myWorkspaces !! 1 )
+        <+> doF (W.greedyView ( myWorkspaces !! 1 ))
+
+      , className =? "obs"                     --> doCenterFloat
+        <+>  doShift ( myWorkspaces !! 3 )
+        <+> doF (W.greedyView ( myWorkspaces !! 3 ))
+
+      , className =? "Xephyr"                  --> doCenterFloat
+        <+> doShift ( myWorkspaces !! 9 )
 
       -- Rules by using resource names
       , resource  =? "desktop_window"          --> doIgnore
@@ -487,25 +426,19 @@ myManageHook = composeAll
 
       , isFullscreen                           --> doFullFloat
 
-      -- Workspace rules for windows
-      , className =? "URxvt"                   --> doShift ( head myWorkspaces ) <+> doF (W.greedyView ( head myWorkspaces ))
+      -- Workspace rules for tiled windows
       , className =? "XTerm"                   --> doShift ( head myWorkspaces ) <+> doF (W.greedyView ( head myWorkspaces ))
       , className =? "firefox"                 --> doShift ( myWorkspaces !! 1 ) <+> doF (W.greedyView ( myWorkspaces !! 1 ))
-      , className =? "Tor Browser"             --> doShift ( myWorkspaces !! 1 ) <+> doF (W.greedyView ( myWorkspaces !! 1 ))
       , className =? "VSCodium"                --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
       , className =? "Emacs"                   --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
+      , className =? "Gedit"                   --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
       , className =? "Gvim"                    --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
       , className =? "vlc"                     --> doShift ( myWorkspaces !! 3 ) <+> doF (W.greedyView ( myWorkspaces !! 3 ))
-      , className =? "obs"                     --> doShift ( myWorkspaces !! 3 ) <+> doF (W.greedyView ( myWorkspaces !! 3 ))
-      , className =? "Lxappearance"            --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
-      , className =? "Nitrogen"                --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
       , className =? "Grub-customizer"         --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
       , className =? "Eog"                     --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
-      , className =? "libreoffice"             --> doShift ( myWorkspaces !! 5 ) <+> doF (W.greedyView ( myWorkspaces !! 5 ))
-      , title     =? "Libreoffice"             --> doShift ( myWorkspaces !! 5 ) <+> doF (W.greedyView ( myWorkspaces !! 5 ))
+      , title     =? "LibreOffice"             --> doShift ( myWorkspaces !! 5 ) <+> doF (W.greedyView ( myWorkspaces !! 5 ))
       , className =? "Evince"                  --> doShift ( myWorkspaces !! 5 ) <+> doF (W.greedyView ( myWorkspaces !! 5 ))
       , className =? "Org.gnome.Nautilus"      --> doShift ( myWorkspaces !! 6 ) <+> doF (W.greedyView ( myWorkspaces !! 6 ))
-      , className =? "Pcmanfm"                 --> doShift ( myWorkspaces !! 6 ) <+> doF (W.greedyView ( myWorkspaces !! 6 ))
       , className =? "Rhythmbox"               --> doShift ( myWorkspaces !! 7 ) <+> doF (W.greedyView ( myWorkspaces !! 7 ))
       , className =? "discord"                 --> doShift ( myWorkspaces !! 8 ) <+> doF (W.greedyView ( myWorkspaces !! 8 ))
     ]
@@ -516,12 +449,6 @@ myManageHook = composeAll
 ------------------------------------------------------------------------
 -- Event handling
 
--- * EwmhDesktops users should change this to ewmhDesktopsEventHook
---
--- Defines a custom handler function for X Events. The function should
--- return (All True) if the default handler is to be run afterwards. To
--- combine event hooks use mappend or mconcat from Data.Monoid.
---
 myEventHook :: Event -> X All
 myEventHook = FS.fullscreenEventHook
   <+> ewmhDesktopsEventHook
@@ -529,22 +456,14 @@ myEventHook = FS.fullscreenEventHook
 ------------------------------------------------------------------------
 -- Status bars and logging
 
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
 myLogHook :: X ()
-myLogHook = fadeInactiveLogHook fadeAmount
+myLogHook = fadeInactiveLogHook fadeAmount <+> ewmhDesktopsLogHook
   where
     fadeAmount = 0.95
 
 ------------------------------------------------------------------------
--- Startup hook
+-- Startup Applications
 
--- Perform an arbitrary action each time xmonad starts or is restarted
--- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
--- per-workspace layout choices.
---
--- By default, do nothing.
 myStartupHook :: X ()
 myStartupHook = do
   spawnOnce "nitrogen --restore &"
@@ -553,13 +472,7 @@ myStartupHook = do
   spawnOnce "xsetroot -cursor_name left_ptr &"
   spawnOnce "xset r rate 300 50 &"
 ------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
-
--- Run xmonad with the settings you specify. No need to modify this.
---
--- main = do
-  -- xmproc <- spawnPipe "xmobar"
-  -- xmonad $ docks defaults
+-- Status configuration
 
 myXmobarPP :: PP
 myXmobarPP = xmobarPP {
@@ -575,41 +488,36 @@ myXmobarPP = xmobarPP {
                           "Maximize Hidden [*]F"                   -> "[*]F"
                           "Maximize Hidden [=]S"                   -> "[=]S"
                           "Maximize Hidden [+]G"                   -> "[+]G"
-                          "Maximize Hidden [+G]"                   -> "[+G]"
                           "Maximize Hidden [TP]"                   -> "[TP]"
                           "Maximize Hidden [W]="                   -> "[W]="
                           "Maximize Hidden [|]S"                   -> "[|]S"
-                          "ReflectX Maximize Hidden [T]="          -> "<[T]="
-                          "ReflectX Maximize Hidden [1]0"          -> "<[1]0"
-                          "ReflectX Maximize Hidden [_]T"          -> "<[_]T"
-                          "ReflectX Maximize Hidden [*]F"          -> "<[*]F"
-                          "ReflectX Maximize Hidden [=]S"          -> "<[=]S"
-                          "ReflectX Maximize Hidden [+]G"          -> "<[+]G"
-                          "ReflectX Maximize Hidden [+G]"          -> "<[+G]"
-                          "ReflectX Maximize Hidden [TP]"          -> "<[TP]"
-                          "ReflectX Maximize Hidden [W]="          -> "<[W]="
-                          "ReflectX Maximize Hidden [|]S"          -> "<[|]S"
-                          "ReflectY Maximize Hidden [T]="          -> "v[T]="
-                          "ReflectY Maximize Hidden [1]0"          -> "v[1]0"
-                          "ReflectY Maximize Hidden [_]T"          -> "v[_]T"
-                          "ReflectY Maximize Hidden [*]F"          -> "v[*]F"
-                          "ReflectY Maximize Hidden [=]S"          -> "v[=]S"
-                          "ReflectY Maximize Hidden [+]G"          -> "v[+]G"
-                          "ReflectY Maximize Hidden [+G]"          -> "v[+G]"
-                          "ReflectY Maximize Hidden [TP]"          -> "v[TP]"
-                          "ReflectY Maximize Hidden [W]="          -> "v[W]="
-                          "ReflectY Maximize Hidden [|]S"          -> "v[|]S"
-                          "ReflectX ReflectY Maximize Hidden [T]=" -> "v<[T]="
-                          "ReflectX ReflectY Maximize Hidden [1]0" -> "v<[1]0"
-                          "ReflectX ReflectY Maximize Hidden [_]T" -> "v<[_]T"
-                          "ReflectX ReflectY Maximize Hidden [*]F" -> "v<[*]F"
-                          "ReflectX ReflectY Maximize Hidden [=]S" -> "v<[=]S"
-                          "ReflectX ReflectY Maximize Hidden [+]G" -> "v<[+]G"
-                          "ReflectX ReflectY Maximize Hidden [+G]" -> "v<[+G]"
-                          "ReflectX ReflectY Maximize Hidden [TP]" -> "v<[TP]"
-                          "ReflectX ReflectY Maximize Hidden [W]=" -> "v<[W]="
-                          "ReflectX ReflectY Maximize Hidden [|]S" -> "v<[|]S"
-
+                          "ReflectX Maximize Hidden [T]="          -> "[x][T]="
+                          "ReflectX Maximize Hidden [1]0"          -> "[x][1]0"
+                          "ReflectX Maximize Hidden [_]T"          -> "[x][_]T"
+                          "ReflectX Maximize Hidden [*]F"          -> "[x][*]F"
+                          "ReflectX Maximize Hidden [=]S"          -> "[x][=]S"
+                          "ReflectX Maximize Hidden [+]G"          -> "[x][+]G"
+                          "ReflectX Maximize Hidden [TP]"          -> "[x][TP]"
+                          "ReflectX Maximize Hidden [W]="          -> "[x][W]="
+                          "ReflectX Maximize Hidden [|]S"          -> "[x][|]S"
+                          "ReflectY Maximize Hidden [T]="          -> "[y][T]="
+                          "ReflectY Maximize Hidden [1]0"          -> "[y][1]0"
+                          "ReflectY Maximize Hidden [_]T"          -> "[y][_]T"
+                          "ReflectY Maximize Hidden [*]F"          -> "[y][*]F"
+                          "ReflectY Maximize Hidden [=]S"          -> "[y][=]S"
+                          "ReflectY Maximize Hidden [+]G"          -> "[y][+]G"
+                          "ReflectY Maximize Hidden [TP]"          -> "[y][TP]"
+                          "ReflectY Maximize Hidden [W]="          -> "[y][W]="
+                          "ReflectY Maximize Hidden [|]S"          -> "[y][|]S"
+                          "ReflectX ReflectY Maximize Hidden [T]=" -> "[xy][T]="
+                          "ReflectX ReflectY Maximize Hidden [1]0" -> "[xy][1]0"
+                          "ReflectX ReflectY Maximize Hidden [_]T" -> "[xy][_]T"
+                          "ReflectX ReflectY Maximize Hidden [*]F" -> "[xy][*]F"
+                          "ReflectX ReflectY Maximize Hidden [=]S" -> "[xy][=]S"
+                          "ReflectX ReflectY Maximize Hidden [+]G" -> "[xy][+]G"
+                          "ReflectX ReflectY Maximize Hidden [TP]" -> "[xy][TP]"
+                          "ReflectX ReflectY Maximize Hidden [W]=" -> "[xy][W]="
+                          "ReflectX ReflectY Maximize Hidden [|]S" -> "[xy][|]S"
 
                         ),
   ppTitle           = xmobarAction "xdotool key super+Tab" "1"
@@ -620,17 +528,14 @@ myXmobarPP = xmobarPP {
 
 toggleStrutKey :: XConfig l -> (KeyMask, KeySym)
 toggleStrutKey XConfig {XMonad.modMask = modm} = (modm, xK_b)
-
+---------------------------------------------------------------------------------
+-- Main Function call for XMonad
 main :: IO ()
 main = do
   xmonad =<< statusBar "xmobar" myXmobarPP toggleStrutKey defaults
 
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
+---------------------------------------------------------------------------------
+-- Custom settings override for XMonad
 defaults = ewmh
   $ FS.fullscreenSupport
   $ def {
@@ -645,7 +550,7 @@ defaults = ewmh
         focusedBorderColor = myFocusedBorderColor,
 
       -- key bindings
-        keys               = myKeys,
+        keys               = myKeys <+> keys def,
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
