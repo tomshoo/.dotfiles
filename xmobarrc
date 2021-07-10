@@ -5,7 +5,7 @@ Config {
      additionalFonts = [
     "xft:Source Code Pro:size=8:bold:antialias=true"
      ]
-   , bgColor =      "#2f4f4f"
+   , bgColor =      "#434c5e"
    , fgColor =      "#969696"
    , position =     Top
    , border =       TopB
@@ -15,8 +15,7 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = " <action=xdotool key
-   super+d><icon=haskell_yellow.xpm/></action> <fc=#f4f3ed>[ %UnsafeStdinReader% ]</fc> }{ <fn=1>[ %battery% ][ <action=xterm -e nmtui>%wlp2s0wi%</action> ][ %mydate% ][ <action=xdotool key XF86AudioMute>Vol: %volume%</action> ][ Brt: %brightness% ]|<action=xdotool key super+shift+a>[exit]</action></fn>"
+   , template = " <action=xdotool key super+d><icon=haskell_yellow.xpm/></action> <fc=#f4f3ed>[ %UnsafeStdinReader% ]</fc> }{ <fn=1>[ %battery% ][ <action=urxvt -n NetworkManager -e nmtui>%wlp2s0wi%</action> ][ %mydate% ][ <action=xdotool key XF86AudioMute>Vol: %volume%</action> ][ Brt: %brightness% ]|<action=xdotool key super+shift+a>[exit]</action></fn>"
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

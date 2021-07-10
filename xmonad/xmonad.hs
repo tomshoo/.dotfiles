@@ -64,6 +64,9 @@ import qualified XMonad.StackSet as W
 myTerminal :: [Char]
 myTerminal      = "alacritty"
 
+myFileManager :: [Char]
+myFileManager = "nautilus"
+
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = False
@@ -195,10 +198,10 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
     , ((modm .|. shiftMask, xK_a), TS.treeselectAction tsDefaultConfig myTreeActionConf)
 
     -- Launch Scratchpads
-    , ((modm .|. shiftMask, xK_h), namedScratchpadAction scratchpads "HTop")
-    , ((modm .|. shiftMask, xK_e), spawn "pcmanfm")
+    , ((modm .|. shiftMask, xK_h), namedScratchpadAction scratchpads "bPyTop")
+    , ((modm .|. shiftMask, xK_e), namedScratchpadAction scratchpads "Ranger")
+    , ((modm,               xK_e), spawn myFileManager)
     , ((modm .|. shiftMask, xK_w), spawn "firefox")
-
     -- bsp layout controls
     , ((modm .|. mod1Mask,    xK_Right), sendMessage $ ExpandTowards R)
     , ((modm .|. mod1Mask,    xK_Left ), sendMessage $ ExpandTowards L)
@@ -252,7 +255,8 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 scratchpads :: [NamedScratchpad]
 scratchpads =
   [
-    NS "HTop" "alacritty -t HTop -e htop" (title =? "HTop") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+    NS "bPyTop" "alacritty -t bPyTop -e bpytop" (title =? "bPyTop") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+  , NS "Ranger" "alacritty -t Ranger -e ranger" (title =? "Ranger") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   ]
 
 ------------------------------------------------------------------------
@@ -348,21 +352,31 @@ myLayout = smartBorders
 
 -- use spacingRaw instead of smartSpacing
 mySpacing :: l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
-mySpacing = spacingRaw True (Border 0 0 0 0) True (Border 4 4 4 4) True
+mySpacing = spacingRaw True (Border 0 0 0 0) False (Border 4 4 4 4) True
 
 -- Theme settings for the tabbed layout
 myTabConfig :: Theme
 myTabConfig = def {
   activeColor           = "#556064"
-  , inactiveColor       = "#2F3D44"
-  , urgentColor         = "#FDF6E3"
+  , inactiveColor       = "#2f3d44"
+  , urgentColor         = "#fdf6e3"
   , activeBorderColor   = "#454948"
   , inactiveBorderColor = "#454948"
-  , urgentBorderColor   = "#268BD2"
-  , activeTextColor     = "#80FFF9"
-  , inactiveTextColor   = "#1ABC9C"
-  , urgentTextColor     = "#1ABC9C"
-  , fontName            = "xft:Source Code Pro:size=9"
+  , urgentBorderColor   = "#268bd2"
+  , activeTextColor     = "#80fff9"
+  , inactiveTextColor   = "#1abc9c"
+  , urgentTextColor     = "#1abc9c"
+  , fontName            = "xft:Source Code Pro:size=9:antialias=true"
+  }
+
+myFloatConfig :: Theme
+myFloatConfig = def {
+  activeColor         = "#556064"
+  , urgentColor       = "#2f3d44"
+  , urgentTextColor   = "#1abc9c"
+  , activeBorderColor = "#454948"
+  , activeTextColor   = "#80fff9"
+  , fontName          = "xft:Source Code Pro:size=7:antialias=true"
   }
 
 ------------------------------------------------------------------------
@@ -374,48 +388,18 @@ myManageHook = composeAll
       -- Rules by using class name
       className =? "MPlayer"                 --> doFloat
       , className =? "Gimp"                    --> doFloat
-      , className =? "Org.gnome.Nautilus"      --> doFloat
-        <+> doShift ( myWorkspaces !! 6 )
-        <+> doF (W.greedyView ( myWorkspaces !! 6 ))
-
       , className =? "armitage-ArmitageMain"   --> doCenterFloat
-      , className =? "Nitrogen"                --> doFloat
-        <+> doShift ( myWorkspaces !! 4 )
-        <+> doF (W.greedyView ( myWorkspaces !! 4 ))
-
       , className =? "burp-StartBurp"          --> doCenterFloat
       , className =? "Gnome-calculator"        --> doFloat
       , className =? "zoom"                    --> doFloat
-      , className =? "Lxappearance"            --> doFloat
-        <+> doShift ( myWorkspaces !! 4 )
-        <+> doF (W.greedyView ( myWorkspaces !! 4 ))
-
       , className =? "Gnome-sound-recorder"    --> doFloat
-      , className =? "Pcmanfm"                 --> doCenterFloat
-        <+> doShift ( myWorkspaces !! 6 )
-        <+> doF (W.greedyView ( myWorkspaces !! 6 ))
-
       , className =? "Thunar"                  --> doCenterFloat
       , className =? "BleachBit"               --> doCenterFloat
       , className =? "Toolkit"                 --> doFloat
       , className =? "Org.gnome.Software"      --> doFloat
       , className =? "XTerm"                   --> doFloat
-      , className =? "URxvt"                   --> doFloat
-        <+> doShift ( head myWorkspaces )
-        <+> doF (W.greedyView ( head myWorkspaces ))
-
       , className =? "Xmessage"                --> doFloat
       , className =? "lxqt-policykit-agent"    --> doCenterFloat
-      , className =? "Tor Browser"             --> doCenterFloat
-        <+>  doShift ( myWorkspaces !! 1 )
-        <+> doF (W.greedyView ( myWorkspaces !! 1 ))
-
-      , className =? "obs"                     --> doCenterFloat
-        <+>  doShift ( myWorkspaces !! 3 )
-        <+> doF (W.greedyView ( myWorkspaces !! 3 ))
-
-      , className =? "Xephyr"                  --> doCenterFloat
-        <+> doShift ( myWorkspaces !! 9 )
 
       -- Rules by using resource names
       , resource  =? "desktop_window"          --> doIgnore
@@ -427,20 +411,79 @@ myManageHook = composeAll
       , isFullscreen                           --> doFullFloat
 
       -- Workspace rules for tiled windows
-      , className =? "XTerm"                   --> doShift ( head myWorkspaces ) <+> doF (W.greedyView ( head myWorkspaces ))
-      , className =? "firefox"                 --> doShift ( myWorkspaces !! 1 ) <+> doF (W.greedyView ( myWorkspaces !! 1 ))
-      , className =? "VSCodium"                --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
-      , className =? "Emacs"                   --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
-      , className =? "Gedit"                   --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
-      , className =? "Gvim"                    --> doShift ( myWorkspaces !! 2 ) <+> doF (W.greedyView ( myWorkspaces !! 2 ))
-      , className =? "vlc"                     --> doShift ( myWorkspaces !! 3 ) <+> doF (W.greedyView ( myWorkspaces !! 3 ))
-      , className =? "Grub-customizer"         --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
-      , className =? "Eog"                     --> doShift ( myWorkspaces !! 4 ) <+> doF (W.greedyView ( myWorkspaces !! 4 ))
-      , title     =? "LibreOffice"             --> doShift ( myWorkspaces !! 5 ) <+> doF (W.greedyView ( myWorkspaces !! 5 ))
-      , className =? "Evince"                  --> doShift ( myWorkspaces !! 5 ) <+> doF (W.greedyView ( myWorkspaces !! 5 ))
-      , className =? "Org.gnome.Nautilus"      --> doShift ( myWorkspaces !! 6 ) <+> doF (W.greedyView ( myWorkspaces !! 6 ))
-      , className =? "Rhythmbox"               --> doShift ( myWorkspaces !! 7 ) <+> doF (W.greedyView ( myWorkspaces !! 7 ))
-      , className =? "discord"                 --> doShift ( myWorkspaces !! 8 ) <+> doF (W.greedyView ( myWorkspaces !! 8 ))
+      , className =? "XTerm"                   --> doCenterFloat
+          <+> doShift ( head myWorkspaces )
+          <+> doF (W.greedyView ( head myWorkspaces ))
+
+      , className =? "URxvt"                   --> doCenterFloat
+          <+> doShift ( head myWorkspaces )
+          <+> doF (W.greedyView ( head myWorkspaces ))
+
+      , className =? "firefox"                 --> doShift ( myWorkspaces !! 1 )
+          <+> doF (W.greedyView ( myWorkspaces !! 1 ))
+
+      , className =? "Tor Browser"             --> doCenterFloat
+          <+>  doShift ( myWorkspaces !! 1 )
+          <+> doF (W.greedyView ( myWorkspaces !! 1 ))
+
+      , className =? "VSCodium"                --> doShift ( myWorkspaces !! 2 )
+          <+> doF (W.greedyView ( myWorkspaces !! 2 ))
+
+      , className =? "Emacs"                   --> doShift ( myWorkspaces !! 2 )
+          <+> doF (W.greedyView ( myWorkspaces !! 2 ))
+
+      , className =? "Gedit"                   --> doShift ( myWorkspaces !! 2 )
+          <+> doF (W.greedyView ( myWorkspaces !! 2 ))
+
+      , className =? "Gvim"                    --> doShift ( myWorkspaces !! 2 )
+          <+> doF (W.greedyView ( myWorkspaces !! 2 ))
+
+      , className =? "vlc"                     --> doShift ( myWorkspaces !! 3 )
+          <+> doF (W.greedyView ( myWorkspaces !! 3 ))
+
+      , className =? "obs"                     --> doCenterFloat
+          <+>  doShift ( myWorkspaces !! 3 )
+          <+> doF (W.greedyView ( myWorkspaces !! 3 ))
+
+      , className =? "Grub-customizer"         --> doShift ( myWorkspaces !! 4 )
+          <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+
+      , className =? "Nitrogen"                --> doFloat
+          <+> doShift ( myWorkspaces !! 4 )
+          <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+
+      , className =? "Lxappearance"            --> doFloat
+          <+> doShift ( myWorkspaces !! 4 )
+          <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+
+      , className =? "Eog"                     --> doShift ( myWorkspaces !! 4 )
+          <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+
+      , title     =? "LibreOffice"             --> doShift ( myWorkspaces !! 5 )
+          <+> doF (W.greedyView ( myWorkspaces !! 5 ))
+
+      , className =? "Evince"                  --> doShift ( myWorkspaces !! 5 )
+          <+> doF (W.greedyView ( myWorkspaces !! 5 ))
+
+      , className =? "Org.gnome.Nautilus"      --> doCenterFloat
+          <+> doShift ( myWorkspaces !! 6 )
+          <+> doF (W.greedyView ( myWorkspaces !! 6 ))
+
+      , className =? "Pcmanfm"                 --> doCenterFloat
+          <+> doShift ( myWorkspaces !! 6 )
+          <+> doF (W.greedyView ( myWorkspaces !! 6 ))
+
+      , className =? "Rhythmbox"               --> doShift ( myWorkspaces !! 7 )
+          <+> doF (W.greedyView ( myWorkspaces !! 7 ))
+
+      , className =? "discord"                 --> doShift ( myWorkspaces !! 8 )
+          <+> doF (W.greedyView ( myWorkspaces !! 8 ))
+
+      , className =? "qBittorrent"             --> doShift ( myWorkspaces !! 4 )
+          <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+
+      , className =? "Xephyr"                  --> doCenterFloat
+          <+> doShift ( myWorkspaces !! 9 )
     ]
     <+> namedScratchpadManageHook scratchpads
     <+> FS.fullscreenManageHook
@@ -471,6 +514,7 @@ myStartupHook = do
   spawnOnce "lxqt-policykit-agent &"
   spawnOnce "xsetroot -cursor_name left_ptr &"
   spawnOnce "xset r rate 300 50 &"
+  spawnOnce "numlockx"
 ------------------------------------------------------------------------
 -- Status configuration
 
@@ -491,6 +535,7 @@ myXmobarPP = xmobarPP {
                           "Maximize Hidden [TP]"                   -> "[TP]"
                           "Maximize Hidden [W]="                   -> "[W]="
                           "Maximize Hidden [|]S"                   -> "[|]S"
+                          "Maximize Hidden [F]*"                   -> "[F]*"
                           "ReflectX Maximize Hidden [T]="          -> "[x][T]="
                           "ReflectX Maximize Hidden [1]0"          -> "[x][1]0"
                           "ReflectX Maximize Hidden [_]T"          -> "[x][_]T"
@@ -499,7 +544,8 @@ myXmobarPP = xmobarPP {
                           "ReflectX Maximize Hidden [+]G"          -> "[x][+]G"
                           "ReflectX Maximize Hidden [TP]"          -> "[x][TP]"
                           "ReflectX Maximize Hidden [W]="          -> "[x][W]="
-                          "ReflectX Maximize Hidden [|]S"          -> "[x][|]S"
+                          "ReflectX Maximize Hidden [T]="          -> "[x][T]="
+                          "ReflectX Maximize Hidden [F]*"          -> "[x][F]*"
                           "ReflectY Maximize Hidden [T]="          -> "[y][T]="
                           "ReflectY Maximize Hidden [1]0"          -> "[y][1]0"
                           "ReflectY Maximize Hidden [_]T"          -> "[y][_]T"
@@ -508,6 +554,7 @@ myXmobarPP = xmobarPP {
                           "ReflectY Maximize Hidden [+]G"          -> "[y][+]G"
                           "ReflectY Maximize Hidden [TP]"          -> "[y][TP]"
                           "ReflectY Maximize Hidden [W]="          -> "[y][W]="
+                          "ReflectX Maximize Hidden [F]*"          -> "[x][F]*"
                           "ReflectY Maximize Hidden [|]S"          -> "[y][|]S"
                           "ReflectX ReflectY Maximize Hidden [T]=" -> "[xy][T]="
                           "ReflectX ReflectY Maximize Hidden [1]0" -> "[xy][1]0"
@@ -518,6 +565,7 @@ myXmobarPP = xmobarPP {
                           "ReflectX ReflectY Maximize Hidden [TP]" -> "[xy][TP]"
                           "ReflectX ReflectY Maximize Hidden [W]=" -> "[xy][W]="
                           "ReflectX ReflectY Maximize Hidden [|]S" -> "[xy][|]S"
+                          "ReflectX Maximize Hidden [F]*"          -> "[xy][F]*"
 
                         ),
   ppTitle           = xmobarAction "xdotool key super+Tab" "1"
