@@ -14,6 +14,8 @@ import XMonad.Layout.TwoPane
 import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.Tabbed
 import XMonad.Layout.StackTile
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.MouseResizableTile
 
 -- Layout Modifiers
 import XMonad.Layout.LayoutModifier
@@ -21,11 +23,13 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.Hidden
 import XMonad.Layout.Gaps
 import XMonad.Layout.Spacing
-import XMonad.Layout.ResizableTile
 import XMonad.Layout.Renamed
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.Maximize
 import XMonad.Layout.Reflect
+import XMonad.Layout.TrackFloating
+import XMonad.Layout.Minimize
+import XMonad.Layout.TabBarDecoration
 import qualified XMonad.Layout.MultiToggle as MT
 import qualified XMonad.Layout.Fullscreen as FS
 import qualified XMonad.Layout.WindowNavigation as WN
@@ -39,9 +43,15 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Place
 
+-- Prompts
+import XMonad.Prompt
+import XMonad.Prompt.ConfirmPrompt
+
 -- Actions
 import XMonad.Actions.Promote
 import XMonad.Actions.NoBorders
+import XMonad.Actions.Minimize
+import XMonad.Actions.WithAll
 import qualified XMonad.Actions.ConstrainedResize as CNT
 import qualified XMonad.Actions.TreeSelect as TS
 import qualified XMonad.Actions.FlexibleResize as Flex
@@ -55,7 +65,6 @@ import qualified Data.Map        as M
 -- Utils
 import XMonad.Util.SpawnOnce
 import XMonad.Util.NamedScratchpad
-
 import qualified XMonad.StackSet as W
 
 -- The preferred terminal program, which is used in a binding below and by
@@ -65,7 +74,7 @@ myTerminal :: [Char]
 myTerminal      = "alacritty"
 
 myFileManager :: [Char]
-myFileManager = "nautilus"
+myFileManager = "pcmanfm"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -122,8 +131,8 @@ clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
 
 myNormalBorderColor :: [Char]
 myFocusedBorderColor :: [Char]
-myNormalBorderColor  = "#000000"
-myFocusedBorderColor = "#ff0000"
+myNormalBorderColor  = "#434c5e"
+myFocusedBorderColor = "#188b77"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -139,6 +148,13 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
     , ((modm,               xK_j), return())
     , ((modm,               xK_k), return())
 
+    , ((modm .|. shiftMask, xK_t), sinkAll)
+
+    , ((modm .|. shiftMask, xK_q), confirmPrompt myXPConfirmationConfig "logout?" $ io exitSuccess)
+
+    , ((modm .|. shiftMask, xK_period), sendMessage ExpandSlave)
+    , ((modm .|. shiftMask, xK_comma),  sendMessage ShrinkSlave)
+
     -- Kill focused window
     , ((modm, xK_x), kill)
 
@@ -146,7 +162,7 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
     , ((modm,               xK_Return), promote)
 
     -- Run xmessage with a summary of the default keybindings (useful for beginners)
-    , ((modm .|. shiftMask, xK_slash ), spawn (myTerminal ++ " -e less /home/user/.xmonad/help.doc"))
+    , ((modm .|. shiftMask, xK_slash ), namedScratchpadAction scratchpads "Helper")
 
     -- XF86 shortcut keys for xmonad
     , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
@@ -156,32 +172,32 @@ myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
     , ((0, xF86XK_MonBrightnessDown), spawn "light -U 5")
 
     -- Resize vertical windows using ResizableTall
-    , ((modm .|. controlMask .|. mod1Mask, xK_Up), sendMessage MirrorExpand)
-    , ((modm .|. controlMask .|. mod1Mask, xK_Down), sendMessage MirrorShrink)
-    , ((modm .|. controlMask .|. mod1Mask, xK_Left), sendMessage Shrink)
-    , ((modm .|. controlMask .|. mod1Mask, xK_Right), sendMessage Expand)
+    , ((modm .|. controlMask, xK_Up), sendMessage MirrorExpand)
+    , ((modm .|. controlMask, xK_Down), sendMessage MirrorShrink)
+    , ((modm .|. controlMask, xK_Left), sendMessage Shrink)
+    , ((modm .|. controlMask, xK_Right), sendMessage Expand)
 
     -- Lock screen using betterlockscreen
-    , ((modm .|. shiftMask, xK_x), spawn "betterlockscreen --lock blur")
+    , ((modm,               xK_l), confirmPrompt myXPConfirmationConfig "lockscreen?" $ spawn "betterlockscreen --lock blur")
 
     -- rofi shortcuts my personal favorites
     , ((modm,               xK_d), spawn "rofi -show drun")
     , ((modm .|. controlMask, xK_c), spawn "rofi -show calc")
 
     -- Scratchpad Key bindings also uses rofi
-    , ((modm .|. shiftMask, xK_minus), withFocused hideWindow)
-    , ((modm,               xK_minus), popNewestHiddenWindow)
-    , ((modm .|. controlMask, xK_minus), popOldestHiddenWindow)
+    , ((modm .|. shiftMask, xK_minus), withFocused minimizeWindow)
+    , ((modm,               xK_minus), withLastMinimized maximizeWindowAndFocus)
+    , ((modm .|. controlMask, xK_minus), withFirstMinimized maximizeWindowAndFocus)
 
-    -- Maximize currently focused window
+    -- Minimize Maximize currently focused window
     , ((modm,               xK_m), withFocused (sendMessage . maximizeRestore))
 
     -- Screenshot keys in xmonad
-    , ((0,              xK_Print), spawn "scrot 'screenshot_%Y%m%d_%H%M%S%T.png' -e 'mv $f ~/Pictures/ && xclip -selection clipboard -t image/png -i ~/Pictures`ls -1 -t ~/Pictures | head -1`'")
-    , ((shiftMask,      xK_Print), spawn "scrot -s 'screenshot_select_%Y%m%d_%H%M%S%T.png' -e 'mv $f ~/Pictures && xclip -selection clipboard -t image/png -i ~/Pictures `ls -1 -t ~/Pictures | head -1`'")
+    , ((0,                  xK_Print), spawn "scrot 'screenshot_%Y%m%d_%H%M%S%T.png' -e 'mv $f ~/Pictures/ && xclip -selection clipboard -t image/png -i ~/Pictures`ls -1 -t ~/Pictures | head -1`'")
+    , ((shiftMask,          xK_Print), spawn "scrot -s 'screenshot_select_%Y%m%d_%H%M%S%T.png' -e 'mv $f ~/Pictures && xclip -selection clipboard -t image/png -i ~/Pictures `ls -1 -t ~/Pictures | head -1`'")
 
     -- toggling gaps
-    , ((modm, xK_g), sendMessage ToggleGaps)
+    , ((modm,               xK_g), sendMessage ToggleGaps)
     , ((modm .|. shiftMask, xK_g), withFocused toggleBorder)
 
     -- window navigation bindings
@@ -257,19 +273,21 @@ scratchpads =
   [
     NS "bPyTop" "alacritty -t bPyTop -e bpytop" (title =? "bPyTop") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   , NS "Ranger" "alacritty -t Ranger -e ranger" (title =? "Ranger") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+  , NS "Helper" "alacritty -t Helper -e less /home/user/.xmonad/help.doc" (title =? "Helper") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   ]
 
 ------------------------------------------------------------------------
+
 -- TreeSelect Actions Config
 
 myTreeActionConf :: [Tree (TS.TSNode  (X ()))]
 myTreeActionConf =
-   [ Node (TS.TSNode "Lock Screen" "Lock the screen"            (spawn "betterlockscreen --lock blur")) []
-   , Node (TS.TSNode "Quit"        "Exit the XMonad session"    (io exitSuccess))[]
-   , Node (TS.TSNode "Suspend"     "Suspends the system"        (spawn "systemctl suspend")) []
-   , Node (TS.TSNode "Hibernate"   "Send system to hibernation" (spawn "systemctl hibernate")) []
-   , Node (TS.TSNode "Shutdown"    "Poweroff the system"        (spawn "poweroff")) []
-   , Node (TS.TSNode "Restart"     "Restart the system"         (spawn "reboot")) []
+   [ Node (TS.TSNode "Lock Screen" "Lock the screen"            (confirmPrompt myXPConfirmationConfig "lockscreen?" $ spawn "betterlockscreen --lock blur")) []
+   , Node (TS.TSNode "Quit"        "Exit the XMonad session"    (confirmPrompt myXPConfirmationConfig "logout?" $ io exitSuccess))[]
+   , Node (TS.TSNode "Suspend"     "Suspends the system"        (confirmPrompt myXPConfirmationConfig "suspend?" $ spawn "systemctl suspend")) []
+   , Node (TS.TSNode "Hibernate"   "Send system to hibernation" (confirmPrompt myXPConfirmationConfig "hibernate?" $ spawn "systemctl hibernate")) []
+   , Node (TS.TSNode "Shutdown"    "Poweroff the system"        (confirmPrompt myXPConfirmationConfig "shutdown?" $ spawn "poweroff")) []
+   , Node (TS.TSNode "Restart"     "Restart the system"         (confirmPrompt myXPConfirmationConfig "Restart?" $ spawn "reboot")) []
    ]
 
 -- TreeSelect Appearance config
@@ -289,17 +307,33 @@ tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
                            , TS.ts_navigate     = TS.defaultNavigation
                            }
 
+-----------------------------------------------------------------------
+-- XMonad Prompt config
+
+myXPConfirmationConfig :: XPConfig
+myXPConfirmationConfig = def {
+  font = "xft:Source Code Pro:size=10",
+  bgColor = "#2f3d44",
+  fgColor = "#70c4c1",
+  promptBorderWidth = 1,
+  borderColor = "#228e7c",
+  position = CenteredAt 0.5 0.3,
+  height = 30
+                 }
+
 ------------------------------------------------------------------------
 -- Layouts:
 
 myLayout = smartBorders
   $ MT.mkToggle (MT.single REFLECTX)
   $ MT.mkToggle (MT.single REFLECTY)
-  $ maximize
+  $ minimize
+  $ maximizeWithPadding 25
   $ WN.windowNavigation
   $ toggleLayouts Full
   $ avoidStruts
   $ hiddenWindows
+  $ trackFloating
   $ gaps [ (U, 4), (D, 4), (R, 4), (L, 4) ]
   $ tiled
   ||| binary
@@ -314,9 +348,9 @@ myLayout = smartBorders
   where
      tiled   = renamed [Replace "[T]="]
        $ mySpacing
-       $ ResizableTall nmaster delta ratio []
+       $ ResizableTall no_master delta ratio []
 
-     nmaster = 1
+     no_master = 1
 
      ratio   = 1/2
 
@@ -332,7 +366,6 @@ myLayout = smartBorders
        $ noBorders Full
 
      twoPane = renamed [Replace "[TP]"]
-       $ addTabsBottomAlways shrinkText myTabConfig
        $ mySpacing
        $ TwoPane delta ratio
 
@@ -369,121 +402,138 @@ myTabConfig = def {
   , fontName            = "xft:Source Code Pro:size=9:antialias=true"
   }
 
-myFloatConfig :: Theme
-myFloatConfig = def {
-  activeColor         = "#556064"
-  , urgentColor       = "#2f3d44"
-  , urgentTextColor   = "#1abc9c"
-  , activeBorderColor = "#454948"
-  , activeTextColor   = "#80fff9"
-  , fontName          = "xft:Source Code Pro:size=7:antialias=true"
-  }
-
 ------------------------------------------------------------------------
 -- Window rules:
 
 myManageHook :: Query (Endo WindowSet)
-myManageHook = composeAll
+myManageHook = composeOne
     [
       -- Rules by using class name
-      className =? "MPlayer"                 --> doFloat
-      , className =? "Gimp"                    --> doFloat
-      , className =? "armitage-ArmitageMain"   --> doCenterFloat
-      , className =? "burp-StartBurp"          --> doCenterFloat
-      , className =? "Gnome-calculator"        --> doFloat
-      , className =? "zoom"                    --> doFloat
-      , className =? "Gnome-sound-recorder"    --> doFloat
-      , className =? "Thunar"                  --> doCenterFloat
-      , className =? "BleachBit"               --> doCenterFloat
-      , className =? "Toolkit"                 --> doFloat
-      , className =? "Org.gnome.Software"      --> doFloat
-      , className =? "XTerm"                   --> doFloat
-      , className =? "Xmessage"                --> doFloat
-      , className =? "lxqt-policykit-agent"    --> doCenterFloat
+      className =? "MPlayer"                 -?> insertPosition Above Newer <+> doFloat
+      , className =? "armitage-ArmitageMain"   -?> insertPosition Above Newer <+> doCenterFloat
+      , className =? "burp-StartBurp"          -?> insertPosition Above Newer <+> doCenterFloat
+      , className =? "Gnome-calculator"        -?> insertPosition Above Newer <+> doFloat
+      , className =? "zoom"                    -?> insertPosition Above Newer <+> doFloat
+      , className =? "Gnome-sound-recorder"    -?> insertPosition Above Newer <+> doFloat
+      , className =? "Thunar"                  -?> insertPosition Above Newer <+> doCenterFloat
+      , className =? "BleachBit"               -?> insertPosition Above Newer <+> doCenterFloat
+      , className =? "Toolkit"                 -?> insertPosition Above Newer <+> doFloat
+      , className =? "Org.gnome.Software"      -?> insertPosition Above Newer <+> doFloat
+      , className =? "Xmessage"                -?> insertPosition Above Newer <+> doFloat
+      , className =? "lxqt-policykit-agent"    -?> insertPosition Above Newer <+> doCenterFloat
 
       -- Rules by using resource names
-      , resource  =? "desktop_window"          --> doIgnore
-      , resource  =? "kdesktop"                --> doIgnore
+      , resource  =? "desktop_window"          -?> doIgnore
+      , resource  =? "kdesktop"                -?> doIgnore
 
       -- Rules by using title names
-      , title     =? "Picture-in-Picture"      --> doFloat
+      , title     =? "Picture-in-Picture"      -?> insertPosition Above Newer <+> doFloat
+      , title     =? "Firefox — Sharing Indicator" -?> doHideIgnore
+      , title     =? "Enter name of file to save to..." -?> insertPosition Above Newer <+> doCenterFloat
 
-      , isFullscreen                           --> doFullFloat
+      , isFullscreen                           -?> insertPosition Above Newer <+> doFullFloat
 
       -- Workspace rules for tiled windows
-      , className =? "XTerm"                   --> doCenterFloat
+      , className =? "XTerm"                   -?> insertPosition Above Newer <+> doCenterFloat
           <+> doShift ( head myWorkspaces )
           <+> doF (W.greedyView ( head myWorkspaces ))
 
-      , className =? "URxvt"                   --> doCenterFloat
+      , className =? "URxvt"                   -?> insertPosition Above Newer <+> doCenterFloat
           <+> doShift ( head myWorkspaces )
           <+> doF (W.greedyView ( head myWorkspaces ))
 
-      , className =? "firefox"                 --> doShift ( myWorkspaces !! 1 )
+      , className =? "firefox"                 -?> doShift ( myWorkspaces !! 1 )
           <+> doF (W.greedyView ( myWorkspaces !! 1 ))
 
-      , className =? "Tor Browser"             --> doCenterFloat
+      , className =? "Brave-browser"           -?> doShift ( myWorkspaces !! 1 )
+          <+> doF (W.greedyView ( myWorkspaces !! 1 ))
+
+      , className =? "Tor Browser"             -?> insertPosition Above Newer <+> doCenterFloat
           <+>  doShift ( myWorkspaces !! 1 )
           <+> doF (W.greedyView ( myWorkspaces !! 1 ))
 
-      , className =? "VSCodium"                --> doShift ( myWorkspaces !! 2 )
+      , className =? "VSCodium"                -?> doShift ( myWorkspaces !! 2 )
           <+> doF (W.greedyView ( myWorkspaces !! 2 ))
 
-      , className =? "Emacs"                   --> doShift ( myWorkspaces !! 2 )
+      , className =? "Emacs"                   -?> doShift ( myWorkspaces !! 2 )
           <+> doF (W.greedyView ( myWorkspaces !! 2 ))
 
-      , className =? "Gedit"                   --> doShift ( myWorkspaces !! 2 )
+      , className =? "Gedit"                   -?> doShift ( myWorkspaces !! 2 )
           <+> doF (W.greedyView ( myWorkspaces !! 2 ))
 
-      , className =? "Gvim"                    --> doShift ( myWorkspaces !! 2 )
+      , className =? "Gvim"                    -?> doShift ( myWorkspaces !! 2 )
           <+> doF (W.greedyView ( myWorkspaces !! 2 ))
 
-      , className =? "vlc"                     --> doShift ( myWorkspaces !! 3 )
+      , className =? "neovide"                 -?> doShift ( myWorkspaces !! 2 )
+          <+> doF (W.greedyView ( myWorkspaces !! 2 ))
+
+      , className =? "vlc"                     -?> doShift ( myWorkspaces !! 3 )
           <+> doF (W.greedyView ( myWorkspaces !! 3 ))
 
-      , className =? "obs"                     --> doCenterFloat
+      , className =? "Totem"                   -?> doShift ( myWorkspaces !! 3 )
+          <+> doF (W.greedyView ( myWorkspaces !! 3 ))
+
+      , className =? "obs"                     -?> insertPosition Above Newer <+> doCenterFloat
           <+>  doShift ( myWorkspaces !! 3 )
           <+> doF (W.greedyView ( myWorkspaces !! 3 ))
 
-      , className =? "Grub-customizer"         --> doShift ( myWorkspaces !! 4 )
+      , className =? "Grub-customizer"         -?> doShift ( myWorkspaces !! 4 )
           <+> doF (W.greedyView ( myWorkspaces !! 4 ))
 
-      , className =? "Nitrogen"                --> doFloat
+      , className =? "Nitrogen"                -?> insertPosition Above Newer <+> doFloat
           <+> doShift ( myWorkspaces !! 4 )
           <+> doF (W.greedyView ( myWorkspaces !! 4 ))
 
-      , className =? "Lxappearance"            --> doFloat
+      , className =? "Variety"                 -?> insertPosition Above Newer <+> doCenterFloat
           <+> doShift ( myWorkspaces !! 4 )
           <+> doF (W.greedyView ( myWorkspaces !! 4 ))
 
-      , className =? "Eog"                     --> doShift ( myWorkspaces !! 4 )
+      , className =? "Lxappearance"            -?> insertPosition Above Newer <+> doFloat
+          <+> doShift ( myWorkspaces !! 4 )
           <+> doF (W.greedyView ( myWorkspaces !! 4 ))
 
-      , title     =? "LibreOffice"             --> doShift ( myWorkspaces !! 5 )
+      , className =? "Eog"                     -?> doShift ( myWorkspaces !! 4 )
+          <+> doF (W.greedyView ( myWorkspaces !! 4 ))
+
+      , className =? "Gimp-2.10"               -?> insertPosition Above Newer <+> doFloat
+          <+> doShift ( myWorkspaces !! 4 )
+          <+> doF (W.greedyView ( myWorkspaces !! 4))
+
+      , title     =? "LibreOffice"             -?> doShift ( myWorkspaces !! 5 )
           <+> doF (W.greedyView ( myWorkspaces !! 5 ))
 
-      , className =? "Evince"                  --> doShift ( myWorkspaces !! 5 )
+      , title     =? "DesktopEditors"          -?> doShift ( myWorkspaces !! 5 )
           <+> doF (W.greedyView ( myWorkspaces !! 5 ))
 
-      , className =? "Org.gnome.Nautilus"      --> doCenterFloat
+      , className =? "Evince"                  -?> doShift ( myWorkspaces !! 5 )
+          <+> doF (W.greedyView ( myWorkspaces !! 5 ))
+
+      , className =? "Org.gnome.Nautilus"      -?> insertPosition Above Newer <+> insertPosition Above Newer <+> doCenterFloat
           <+> doShift ( myWorkspaces !! 6 )
           <+> doF (W.greedyView ( myWorkspaces !! 6 ))
 
-      , className =? "Pcmanfm"                 --> doCenterFloat
+      , className =? "Pcmanfm"                 -?> insertPosition Above Newer <+> insertPosition Above Newer <+> doCenterFloat
           <+> doShift ( myWorkspaces !! 6 )
           <+> doF (W.greedyView ( myWorkspaces !! 6 ))
 
-      , className =? "Rhythmbox"               --> doShift ( myWorkspaces !! 7 )
+      , className =? "Rhythmbox"               -?> doShift ( myWorkspaces !! 7 )
           <+> doF (W.greedyView ( myWorkspaces !! 7 ))
 
-      , className =? "discord"                 --> doShift ( myWorkspaces !! 8 )
+      , className =? "discord"                 -?> doShift ( myWorkspaces !! 8 )
           <+> doF (W.greedyView ( myWorkspaces !! 8 ))
 
-      , className =? "qBittorrent"             --> doShift ( myWorkspaces !! 4 )
+      , className =? "qBittorrent"             -?> doShift ( myWorkspaces !! 4 )
           <+> doF (W.greedyView ( myWorkspaces !! 4 ))
 
-      , className =? "Xephyr"                  --> doCenterFloat
+      , className =? "Xephyr"                  -?> insertPosition Above Newer <+> doCenterFloat
           <+> doShift ( myWorkspaces !! 9 )
+
+      , className =? "Warpinator"              -?> insertPosition Above Newer <+> doCenterFloat <+> doShift ( myWorkspaces !! 9 )
+          <+> doF (W.greedyView( myWorkspaces !! 9 ))
+
+      , className =? "VirtualBox Manager"      -?> insertPosition Above Newer <+> doCenterFloat
+          <+> doShift ( myWorkspaces !! 9 )
+          <+> doF (W.greedyView( myWorkspaces !! 9 ))
     ]
     <+> namedScratchpadManageHook scratchpads
     <+> FS.fullscreenManageHook
@@ -502,7 +552,7 @@ myEventHook = FS.fullscreenEventHook
 myLogHook :: X ()
 myLogHook = fadeInactiveLogHook fadeAmount <+> ewmhDesktopsLogHook
   where
-    fadeAmount = 0.95
+    fadeAmount = 0.70
 
 ------------------------------------------------------------------------
 -- Startup Applications
@@ -514,7 +564,8 @@ myStartupHook = do
   spawnOnce "lxqt-policykit-agent &"
   spawnOnce "xsetroot -cursor_name left_ptr &"
   spawnOnce "xset r rate 300 50 &"
-  spawnOnce "numlockx"
+  spawnOnce "ulauncher --hide-window &"
+  spawnOnce "numlockx &"
 ------------------------------------------------------------------------
 -- Status configuration
 
@@ -522,54 +573,55 @@ myXmobarPP :: PP
 myXmobarPP = xmobarPP {
   ppHiddenNoWindows = xmobarColor "#f4f3ed" "" . clickable,
   ppHidden          = xmobarColor "#b4cfec" "" . clickable,
-  ppCurrent         = xmobarColor "#57feff" "" . wrap "=] " " [=" ,
+  ppCurrent         = xmobarColor "#57feff" "#4c566a" . wrap "=] " " [=" ,
   ppLayout          = xmobarAction "xdotool key super+space" "1"
                       . xmobarAction "xdotool key super+shift+space" "3"
-                      . (\ x -> case x of
-                          "Maximize Hidden [T]="                   -> "[T]="
-                          "Maximize Hidden [1]0"                   -> "[1]0"
-                          "Maximize Hidden [_]T"                   -> "[_]T"
-                          "Maximize Hidden [*]F"                   -> "[*]F"
-                          "Maximize Hidden [=]S"                   -> "[=]S"
-                          "Maximize Hidden [+]G"                   -> "[+]G"
-                          "Maximize Hidden [TP]"                   -> "[TP]"
-                          "Maximize Hidden [W]="                   -> "[W]="
-                          "Maximize Hidden [|]S"                   -> "[|]S"
-                          "Maximize Hidden [F]*"                   -> "[F]*"
-                          "ReflectX Maximize Hidden [T]="          -> "[x][T]="
-                          "ReflectX Maximize Hidden [1]0"          -> "[x][1]0"
-                          "ReflectX Maximize Hidden [_]T"          -> "[x][_]T"
-                          "ReflectX Maximize Hidden [*]F"          -> "[x][*]F"
-                          "ReflectX Maximize Hidden [=]S"          -> "[x][=]S"
-                          "ReflectX Maximize Hidden [+]G"          -> "[x][+]G"
-                          "ReflectX Maximize Hidden [TP]"          -> "[x][TP]"
-                          "ReflectX Maximize Hidden [W]="          -> "[x][W]="
-                          "ReflectX Maximize Hidden [T]="          -> "[x][T]="
-                          "ReflectX Maximize Hidden [F]*"          -> "[x][F]*"
-                          "ReflectY Maximize Hidden [T]="          -> "[y][T]="
-                          "ReflectY Maximize Hidden [1]0"          -> "[y][1]0"
-                          "ReflectY Maximize Hidden [_]T"          -> "[y][_]T"
-                          "ReflectY Maximize Hidden [*]F"          -> "[y][*]F"
-                          "ReflectY Maximize Hidden [=]S"          -> "[y][=]S"
-                          "ReflectY Maximize Hidden [+]G"          -> "[y][+]G"
-                          "ReflectY Maximize Hidden [TP]"          -> "[y][TP]"
-                          "ReflectY Maximize Hidden [W]="          -> "[y][W]="
-                          "ReflectX Maximize Hidden [F]*"          -> "[x][F]*"
-                          "ReflectY Maximize Hidden [|]S"          -> "[y][|]S"
-                          "ReflectX ReflectY Maximize Hidden [T]=" -> "[xy][T]="
-                          "ReflectX ReflectY Maximize Hidden [1]0" -> "[xy][1]0"
-                          "ReflectX ReflectY Maximize Hidden [_]T" -> "[xy][_]T"
-                          "ReflectX ReflectY Maximize Hidden [*]F" -> "[xy][*]F"
-                          "ReflectX ReflectY Maximize Hidden [=]S" -> "[xy][=]S"
-                          "ReflectX ReflectY Maximize Hidden [+]G" -> "[xy][+]G"
-                          "ReflectX ReflectY Maximize Hidden [TP]" -> "[xy][TP]"
-                          "ReflectX ReflectY Maximize Hidden [W]=" -> "[xy][W]="
-                          "ReflectX ReflectY Maximize Hidden [|]S" -> "[xy][|]S"
-                          "ReflectX Maximize Hidden [F]*"          -> "[xy][F]*"
+                      . (\case
+                          "Minimize Maximize Hidden [T]="                   -> "[T]="
+                          "Minimize Maximize Hidden [1]0"                   -> "[1]0"
+                          "Minimize Maximize Hidden [_]T"                   -> "[_]T"
+                          "Minimize Maximize Hidden [*]F"                   -> "[*]F"
+                          "Minimize Maximize Hidden [=]S"                   -> "[=]S"
+                          "Minimize Maximize Hidden [+]G"                   -> "[+]G"
+                          "Minimize Maximize Hidden [TP]"                   -> "[TP]"
+                          "Minimize Maximize Hidden [W]="                   -> "[W]="
+                          "Minimize Maximize Hidden [|]S"                   -> "[|]S"
+                          "Minimize Maximize Hidden [M]R"                   -> "[M]R"
+                          "ReflectX Minimize Maximize Hidden [T]="          -> "[x][T]="
+                          "ReflectX Minimize Maximize Hidden [1]0"          -> "[x][1]0"
+                          "ReflectX Minimize Maximize Hidden [_]T"          -> "[x][_]T"
+                          "ReflectX Minimize Maximize Hidden [*]F"          -> "[x][*]F"
+                          "ReflectX Minimize Maximize Hidden [=]S"          -> "[x][=]S"
+                          "ReflectX Minimize Maximize Hidden [+]G"          -> "[x][+]G"
+                          "ReflectX Minimize Maximize Hidden [TP]"          -> "[x][TP]"
+                          "ReflectX Minimize Maximize Hidden [W]="          -> "[x][W]="
+                          "ReflectX Minimize Maximize Hidden [T]="          -> "[x][T]="
+                          "ReflectX Minimize Maximize Hidden [M]R"          -> "[x][M]R"
+                          "ReflectY Minimize Maximize Hidden [T]="          -> "[y][T]="
+                          "ReflectY Minimize Maximize Hidden [1]0"          -> "[y][1]0"
+                          "ReflectY Minimize Maximize Hidden [_]T"          -> "[y][_]T"
+                          "ReflectY Minimize Maximize Hidden [*]F"          -> "[y][*]F"
+                          "ReflectY Minimize Maximize Hidden [=]S"          -> "[y][=]S"
+                          "ReflectY Minimize Maximize Hidden [+]G"          -> "[y][+]G"
+                          "ReflectY Minimize Maximize Hidden [TP]"          -> "[y][TP]"
+                          "ReflectY Minimize Maximize Hidden [W]="          -> "[y][W]="
+                          "ReflectY Minimize Maximize Hidden [|]S"          -> "[y][|]S"
+                          "ReflectY Minimize Maximize Hidden [M]R"          -> "[y][M]R"
+                          "ReflectX ReflectY Minimize Maximize Hidden [T]=" -> "[xy][T]="
+                          "ReflectX ReflectY Minimize Maximize Hidden [1]0" -> "[xy][1]0"
+                          "ReflectX ReflectY Minimize Maximize Hidden [_]T" -> "[xy][_]T"
+                          "ReflectX ReflectY Minimize Maximize Hidden [*]F" -> "[xy][*]F"
+                          "ReflectX ReflectY Minimize Maximize Hidden [=]S" -> "[xy][=]S"
+                          "ReflectX ReflectY Minimize Maximize Hidden [+]G" -> "[xy][+]G"
+                          "ReflectX ReflectY Minimize Maximize Hidden [TP]" -> "[xy][TP]"
+                          "ReflectX ReflectY Minimize Maximize Hidden [W]=" -> "[xy][W]="
+                          "ReflectX ReflectY Minimize Maximize Hidden [|]S" -> "[xy][|]S"
+                          "ReflectY ReflectY Minimize Maximize Hidden [M]R" -> "[xy][M]R"
+                          "Minimize Maximize Full"                          -> "Full"
 
                         ),
   ppTitle           = xmobarAction "xdotool key super+Tab" "1"
-                      . xmobarColor "#32cd32" ""
+                      . xmobarColor "#57feff" ""
                       . shorten 55,
   ppSep             = " ][ "
   }
@@ -603,8 +655,7 @@ defaults = ewmh
 
       -- hooks, layouts
         layoutHook         = myLayout,
-        manageHook         = insertPosition Below Newer
-          <+> myManageHook,
+        manageHook         = myManageHook <+> insertPosition Below Newer,
         handleEventHook    = myEventHook,
         logHook            = myLogHook,
         startupHook        = myStartupHook

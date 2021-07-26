@@ -1,47 +1,62 @@
 The default modifier key is 'super'. Default keybindings:
     -- launching and killing programs
-    mod-Shift-Enter  Launch xterminal
+    mod-Shift-Enter  Launch the terminal emulator
+    mod-Shift-e      Launch ranger file manager
+    mod-Shift-h      Launch bpytop
+    mod-e            Launch the file manager
     mod-p            Launch dmenu
-    mod-Shift-p      Launch gmrun
-    mod-Shift-c      Close/kill the focused window
+    mod-d            Launch rofi desktop applications menu
+    mod-x            Close/kill the focused window
     mod-Space        Rotate through the available layout algorithms
     mod-Shift-Space  Reset the layouts on the current workSpace to default
-    mod-n            Resize/refresh viewed windows to the correct size
 
     -- move focus up or down the window stack
-    mod-Tab        Move focus to the next window
-    mod-Shift-Tab  Move focus to the previous window
-    mod-j          Move focus to the next window
-    mod-k          Move focus to the previous window
-    mod-m          Move focus to the master window
+    mod-Tab         Move focus to the next window
+    mod-Shift-Tab   Move focus to the previous window
+    mod-up          Move focus to the above window
+    mod-down        Move focus to the bottom window
+    mod-left        Move focus to the left window
+    mod-right       Move focus to the right window
+
+    -- Maximize or minimize windows
+    mod-m           Maximize current window
+    mod-Shift-(-)   Minimize current window
+    mod-ctrl-(-)    Restore first minimized window
+    mod-(-)         Restore last minimized window
 
     -- modifying the window order
-    mod-Return   Swap the focused window and the master window
-    mod-Shift-j  Swap the focused window with the next window
-    mod-Shift-k  Swap the focused window with the previous window
+    mod-Return       Swap the focused window and the master window
+    mod-Shift-up     Swap the focused window with the above window
+    mod-Shift-down   Swap the focused window with the bottom window
+    mod-Shift-left   Swap the focused window with the left window
+    mod-Shift-right  Swap the focused window with the right window
 
     -- resizing the master/slave ratio
-    mod-h  Shrink the master area
-    mod-l  Expand the master area
+    mod-ctrl-up/down Resize Stacked windows
+    mod-ctrl-left    Shrink the master area
+    mod-ctrl-right   Expand the master area
+
+    mod-alt-up/down/right/left Resize BSP layout windows
 
     -- floating layer support
-    mod-t  Push window back into tiling; unfloat and re-tile it
+    mod-t       Push window back into tiling; unfloat and re-tile it
+    mod-Shift-t Push all floating windows to tiling mode
 
     -- increase or decrease number of windows in the master area
     mod-comma  (mod-,)   Increment the number of windows in the master area
     mod-period (mod-.)   Deincrement the number of windows in the master area
 
-    -- quit, or restart
+    -- quit, lock or restart
     mod-Shift-q  Quit xmonad
     mod-q        Restart xmonad
-    mod-[1..9]   Switch to workSpace N
+    mod-l        lock screen
 
     -- Workspaces & screens
-    mod-Shift-[1..9]   Move client to workspace N
-    mod-{w,e,r}        Switch to physical/Xinerama screens 1, 2, or 3
-    mod-Shift-{w,e,r}  Move client to screen 1, 2, or 3
+    mod-Shift-[1..0]   Move client to workspace N
+    mod-[1..0]   Switch to workSpace N
 
     -- Mouse bindings: default actions bound to mouse events
-    mod-button1  Set the window to floating mode and move by dragging
-    mod-button2  Raise the window to the top of the stack
-    mod-button3  Set the window to floating mode and resize by dragging
+    mod-button1        Set the window to floating mode and move by dragging
+    mod-button2        Raise the window to the top of the stack
+    mod-button3        Set the window to floating mode and resize by dragging
+    mod-Shift-button3  Set the window to floating mode and constrained resize by dragging
