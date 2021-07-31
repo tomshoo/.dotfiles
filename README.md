@@ -12,3 +12,7 @@ These are my configurations and themes for my setup of arch linux, and nothing e
 - scrot
 - xclip
 - betterlockscreen
+
+### Note:
+For both vim and nvim run `:PluginInstall` and `:PluginUpdate` in the vim
+command mode for everything to work properly
