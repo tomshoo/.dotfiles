@@ -6,7 +6,7 @@ echo "Checking if yay is installed"
 yay -h > /dev/null
 if [ $? == "0" ]; then
     echo "Yay was installed proceeding"
-    yay -Syu betterlockscreen
+    yay -Syu betterlockscreen ttf-fontawesome-4
 else
     pacman -S --needed git base-devel
     git clone https://aur.archlinux.org/yay.git
@@ -21,10 +21,6 @@ cp -r alacritty $HOME/.config/alacritty
 echo "Setting up rofi..."
 cp -r rofi $HOME/.config/rofi
 
-echo "Installing FontAwesome"
-mkdir $HOME/.fonts
-cp fontawesome.ttf $HOME/.fonts
-
 function xmonad_setup(){
 	if ! [ -f $HOME/.xmonad/xmonad.hs ]; then
 		cp -r xmonad/ $HOME/.xmonad/
@@ -33,12 +29,12 @@ function xmonad_setup(){
 	    shopt -s nocasematch
 		read -p "Config file already exists do you want to overwrite it (y/N): " YES_NO
 		case $YES_NO in
-		    "y" | "yes") 
+		    "y" | "yes")
 		        cp $HOME/.xmonad/xmonad.hs $HOME/.xmonad/xmonad.hs.bck
 		        cp -r xmonad/ $HOME/.xmonad/
 		        cp xmobarrc $HOME/.xmobarrc.bck
 		        echo "Copied config file to ~/.xmonad/"
-		        echo "Backup of previous file created at ~/.xmonad/xmonad.hs.bck" 
+		        echo "Backup of previous file created at ~/.xmonad/xmonad.hs.bck"
 		        echo "Backup of previous xmobar config created at ~/.xmobarrc.bck";;
 
 		    "n" | "no") echo "Leaving default config as is." ;;
