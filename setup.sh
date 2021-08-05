@@ -3,8 +3,7 @@
 echo "Installing required dependancies..."
 sudo pacman -Syu --needed xmonad xmonad-contrib dmenu rofi alacritty rxvt-unicode rxvt-unicode-terminfo nitrogen picom unzip
 echo "Checking if yay is installed"
-yay -h > /dev/null
-if [ $? == "0" ]; then
+if which yay > /dev/null 2>&1; then
     echo "Yay was installed proceeding"
     yay -Syu betterlockscreen ttf-fontawesome-4
 else
