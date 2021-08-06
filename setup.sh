@@ -5,13 +5,13 @@ sudo pacman -Syu --needed xmonad xmonad-contrib dmenu rofi alacritty rxvt-unicod
 echo "Checking if yay is installed"
 if which yay > /dev/null 2>&1; then
     echo "Yay was installed proceeding"
-    yay -Syu betterlockscreen ttf-fontawesome-4
+    yay -Syu betterlockscreen ttf-fontawesome-4 i3exit
 else
     pacman -S --needed git base-devel
     git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si
-    yay -Syu betterlockscreen
+    yay -Syu betterlockscreen ttf-fontawesome-4 i3exit
 fi
 
 echo "Setting up alacritty..."
