@@ -7,7 +7,6 @@ if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.z
     source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-export git_token=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
 if [ $TERM = linux ]; then
     tmux
     printf "Do you want to logout from tty?(Y/n): ";read yes_no
