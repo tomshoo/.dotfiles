@@ -5,14 +5,22 @@ blue="$(tput bold; tput setaf 4)"
 cyan="$(tput bold; tput setaf 6)"
 nc="$(tput sgr0)"
 
+if [ -f /usr/share/git/completion/git-prompt.sh ]; then
+  echo "cyka"
+  source /usr/share/git/completion/git-prompt.sh
+fi
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_SHOWUPSTREAM=1
+
 # exports
-export PATH="${HOME}/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:"
+export PATH="${HOME}/.bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:"
 export PATH="${PATH}/usr/local/sbin:/opt/bin:/usr/bin/core_perl:/usr/games/bin:"
 
 if [[ $EUID -eq 0 ]]; then
-  export PS1="\[$blue\][ \[$cyan\]\H \[$darkgrey\]\w\[$darkgrey\] \[$blue\]]\\[$darkgrey\]# \[$nc\]"
+  export PS1="\[$blue\][ \[$cyan\]\H \[$darkgrey\]\$(__git_ps1 ' (%s)')\w\[$darkgrey\] \[$blue\]]\\[$darkgrey\]# \[$nc\]"
 else
-  export PS1="\[$blue\][ \[$cyan\]\H \[$darkgrey\]\w\[$darkgrey\] \[$blue\]]\\[$cyan\]\$> \[$nc\]"
+  export PS1="\[$blue\][\$(__git_ps1 ' (%s) ')\[$cyan\]\H \[$darkgrey\]\W\[$darkgrey\] \[$blue\]]\\[$cyan\]\$> \[$nc\]"
 fi
 
 export LD_PRELOAD=""
@@ -46,3 +54,6 @@ export PATH="$PATH:$HOME/.rvm/bin"
 bind "set show-all-if-ambiguous on"
 bind "set menu-complete-display-prefix on"
 set 'completion-ignore-case on'
+
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
