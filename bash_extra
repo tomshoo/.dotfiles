@@ -2,7 +2,8 @@ if which neofetch > /dev/null 2>&1; then
     clear; neofetch
 fi
 
-if [ $TERM = linux ]; then
+if which tmux > /dev/null 2>&1 && which fbterm > /dev/null 2>&1; then
+  if [ $TERM = linux ]; then
     fbterm tmux
     read -p "Do you want to exit the tty console?(Y/n) " yes_no < /dev/tty
     case $yes_no in
@@ -13,4 +14,5 @@ if [ $TERM = linux ]; then
             echo "Exiting TTY...";exit
         ;;
     esac
+  fi
 fi
