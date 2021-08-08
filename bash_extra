@@ -1,0 +1,17 @@
+if which neofetch > /dev/null 2>&1; then
+    clear; neofetch
+fi
+
+export git_token=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
+if [ $TERM = linux ]; then
+    fbterm tmux
+    printf "Do you want to logout from tty?(Y/n): ";read yes_no
+        case $yes_no in
+            'n'|'N')
+                echo "Continuing in tty console session"
+            ;;
+            *)
+                echo "Exiting TTY...";exit
+            ;;
+        esac
+fi
