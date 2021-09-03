@@ -1,0 +1,14 @@
+path = ["/usr/local/bin", "/usr/bin", "/usr/local/sbin", "/usr/bin/site_perl", "/usr/bin/vendor_perl", "/usr/bin/core_perl"]
+pivot_mode = "always"
+prompt = "build-string (build-string (ansi cu) (do -i {whoami} | str trim) '@' ( do -i {hostname} | str trim) (ansi reset) ' ' ) (ansi gb) (pwd) (ansi reset) '(' (ansi cb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')-' (ansi yb) (date format '%m/%d/%Y %H:%M') (char newline)  (ansi reset) (ansi rb) '<>=> ' (ansi reset)  "
+skip_welcome_message = true
+table_mode = "light"
+
+[line_editor]
+completion_type = "circular"
+edit_mode = "vi"
+history_duplicates = "ignoreconsecutive"
+
+[textview]
+paging_mode = "quitifonescreen"
+wrapping_mode = "nowrapping"
