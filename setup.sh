@@ -2,17 +2,7 @@
 
 echo "Installing required dependancies..."
 sudo pacman -Syu --needed xmonad xmonad-contrib dmenu rofi alacritty rxvt-unicode rxvt-unicode-terminfo nitrogen picom unzip
-echo "Checking if yay is installed"
-if which yay > /dev/null 2>&1; then
-    echo "Yay was installed proceeding"
-    yay -Syu betterlockscreen ttf-fontawesome-4 i3exit
-else
-    pacman -S --needed git base-devel
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si
-    yay -Syu betterlockscreen ttf-fontawesome-4 i3exit
-fi
+sudo aura -A betterlockscreen ttf-fontawesome-4 i3exit --needed
 
 echo "Setting up alacritty..."
 cp -r alacritty $HOME/.config/alacritty
