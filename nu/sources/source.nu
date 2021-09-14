@@ -11,8 +11,8 @@ def clean [
             sudo pacman -Scc
         } {
             if ($pacman == 'uneeded') {
-                let uneeded = (pacman -Qtdq)
-                if ($uneeded|empty?) {echo "No uneeded packages"} {for $it in $uneeded {sudo pacman -Rsunc --noconfirm $it}}
+                let uneeded = (do -i {pacman -Qtdq|split row '\n'})
+                for $it in $uneeded {sudo pacman -Rsunc --noconfirm $it}
             } {
                 build-string 'Invalid option "' $pacman '"'
             }
