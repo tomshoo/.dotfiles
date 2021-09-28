@@ -1,27 +1,49 @@
+path = [
+    "/home/user/.local/bin", 
+    "/usr/local/bin", 
+    "/usr/bin", 
+    "/usr/local/sbin", 
+    "/usr/bin/site_perl", 
+    "/usr/bin/vendor_perl", 
+    "/usr/bin/core_perl", 
+    "/opt/android-ndk", 
+    "/opt/android-sdk/platform-tools", 
+    "/opt/android-sdk/tools", 
+    "/opt/android-sdk/tools/bin", 
+    "/var/lib/flatpak/exports/bin", 
+    "/usr/lib/jvm/default/bin"
+]
+
 pivot_mode = "always"
 prompt = "build-string (build-string (ansi cu) (do -i {whoami} | str trim) '@' ( do -i {hostname} | str trim) (ansi reset) ' ' ) (ansi gb) (pwd) (ansi reset) '(' (ansi cb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')-' (ansi yb) (date format '%m/%d/%Y %H:%M') (char newline)  (ansi reset) (ansi rb) '>>=' (ansi reset) ' '  "
 skip_welcome_message = true
-
-#startup commands
 startup = [
     "alias lsd = ls -ds", 
+    "alias ll = {ls -l|select name type mode group size accessed}",
+    "alias la = ls -a",
+    "alias lla = ls -la",
+    "alias grep = grep --color=auto",
+    "alias nu_catimg = kitty +kitten icat",
     "source /home/user/.config/nu/sources/source.nu"
 ]
-
 table_mode = "light"
 
-# Extra environment variables
 [env]
 EDITOR = "micro"
 
-# line edditor settings
+[color_config]
+separator_color = "bd"
+header_align = "l"
+header_color = "ub"
+index_color = "rb"
+primitive_binary = "cb"
+
 [line_editor]
 completion_match_method = "case-insensitive"
 completion_type = "circular"
 edit_mode = "vi"
 history_duplicates = "ignoreconsecutive"
 
-#settings for bat
 [textview]
-paging_mode = "quitifonescreen"
+pager = "less"
 wrapping_mode = "nowrapping"
