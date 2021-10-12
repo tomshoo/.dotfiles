@@ -1,12 +1,4 @@
-# colors
-darkgrey="$(tput bold ; tput setaf 8)"
-white="$(tput bold ; tput setaf 7)"
-blue="$(tput bold; tput setaf 4)"
-cyan="$(tput bold; tput setaf 6)"
-nc="$(tput sgr0)"
-
 if [ -f /usr/share/git/completion/git-prompt.sh ]; then
-  echo "cyka"
   source /usr/share/git/completion/git-prompt.sh
 fi
 export GIT_PS1_SHOWDIRTYSTATE=1
@@ -18,9 +10,9 @@ export PATH="${HOME}/.bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:"
 export PATH="${PATH}/usr/local/sbin:/opt/bin:/usr/bin/core_perl:/usr/games/bin:"
 
 if [[ $EUID -eq 0 ]]; then
-  export PS1="\[$blue\][ \[$cyan\]\H \[$darkgrey\]\$(__git_ps1 ' (%s)')\w\[$darkgrey\] \[$blue\]]\\[$darkgrey\]# \[$nc\]"
+    export PS1="\u@\h:\W:\$(__git_ps1 ' (%s)')$> "
 else
-  export PS1="\[$blue\][\$(__git_ps1 ' (%s) ')\[$cyan\]\H \[$darkgrey\]\W\[$darkgrey\] \[$blue\]]\\[$cyan\]\$> \[$nc\]"
+    export PS1="\u@\h:\W:\$(__git_ps1 ' (%s)')$> "
 fi
 
 export LD_PRELOAD=""
