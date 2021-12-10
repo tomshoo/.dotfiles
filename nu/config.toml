@@ -34,7 +34,6 @@ startup = [
 table_mode = "light"
 
 [env]
-git_token = "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"
 EDITOR = "vim"
 
 [color_config]
