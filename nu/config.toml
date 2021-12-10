@@ -15,7 +15,7 @@ path = [
 ]
 
 pivot_mode = "always"
-prompt = "build-string (build-string (ansi cu) (do -i {whoami} | str trim) '@' ( do -i {hostname} | str trim) (ansi reset) ' ' ) (ansi gd) (pwd) (ansi reset) '(' (ansi cb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')-' (ansi yd) (date format '%m/%d/%Y %H:%M') (char newline)  (ansi reset) (ansi rb) '>>=' (ansi reset) ' '  "
+prompt = "build-string (ansi gd) (pwd) (ansi reset) '(' (ansi cb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')-' (ansi yd) (date format '%m/%d/%Y %H:%M') (char newline)  (ansi reset) (ansi cyan) (do -i {hostname}|str trim) (ansi reset) ':' (ansi red) '>' (ansi reset) ' '  "
 skip_welcome_message = true
 startup = [
     "alias lsd = ls -ds", 
@@ -34,6 +34,7 @@ startup = [
 table_mode = "light"
 
 [env]
+git_token = "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"
 EDITOR = "vim"
 
 [color_config]
