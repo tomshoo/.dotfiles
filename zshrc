@@ -82,3 +82,90 @@ fi
 if [ -f ~/.zsh_extra ]; then
     . ~/.zsh_extra
 fi
+
+pactui () {
+	GROUP_INSTALL=0 
+	PACKAGE_INSTALL=0
+	REMOVE_PACKAGE=0
+	REMOVE_PACKAGE_ALL=0
+	REOMVE_PACKAGE_GROUP=0
+	[ $3 ] && echo "Unexpected argument $2" && return 1
+	if [ -z $1 ]; then PACKAGE_INSTALL=1 else;
+	case $1 in
+		("--install" | "-i")
+			if [ -z $2 ]; then PACKAGE_INSTALL=1 else;
+			case $2 in
+				("--package" | "-p") PACKAGE_INSTALL=1 ;;
+				("--group" | "-g") GROUP_INSTALL=1 ;;
+				(*) echo -e "$0: Invalid argument: $2\n" "\rExecute $0 --help to list all arguments" 
+					return 1
+					;;
+			esac
+			fi
+			;;
+		("--remove" | "-r")
+			if [ -z $2 ]; then REMOVE_PACKAGE_ALL=1 else;
+			case $2 in
+				("--explicit" | "-e") REMOVE_PACKAGE=1 ;;
+				("--all" | "-a") REMOVE_PACKAGE_ALL=1 ;;
+				("--group" | "-g") REOMVE_PACKAGE_GROUP=1 ;;
+				(*) echo -e "$0: Invalid argument: $2\n" "\rExecute $0 --help to list all arguments" 
+					return 1
+					;;
+			esac
+			fi
+			;;
+		("--help" | "-h" | "-?") 
+			echo -e "\n\rSimple script to install packages on archlinux\n"\
+					"\r\tUsage: pacinstall [argument]\n\n"\
+					"\rAvailable arguments are:\n\n"\
+					"\t--install | -i     Install a package\n"\
+					"\t  --package. -p    \tInstall a single package\n"\
+					"\t  --group,   -g    \tInstall a package group\n\n"\
+					"\t--remove  | -r     Remove a package\n"\
+					"\t  --explicit, -e   \tRemove an explictly installed package\n"\
+					"\t  --all,      -a   \tRemove packages from all installed packages (dependencies included)\n"\
+					"\t  --group,    -g   \tRemove a package group\n"
+			;;
+		(*) echo -e "$0: Invalid argument: $1\n" "\rExecute $0 --help to list all arguments"
+			return 1 ;;
+	esac
+	fi
+	[ $PACKAGE_INSTALL -eq 1 ] && pacman -Sl |\
+			awk '{print $1 "/" $2}' |\
+			fzf --preview 'pacman -Si {}' \
+				--layout=reverse \
+				--bind 'enter:execute(sudo pacman -Syu --noconfirm --needed {})' \
+			&& printf ''
+	[ $GROUP_INSTALL -eq 1 ] && pacman -Sgg | \
+			cut -d" " -f1 | \
+			uniq | \
+			fzf --preview 'pacman -Sgq {}' \
+				--layout=reverse \
+				--bind 'enter:execute(sudo pacman -Syu --noconfirm --needed {})' \
+			&& printf ''
+	[ $REMOVE_PACKAGE -eq 1 ] && pacman -Qqet | \
+			fzf \
+				--preview 'pacman -Qil {}' \
+				--layout=reverse \
+				--bind 'enter:execute(sudo pacman -Rsunc --noconfirm {})' \
+				--bind 'ctrl-r:reload(pacman -Qqet)' \
+			&& printf ''
+	[ $REMOVE_PACKAGE_ALL -eq 1 ] && pacman -Qq | \
+			fzf \
+				--preview 'pacman -Qil {}' \
+				--layout=reverse \
+				--bind 'enter:execute(sudo pacman -Rsunc --noconfirm {})' \
+				--bind 'ctrl-r:reload(pacman -Qq)' \
+			&& printf ''
+	[ $REOMVE_PACKAGE_GROUP -eq 1 ] && pacman -Qgg | \
+			cut -d" " -f1 | \
+			uniq | \
+			fzf  \
+				--preview 'pacman -Qgq {}'  \
+				--layout=reverse \
+				--bind 'enter:execute(sudo pacman -Rsunc --noconfirm {})' \
+				--bind 'ctrl-r:reload(pacman -Qgg | cut -d" " -f1 | uniq)' \
+			&& printf ''
+	return 0
+}
