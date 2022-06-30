@@ -7,15 +7,15 @@ Config {
      ]
    , bgColor =      "#434c5e"
    , fgColor =      "#969696"
-   , position =     Top
+   , position =     Static { xpos=10, ypos=1045, width=1900, height=30 }
    , border =       TopB
    , borderColor =  "#2f4f4f"
-   , iconRoot =     "/home/user/.xmonad/"
+   , iconRoot =     "/home/gh0st/.xmonad/"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = " <action=xdotool key super+d><icon=haskell_yellow.xpm/></action> <fc=#f4f3ed>[ %UnsafeStdinReader% ]</fc> }{ <fn=1>[ %battery% ][ <action=urxvt -n NetworkManager -e nmtui>%wlp2s0wi%</action> ][ %mydate% ][ <action=xdotool key XF86AudioMute>Vol: %volume%</action> ][ Brt: %brightness% ]|<action=xdotool key super+shift+a>[exit]</action></fn>"
+   , template = " <action=xdotool key super+d><icon=haskell.xpm/></action> <fc=#f4f3ed>[ %UnsafeStdinReader% ]</fc> }{ <fn=1>[ %battery% ][ <action=urxvt -n NetworkManager -e nmtui>%wlp2s0wi%</action> ][ %mydate% ][ <action=xdotool key XF86AudioMute>Vol: %volume%</action> ][ Brt: %brightness% ]|<action=xdotool key super+shift+a>[exit]</action></fn>"
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -88,7 +88,7 @@ Config {
                              , ("us"         , "<fc=#8B0000>US</fc>")
                              ]
 
-        , Run Com "getvolume" [] "volume" 1
+        , Run Com "/home/gh0st/.local/bin/getvolume" [] "volume" 1
         , Run Com "light"     ["-G"] "brightness" 1
         , Run UnsafeStdinReader
         ]

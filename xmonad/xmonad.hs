@@ -138,7 +138,7 @@ myFocusedBorderColor = "#188b77"
 -- Key bindings. Add, modify or remove key bindings here.
 --
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-myKeys conf@ XConfig {XMonad.modMask = modm} = M.fromList $
+myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     [ --deleted KeyBindings from the default config
       ((modm .|. shiftMask, xK_c), return())
     , ((modm .|. shiftMask, xK_j), return())
@@ -334,7 +334,7 @@ myLayout = smartBorders
   $ avoidStruts
   $ hiddenWindows
   $ trackFloating
-  $ gaps [ (U, 4), (D, 4), (R, 4), (L, 4) ]
+  $ gaps [ (U, 10), (D, 10), (R, 10), (L, 10) ]
   $ tiled
   ||| binary
   ||| tab
@@ -385,7 +385,7 @@ myLayout = smartBorders
 
 -- use spacingRaw instead of smartSpacing
 mySpacing :: l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
-mySpacing = spacingRaw True (Border 0 0 0 0) False (Border 4 4 4 4) True
+mySpacing = spacingRaw True (Border 0 0 0 0) False (Border 5 5 5 5) True
 
 -- Theme settings for the tabbed layout
 myTabConfig :: Theme
@@ -562,10 +562,9 @@ myStartupHook = do
   spawnOnce "nitrogen --restore &"
   spawnOnce "picom &"
   spawnOnce "lxqt-policykit-agent &"
-  spawnOnce "xsetroot -cursor_name left_ptr &"
   spawnOnce "xset r rate 300 50 &"
-  spawnOnce "ulauncher --hide-window &"
-  spawnOnce "numlockx &"
+  spawnOnce "xinput set-prop 'CUST0001:00 06CB:7E7E Touchpad' 'libinput Tapping Enabled' 1"
+  spawnOnce "xinput set-prop 'CUST0001:00 06CB:7E7E Touchpad' 'libinput Natural Scrolling Enabled' 1"
 ------------------------------------------------------------------------
 -- Status configuration
 
