@@ -129,7 +129,6 @@ alias vim='nvim'
 alias cat='bat --paging=never'
 alias awiki='find /usr/share/doc/arch-wiki/html/en -type f| fzf --layout=reverse --preview "elinks {}" && printf ""'
 alias :q="exit"
-export git_token=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
 export PATH=${PATH}:${HOME}/.local/bin:/home/gh0st/.local/share/gem/ruby/3.0.0/bin:${HOME}/.cargo/bin:${HOME}/.emacs.d/bin
 
 export KITTY_SHELL_INTEGRATION="no-cursor"
