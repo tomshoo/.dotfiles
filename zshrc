@@ -1,171 +1,135 @@
-# Load colours and then set prompt
-# Prompt preview:
-# [user@hostname]-[~]
-# >>>
-autoload -U colors && colors
-PS1="%{$fg[blue]%}%B[%b%{$fg[cyan]%}%n%{$fg[grey]%}%B@%b%{$fg[cyan]%}%m%{$fg[blue]%}%B]-%b%{$fg[blue]%}%B[%b%{$fg[white]%}%~%{$fg[blue]%}%B]%b
-%{$fg[cyan]%}%B>>>%b%{$reset_color%} "
-# Plugins
-plugins=(git battery)
-# ZSH history file
-HISTSIZE=100
-SAVEHIST=100
-HISTFILE=~/.zsh_history
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# Fancy auto-complete
-autoload -Uz compinit
-zstyle ':completion:*' menu select=0
-zmodload zsh/complist
-zstyle ':completion:*' format '>>> %d'
-compinit
-_comp_options+=(globdots) # hidden files are included
+# Path to your oh-my-zsh installation.
+ZSH=/usr/share/oh-my-zsh/
 
-# Keybindings section
-bindkey -e
-bindkey '^[[7~' beginning-of-line                               # Home key
-bindkey '^[[H' beginning-of-line                                # Home key
-if [[ "${terminfo[khome]}" != "" ]]; then
-  bindkey "${terminfo[khome]}" beginning-of-line                # [Home] - Go to beginning of line
-fi
-bindkey '^[[8~' end-of-line                                     # End key
-bindkey '^[[F' end-of-line                                     # End key
-if [[ "${terminfo[kend]}" != "" ]]; then
-  bindkey "${terminfo[kend]}" end-of-line                       # [End] - Go to end of line
-fi
-bindkey '^[[2~' overwrite-mode                                  # Insert key
-bindkey '^[[3~' delete-char                                     # Delete key
-bindkey '^[[C'  forward-char                                    # Right key
-bindkey '^[[D'  backward-char                                   # Left key
-bindkey '^[[5~' history-beginning-search-backward               # Page up key
-bindkey '^[[6~' history-beginning-search-forward                # Page down key
-
-# Navigate words with ctrl+arrow keys
-bindkey '^[Oc' forward-word                                     #
-bindkey '^[Od' backward-word                                    #
-bindkey '^[[1;5D' backward-word                                 #
-bindkey '^[[1;5C' forward-word                                  #
-bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
-bindkey '^[[Z' undo                                             # Shift+tab undo last action
-
-export LD_PRELOAD=""
-export EDITOR="vim"
-export PATH="$HOME/bin:/usr/lib/ccache/bin/:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin:/usr/bin/core_perl:/usr/games/bin:$PATH"
-
-# alias
-alias c="clear"
-alias cd..="cd .."
-alias curl="curl --user-agent 'noleak'"
-alias l="ls -ahls --color=auto"
-alias r="reset"
-alias shred="shred -zf"
-alias sl="ls --color=auto"
-alias vi="vim"
-alias ls="ls --color=auto"
-alias dir="dir --color=auto"
-alias vdir="vdir --color=auto"
-alias grep="grep --color=auto"
-alias fgrep="fgrep --color=auto"
-alias egrep="egrep --color=auto"
-alias wget="wget -c --user-agent 'noleak'"
-alias dd="dd status=progress"
-alias cp="cp -i"                          # confirm before overwriting something
-alias rm="rm -i"
-alias mv="mv -i"
-alias df="df -h"                          # human-readable sizes
-alias free="free -h"
-alias du="du -h"
-
-if [ -f ~/.zsh_aliases ]; then
-    . ~/.zsh_aliases
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+if [ $PIPENV_ACTIVE ]; then
+		ZSH_THEME="terminalparty"
+else
+		pfetch
+		ZSH_THEME="ys"
 fi
 
-if [ -f ~/.zsh_extra ]; then
-    . ~/.zsh_extra
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+
+# Uncomment the following line to change how often to auto-update (in days).
+# zstyle ':omz:update' frequency 13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(aliases git command-not-found sudo copypath copyfile copybuffer archlinux python rust zsh-interactive-cd fastfile themes pipenv web-search)
+
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+export EDITOR=nvim
+export MANPAGER="sh -c 'col -bx | bat -l man'"
+export RANGER_LOAD_DEFAULT_RC=false
+
+# Compilation flags
+export ARCHFLAGS="-arch x86_64"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+alias sudo="sudo -k"
+alias please="/usr/bin/sudo"
+alias update-grub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
+alias pacshow="pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)' ; echo"
+alias pacsearch="pacman -Slq | fzf --preview 'pacman -Si {}' --layout=reverse --bind 'enter:execute(pacman -Si {} | less)'; printf ''"
+
+ZSH_CACHE_DIR=$HOME/.cache/oh-my-zsh
+if [[ ! -d $ZSH_CACHE_DIR ]]; then
+  mkdir $ZSH_CACHE_DIR
 fi
 
-pactui () {
-	GROUP_INSTALL=0 
-	PACKAGE_INSTALL=0
-	REMOVE_PACKAGE=0
-	REMOVE_PACKAGE_ALL=0
-	REOMVE_PACKAGE_GROUP=0
-	[ $3 ] && echo "Unexpected argument $2" && return 1
-	if [ -z $1 ]; then PACKAGE_INSTALL=1 else;
-	case $1 in
-		("--install" | "-i")
-			if [ -z $2 ]; then PACKAGE_INSTALL=1 else;
-			case $2 in
-				("--package" | "-p") PACKAGE_INSTALL=1 ;;
-				("--group" | "-g") GROUP_INSTALL=1 ;;
-				(*) echo -e "$0: Invalid argument: $2\n" "\rExecute $0 --help to list all arguments" 
-					return 1
-					;;
-			esac
-			fi
-			;;
-		("--remove" | "-r")
-			if [ -z $2 ]; then REMOVE_PACKAGE_ALL=1 else;
-			case $2 in
-				("--explicit" | "-e") REMOVE_PACKAGE=1 ;;
-				("--all" | "-a") REMOVE_PACKAGE_ALL=1 ;;
-				("--group" | "-g") REOMVE_PACKAGE_GROUP=1 ;;
-				(*) echo -e "$0: Invalid argument: $2\n" "\rExecute $0 --help to list all arguments" 
-					return 1
-					;;
-			esac
-			fi
-			;;
-		("--help" | "-h" | "-?") 
-			echo -e "\n\rSimple script to install packages on archlinux\n"\
-					"\r\tUsage: pacinstall [argument]\n\n"\
-					"\rAvailable arguments are:\n\n"\
-					"\t--install | -i     Install a package\n"\
-					"\t  --package. -p    \tInstall a single package\n"\
-					"\t  --group,   -g    \tInstall a package group\n\n"\
-					"\t--remove  | -r     Remove a package\n"\
-					"\t  --explicit, -e   \tRemove an explictly installed package\n"\
-					"\t  --all,      -a   \tRemove packages from all installed packages (dependencies included)\n"\
-					"\t  --group,    -g   \tRemove a package group\n"
-			;;
-		(*) echo -e "$0: Invalid argument: $1\n" "\rExecute $0 --help to list all arguments"
-			return 1 ;;
-	esac
-	fi
-	[ $PACKAGE_INSTALL -eq 1 ] && pacman -Sl |\
-			awk '{print $1 "/" $2}' |\
-			fzf --preview 'pacman -Si {}' \
-				--layout=reverse \
-				--bind 'enter:execute(sudo pacman -Syu --noconfirm --needed {})' \
-			&& printf ''
-	[ $GROUP_INSTALL -eq 1 ] && pacman -Sgg | \
-			cut -d" " -f1 | \
-			uniq | \
-			fzf --preview 'pacman -Sgq {}' \
-				--layout=reverse \
-				--bind 'enter:execute(sudo pacman -Syu --noconfirm --needed {})' \
-			&& printf ''
-	[ $REMOVE_PACKAGE -eq 1 ] && pacman -Qqet | \
-			fzf \
-				--preview 'pacman -Qil {}' \
-				--layout=reverse \
-				--bind 'enter:execute(sudo pacman -Rsunc --noconfirm {})' \
-				--bind 'ctrl-r:reload(pacman -Qqet)' \
-			&& printf ''
-	[ $REMOVE_PACKAGE_ALL -eq 1 ] && pacman -Qq | \
-			fzf \
-				--preview 'pacman -Qil {}' \
-				--layout=reverse \
-				--bind 'enter:execute(sudo pacman -Rsunc --noconfirm {})' \
-				--bind 'ctrl-r:reload(pacman -Qq)' \
-			&& printf ''
-	[ $REOMVE_PACKAGE_GROUP -eq 1 ] && pacman -Qgg | \
-			cut -d" " -f1 | \
-			uniq | \
-			fzf  \
-				--preview 'pacman -Qgq {}'  \
-				--layout=reverse \
-				--bind 'enter:execute(sudo pacman -Rsunc --noconfirm {})' \
-				--bind 'ctrl-r:reload(pacman -Qgg | cut -d" " -f1 | uniq)' \
-			&& printf ''
-	return 0
-}
+source $ZSH/oh-my-zsh.sh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+#source ~/.config/zutils/pacutils.zsh
+#fpath+=~/.config/zfunc
+#
+alias zls="/usr/bin/ls --color=auto"
+alias ls="lsd -l"
+alias vim='nvim'
+alias cat='bat --paging=never'
+alias awiki='find /usr/share/doc/arch-wiki/html/en -type f| fzf --layout=reverse --preview "elinks {}" && printf ""'
+alias :q="exit"
+export git_token=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
+export PATH=${PATH}:${HOME}/.local/bin:/home/gh0st/.local/share/gem/ruby/3.0.0/bin:${HOME}/.cargo/bin:${HOME}/.emacs.d/bin
+
+export KITTY_SHELL_INTEGRATION="no-cursor"
