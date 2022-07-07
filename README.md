@@ -1,19 +1,21 @@
 # myDotFiles
+
 My Dotfiles and configuration for arch linux
 
 These are my configurations and themes for my setup of arch linux, and nothing else.
 
-## Requirements
-- alacritty
-- pamixer
-- light
-- dmenu
-- rofi
-- scrot
-- xclip
-- betterlockscreen
+## Apps used
 
-### Note:
-- For both vim and nvim run `:PluginInstall` and `:PluginUpdate` in the vim command mode for everything to work properly.
+- Alacritty
+- [Picom](https://github.com/jonaburg/picom/)
+- [Betterlockscreen](https://github.com/betterlockscreen/betterlockscreen)
+- Light
+- Pamixer
+- Xclip
+- [Swaybg](https://github.com/swaywm/swaybg)
+- [Waybar](https://github.com/Alexays/Waybar/)
+- [Foot](https://codeberg.org/dnkl/foot/)
+- [Dunst](https://github.com/dunst-project/dunst)
 
-- For tmux please refer to [this](https://github.com/tmux-plugins/tpm) and [this](https://www.nordtheme.com/docs/ports/tmux/installation) link if you want to use my config also the key bindings for selecting and pasting are adjusted to suite the vim bindings for ease of use.
+**Nvim uses [Vundle](https://github.com/VundleVim/Vundle.vim) for plugin management.**
+**Tmux uses [tpm](https://github.com/tmux-plugins/tpm) for plugin management.**
