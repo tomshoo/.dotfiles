@@ -1,0 +1,49 @@
+#!/bin/sh
+
+#LOCK=""
+#QUIT=""
+#SHUTDOWN=""
+#SUSPEND=""
+#HIBERNATE=""
+#RESTART=""
+
+
+LOCK="Lock"
+QUIT="Quit"
+SHUTDOWN="Shutdown"
+SUSPEND="Suspend"
+HIBERNATE="Hibernate"
+RESTART="Restart"
+
+ACTION=$(echo -e "$LOCK
+$QUIT
+$SUSPEND
+$HIBERNATE
+$SHUTDOWN
+$RESTART"|wofi --show dmenu)
+
+if [ "$ACTION" == $QUIT ]; then
+    if [ ! -z $(pidof Hyprland) ]; then
+        hyprctl dispatch exit 0
+    elif [ ! -z $(pidof river) ]; then
+        riverctl exit
+    else
+        bspc quit
+    fi
+elif [ "$ACTION" == "$LOCK" ]; then
+    if [ "$XDG_SESSION_TYPE" == "wayland" ]; then
+        swaylock \
+            -i /usr/share/backgrounds/catppuccin-wallpapers/waves/Waves\ Dark\ Alt\ 6016x6016.jpg \
+            -e -F --scaling=fill
+    else
+        betterlockscreen --lock "$@"
+    fi
+elif [ "$ACTION" == "$SUSPEND" ]; then
+    systemctl suspend
+elif [ "$ACTION" == "$HIBERNATE" ]; then
+    systemctl suspend-then-hibernate
+elif [ "$ACTION" == "$RESTART" ]; then
+    systemctl reboot
+elif [ "$ACTION" == "$SHUTDOWN" ]; then
+    systemctl poweroff
+fi
