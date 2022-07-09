@@ -16,4 +16,8 @@ done
 current=$(brightnessctl get)
 max=$(brightnessctl max)
 percent=$(echo "scale=2; ($current / $max) * 100" | bc)
-dunstify -h int:value:"$percent" -h string:x-canonical-private-synchronous:light "Brightness: ${percent}%" --timeout 500
+dunstify \
+    -h int:value:"$percent" \
+    -h string:x-canonical-private-synchronous:light \
+    "Brightness: $(echo $percent | cut -d. -f1)%" \
+    --timeout 500

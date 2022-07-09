@@ -15,8 +15,7 @@ while getopts d:i:m: flag; do
             if [ "$(pamixer --get-volume-human)" == "muted" ]; then
                 dunstify \
                     -h string:x-canonical-private-synchronous:audio \
-                    "Volume: " \
-                    "$(pamixer --get-volume-human)"
+                    "Volume: " "$(pamixer --get-volume-human)"
                 exit 0
             fi
             ;;
@@ -27,4 +26,4 @@ dunstify \
     -h int:value:`pamixer --get-volume-human` \
     -h string:x-canonical-private-synchronous:audio \
     "Volume: " \
-    --timeout 500
+    --timeout 1000

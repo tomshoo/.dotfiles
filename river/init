@@ -8,7 +8,7 @@ SCRIPT_PATH="$HOME/.config/river/scripts"
 alias n_map="riverctl map normal"
 
 riverctl float-filter-add app-id thunar
-riverctl float-filter-add app-id Thunar
+riverctl float-filter-add app-id Rofi
 
 riverctl border-color-focused 0x0cf7e8
 riverctl border-color-unfocused 0xa3b3bb
@@ -23,9 +23,8 @@ riverctl spawn "$HOME/.config/river/scripts/wallpaper.sh"
 riverctl spawn "$HOME/.config/river/scripts/waybar.sh"
 riverctl spawn "gsettings set org.gnome.desktop.wm.preferences button-layout ' '"
 
-riverctl spawn rivertile
+riverctl spawn "rivertile -main-ratio $MAIN_RATIO"
 riverctl default-layout rivertile
-riverctl send-layout-cmd rivertile "main-ratio $MAIN_RATIO"
 
 riverctl spawn dbus-launch
 
@@ -61,8 +60,8 @@ n_map Super+Shift bar send-layout-cmd rivertile "main-ratio 0.5"
 n_map Super comma send-layout-cmd rivertile "main-count +1"
 n_map Super period send-layout-cmd rivertile "main-count -1"
 
-n_map Control+Shift J swap next
-n_map Control+Shift Semicolon swap previous
+n_map Alt J swap next
+n_map Alt Semicolon swap previous
 
 riverctl map-pointer normal Super BTN_LEFT move-view
 riverctl map-pointer normal Super BTN_RIGHT resize-view

@@ -22,19 +22,6 @@ rule Ranger             sticky=on state=floating
 rule Thunar             sticky=on state=floating
 rule Zathura            state=tiled
 
-nitrogen --restore &
-picom &
-xinput set-prop 'CUST0001:00 06CB:7E7E Touchpad' 'libinput Tapping Enabled' 1
-xinput set-prop 'CUST0001:00 06CB:7E7E Touchpad' 'libinput Natural Scrolling Enabled' 1
-xsetroot -cursor_name left_ptr
-killall -q Scratch & alacritty --class=scratch,Scratch --command tmux &
-polybar-msg cmd quit
-polybar --config=~/.config/polybar/config.ini --reload topleft &
-polybar --config=~/.config/polybar/config.ini --reload topcenter &
-polybar --config=~/.config/polybar/config.ini --reload topright &
-lxqt-policykit-agent &
-systemctl restart --user dunst.service
-
 conf border_width         0
 conf window_gap          12
 
@@ -42,7 +29,18 @@ conf split_ratio          0.52
 conf borderless_monocle   true
 conf gapless_monocle      false
 
-conf focused_border_color \#14b3f7
-conf normal_border_color  \#176fad
+conf focused_border_color  \#14b3f7
+conf normal_border_color   \#176fad
 conf presel_feedback_color \#176fad
 
+$HOME/.config/bspwm/scripts/wallpaper.sh
+
+picom --experimental-backend &
+xinput set-prop 'CUST0001:00 06CB:7E7E Touchpad' 'libinput Tapping Enabled' 1
+xinput set-prop 'CUST0001:00 06CB:7E7E Touchpad' 'libinput Natural Scrolling Enabled' 1
+xsetroot -cursor_name left_ptr
+killall -q Scratch & alacritty --class=scratch,Scratch --command tmux &
+polybar-msg cmd quit
+polybar --config=~/.config/polybar/config.ini --reload topbar &
+lxqt-policykit-agent &
+systemctl restart --user dunst.service
