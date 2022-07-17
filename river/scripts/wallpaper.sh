@@ -11,5 +11,5 @@ len=$(for i in ${!walls[@]}; do
 done | wc -l)
 
 wall=${walls[$(( $RANDOM % $len ))]}
-echo "swaybg --mode fill $wall"
-swaybg --mode fill --image "$wall"
+swaybg --mode fill --image "$wall" &
+cp "$wall" /tmp/current_wallpaper

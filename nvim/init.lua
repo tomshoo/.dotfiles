@@ -1,7 +1,26 @@
+require('plugins')
+require("maps")
+
+local cfgpath = vim.fn.stdpath('config')
+
+-- Function to autoload neovim config on write
+function _G.UpdateConfig()
+    if vim.fn.expand('%:p:h') == cfgpath then
+        vim.cmd [[
+        augroup vim_use_config
+            autocmd!
+            autocmd BufWritePost init.lua source <afile>
+        augroup end
+        ]]
+    end
+end
+
 vim.cmd [[
 let $PATH .= ":/home/gh0st/.cargo/bin/"
 syntax on
 filetype plugin indent on
+
+autocmd BufEnter * lua UpdateConfig()
 
 cnoreabbrev <expr> W ((getcmdtype() is# ':' && getcmdline() is# 'W')?('w'):('W'))
 cnoreabbrev <expr> Q ((getcmdtype() is# ':' && getcmdline() is# 'Q')?('q'):('Q'))
@@ -15,37 +34,6 @@ set cursorline
 set fillchars+=stl:\ ,stlnc:\
 
 set rtp+=~/.config/nvim/
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'windwp/nvim-autopairs'
-Plugin 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
-Plugin 'lukas-reineke/indent-blankline.nvim'
-Plugin 'navarasu/onedark.nvim'
-Plugin 'godlygeek/tabular'
-Plugin 'preservim/vim-markdown'
-Plugin 'antoinemadec/FixCursorHold.nvim'
-Plugin 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plugin 'mhinz/vim-startify'
-Plugin 'vim-airline/vim-airline'
-Plugin 'rbgrouleff/bclose.vim'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'preservim/nerdcommenter'
-Plugin 'lambdalisue/fern.vim'
-Plugin 'lilydjwg/colorizer'
-Plugin 'neoclide/coc.nvim', {'branch': 'release'}
-Plugin 'tpope/vim-fugitive'
-Plugin 'ryanoasis/vim-devicons'
-Plugin 'lambdalisue/nerdfont.vim'
-Plugin 'lambdalisue/fern-renderer-nerdfont.vim'
-Plugin 'elkowar/yuck.vim'
-Plugin 'lifepillar/vim-colortemplate'
-Plugin 'cocopon/iceberg.vim'
-Plugin 'preservim/tagbar'
-Plugin 'xolox/vim-session'
-Plugin 'xolox/vim-misc'
-Plugin 's1n7ax/nvim-terminal'
-call vundle#end()
 
 " Relative smartline
 :set number
@@ -80,93 +68,16 @@ endif
 " Spectial keys for rust
 augroup RustKeys
     autocmd!
-    autocmd FileType rust nmap <Leader>e :vsplit<CR> :CocCommand rust-analyzer.expandMacro<CR>
-augroup END
-
-" Fern tree key bindings
-function! FernInit() abort
-  nmap <buffer><expr>
-        \ <Plug>(fern-my-open-expand-collapse)
-        \ fern#smart#leaf(
-        \   "\<Plug>(fern-action-open:select)",
-        \   "\<Plug>(fern-action-expand)",
-        \   "\<Plug>(fern-action-collapse)",
-        \ )
-  nmap <buffer> <CR> <Plug>(fern-my-open-expand-collapse)
-  nmap <buffer> <2-LeftMouse> <plug>(fern-my-open-expand-collapse)
-  nmap <buffer> e <Plug>(fern-my-open-expand-collapse)
-  nmap <buffer> h <Plug>(fern-action-hidden:toggle)
-  nmap <buffer> r <Plug>(fern-action-reload)
-  nmap <buffer> <Space> <Plug>(fern-action-mark-toggle)
-  nmap <buffer> N <Plug>(fern-action-new-path)
-  nmap <buffer> M <Plug>(fern-action-rename)
-  nmap <buffer> <Enter> <Plug>(fern-action-enter)
-  nmap <buffer> <BS> <Plug>(fern-action-leave)
-  nmap <buffer> o <Plug>(fern-action-open)
-  nmap <buffer> s <Plug>(fern-action-open:split)
-  nmap <buffer> S <Plug>(fern-action-open:vsplit)
-  nmap <buffer> t <Plug>(fern-action-open:tabedit)
-  nmap <buffer> O <Plug>(fern-action-open:select)
-  nmap <buffer> d <Plug>(fern-action-trash)
-  nmap <buffer> D <Plug>(fern-action-remove)
-  nmap <buffer> ~ <Plug>(fern-action-terminal)
-endfunction
-
-augroup FernGroup
-    autocmd!
-    autocmd FileType fern call FernInit()
+    autocmd FileType rust nnoremap <Leader>e :lua require('rust-tools.expand_macro').expand_macro()<CR>
+    autocmd FileType rust nnoremap <Leader>i :lua require('rust-tools.inlay_hints').toggle_inlay_hints()<CR>
+    autocmd FileType rust nnoremap <Leader>r :lua require('rust-tools.runnables').runnables()<CR>
+    autocmd FileType rust nnoremap <Leader>h :lua require'rust-tools.hover_actions'.hover_actions()<CR>
 augroup END
 
 set guicursor=v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor21,n:hor10
-function! s:hijack_directory() abort
-  let path = expand('%:p')
-  if !isdirectory(path)
-    return
-  endif
-  bwipeout %
-  execute printf('Fern %s', fnameescape(path))
-endfunction
-
-augroup my_fern_hijack
-  autocmd!
-  autocmd BufEnter * ++nested call s:hijack_directory()
-augroup END
 ]]
--- Imports
-local onedark           = require("onedark")
-local autopairs         = require("nvim-autopairs")
-local treesitter_config = require("nvim-treesitter.configs")
-local nvterm            = require("nvim-terminal")
-local indentguide       = require("indent_blankline")
-
-indentguide.setup ({
-    show_current_context = true,
-    show_current_context_start = true,
-    space_char_blankline = " ",
-    show_end_of_line = true
-})
-
-nvterm.setup()
-
-onedark.setup ({
-    style = "darker",
-    transparent = true,
-})
-onedark.load()
-
-autopairs.setup({
-    disable_filetype = {
-            "fern",
-            "vim",
-            "scratch",
-            "nofile"
-        },
-    check_ts = true,
-    }
-)
-
 -- Configure vim airline
-vim.g.airline_theme="onedark"
+vim.g.airline_theme = "onedark"
 vim.g["airline#extensions#tabline#enabled"] = 1
 if not vim.fn.exists("g:airline_symbols")
 then
@@ -183,20 +94,20 @@ vim.opt.listchars:append("trail:␠")
 vim.opt.listchars:append("nbsp:⎵")
 vim.opt.listchars:append("space:·")
 
-vim.opt.ruler           = true
-vim.opt.mouse           = "a"
-vim.opt.list            = true
+vim.opt.ruler = true
+vim.opt.mouse = "a"
+vim.opt.list  = true
 
-vim.opt.title           = true
-vim.opt.showmode        = true
-vim.opt.tabstop         = 4
-vim.opt.smartindent     = true
-vim.opt.softtabstop     = 4
-vim.opt.expandtab       = true
-vim.opt.shiftwidth      = 4
-vim.opt.ignorecase      = true
-vim.opt.hidden          = true
-vim.opt.wildmenu        = true
+vim.opt.title       = true
+vim.opt.showmode    = true
+vim.opt.tabstop     = 4
+vim.opt.smartindent = true
+vim.opt.softtabstop = 4
+vim.opt.expandtab   = true
+vim.opt.shiftwidth  = 4
+vim.opt.ignorecase  = true
+vim.opt.hidden      = true
+vim.opt.wildmenu    = true
 
 vim.g.colorizer_startup = 1
 
@@ -204,7 +115,7 @@ vim.g.colorizer_startup = 1
 if vim.fn.has('conceal')
 then
     vim.opt.conceallevel = 2
-    vim.opt.concealcursor="niv"
+    vim.opt.concealcursor = "niv"
 end
 
 -- Fern extra settings
@@ -212,72 +123,57 @@ vim.g["fern#disable_default_mappings"] = 1
 vim.g["fern#renderer"]                 = "nerdfont"
 
 -- Vim session settings
-vim.g.session_autosave                 = "no"
-vim.g.session_autoload                 = "yes"
-vim.g.minimap_auto_start               = 1
-vim.g.minimap_git_colors               = 1
+vim.g.session_autosave   = "no"
+vim.g.session_autoload   = "yes"
+vim.g.minimap_auto_start = 1
+vim.g.minimap_git_colors = 1
 
 -- Some thing I had in my old config dont really remember why
-vim.g.cursorhold_updatetime            = 100
+vim.g.cursorhold_updatetime = 100
 
 -- Disable netrw
-vim.g.loaded_netrw                     = 1
-vim.g.loaded_netrwPlugin               = 1
-vim.g.loaded_netrwSettings             = 1
-vim.g.loaded_netrwFileHandlers         = 1
+vim.g.loaded_netrw             = 1
+vim.g.loaded_netrwPlugin       = 1
+vim.g.loaded_netrwSettings     = 1
+vim.g.loaded_netrwFileHandlers = 1
 
 -- Configure minimap
 vim.g.minimap_block_filetypes = {
     "startify",
-    "fern",
-    "vundle",
     "tagbar",
-}
-vim.g.minimap_block_filetypes = {
+    "ale-fix-suggest",
     "fugitive",
-    "fern",
-    "vundle",
-    "ale-fix-suggest"
+    "NvimTree",
+    "help",
+    "scratch",
+    ""
 }
+
+vim.g.minimap_block_buftypes = {
+    "terminal",
+    "startify",
+    "nofile"
+}
+
 vim.g.minimap_close_bufftypes = {
     "nofile",
     "terminal",
     "prompt",
     "quickfix",
-    "nowrite"
+    "nowrite",
 }
 vim.g.startify_session_before_save = {
     "TagbarClose",
     "MinimapClose",
-    "FernDo quit"
+    "NvimTreeClose"
 }
-
--- Configure treesitter
-treesitter_config.setup {
-  ensure_installed = { "c", "lua", "rust", "python", "vim" },
-  sync_install = false,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = true,
-  }
-}
-
--- Function to map key bindings in lua
-function map(mode, key, action, opts)
-    local options = { noremap = true }
-    if opts
-        then
-        options = vim.tbl_extend("force", options, opts)
-    end
-    vim.api.nvim_set_keymap(mode, key, action, options)
-end
 
 -- VSCode like Home key
 function ExtendedHome()
     local column = vim.fn.col('.')
     vim.cmd "normal! ^"
     if column == vim.fn.col('.')
-        then
+    then
         vim.cmd "normal! 0"
     end
 end
@@ -293,40 +189,6 @@ function Scratch()
     ]]
 end
 
--- Configure keybinds
-map("n" , "<S-h>"        , "<C-w>h"                                          , { noremap = false })
-map("n" , "<S-j>"        , "<C-w>j"                                          , { noremap = false })
-map("n" , "<S-k>"        , "<C-w>k"                                          , { noremap = false })
-map("n" , "<S-l>"        , "<C-w>l"                                          , { noremap = false })
-
-map("n" , "<Leader>sv"   , "<C-w>v"                                          , { noremap = false })
-map("n" , "<Leader>sh"   , "<C-w>h"                                          , { noremap = false })
-
-map("n" , "<Leader>wn"   , ":w <bar> bn<CR>")
-map("n" , "<Leader>wp"   , ":w <bar> bp<CR>")
-
-map("n" , "<Leader>bn"   , ":bn<CR>")
-map("n" , "<Leader>bp"   , ":bp<CR>")
-map("n" , "<Leader>bq"   , ":bd<CR>")
-map("n" , "<Leader>bQ"   , ":bw<CR>")
-
-map("n" , "<Leader>u"    , ":TSToggle highlight<CR>"                         , { silent = true })
-map("n" , "<F3>"         , ":TagbarToggle<CR>"                               , { silent = true })
-map("n" , "<F4>"         , ":MinimapToggle<CR>"                              , { silent = true })
-map("n" , "<Leader><F4>" , ":MinimapRescan<CR> :MinimapRefresh<CR>"          , { silent = true })
-
-map("n" , "<F2>"         , ":Fern . -drawer -toggle -width=30<CR>"           , { silent = true })
-map("n" , "<Leader><F2>" , ":Fern . -drawer -toggle -width=30 -reveal=%<CR>" , { silent = true })
-
-map("n" , "<Home>"       , ":lua ExtendedHome()<CR>"                         , { silent = true })
-map("i" , "<Home>"       , "<C-O>:lua ExtendedHome()<CR>"                    , { silent = true })
-
-map("n" , "<Leader>s"    , ":lua Scratch()<CR>"                              , { silent = true })
-
-
--- Some more vim only keybinds
-vim.cmd [[
-if exists('g:neovide')
-    so ~/.config/nvim/ginit.lua
-endif
-]]
+if vim.fn.exists('g:neovide') then
+    require("ginit")
+end

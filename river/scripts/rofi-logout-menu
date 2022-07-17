@@ -8,19 +8,29 @@
 #RESTART=""
 
 
-LOCK="Lock"
-QUIT="Quit"
-SHUTDOWN="Shutdown"
-SUSPEND="Suspend"
-HIBERNATE="Hibernate"
-RESTART="Restart"
+LOCK=" Lock"
+QUIT=" Quit"
+SHUTDOWN=" Shutdown"
+SUSPEND=" Suspend"
+HIBERNATE=" Hibernate"
+RESTART=" Restart"
 
 ACTION=$(echo -e "$LOCK
 $QUIT
 $SUSPEND
 $HIBERNATE
 $SHUTDOWN
-$RESTART"|wofi --show dmenu)
+$RESTART"|wofi --conf "$HOME/.config/wofi/config_alt" --show dmenu)
+
+echo $ACTION
+
+function lock() {
+    if [ -f /tmp/current_wallpaper ]; then
+        swaylock -s fill -i /tmp/current_wallpaper
+    else
+        swaylock -c 000000
+    fi
+}
 
 if [ "$ACTION" == $QUIT ]; then
     if [ ! -z $(pidof Hyprland) ]; then
@@ -28,20 +38,14 @@ if [ "$ACTION" == $QUIT ]; then
     elif [ ! -z $(pidof river) ]; then
         riverctl exit
     else
-        bspc quit
+        echo "Fuck off...!!!"
     fi
 elif [ "$ACTION" == "$LOCK" ]; then
-    if [ "$XDG_SESSION_TYPE" == "wayland" ]; then
-        swaylock \
-            -i /usr/share/backgrounds/catppuccin-wallpapers/waves/Waves\ Dark\ Alt\ 6016x6016.jpg \
-            -e -F --scaling=fill
-    else
-        betterlockscreen --lock "$@"
-    fi
+    lock
 elif [ "$ACTION" == "$SUSPEND" ]; then
-    systemctl suspend
+    lock && systemctl suspend
 elif [ "$ACTION" == "$HIBERNATE" ]; then
-    systemctl suspend-then-hibernate
+    lock && systemctl suspend-then-hibernate
 elif [ "$ACTION" == "$RESTART" ]; then
     systemctl reboot
 elif [ "$ACTION" == "$SHUTDOWN" ]; then

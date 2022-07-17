@@ -1,85 +1,30 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
-    font-family: FontAwesome, Iosevka, Helvetica, Arial, sans-serif;
-    font-size: 15px;
-    padding: 3px 7px;
+    font-family: JetBrainsMonoNL, "Font Awesome 6 Brands", "Font Awesome 6 Free", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    padding: 3px 0px;
 }
 
 window#waybar {
     background-color: rgba(64, 70, 71, 0.95);
     margin: 0;
-    border-radius: 25px;
+    border-radius: 20px;
     color: #d8dee9;
     transition-property: background-color;
     transition-duration: .5s;
 }
 
-window#waybar.hidden {
-    opacity: 0.2;
-}
-
-/*
-window#waybar.empty {
-    background-color: transparent;
-}
-window#waybar.solo {
-    background-color: #FFFFFF;
-}
-*/
-
-window#waybar.termite {
-    background-color: #3F3F3F;
-}
-
-window#waybar.chromium {
-    background-color: #000000;
-    border: none;
-}
-
-#workspaces {
-    border-radius: 25px;
-    padding: 5px 15px 5px 15px;
-    background-color: #d8dee9;
-    color: #1b1b1b;
-}
-
-#workspaces button {
-    color: #1b1b1b;
-    /* Use box-shadow instead of border so the text isn't offset */
-    box-shadow: inset 0 -3px transparent;
-    /* Avoid rounded borders under each workspace name */
-    border-radius: 0;
-}
-
-/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
-#workspaces button:hover {
-    background: rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 -2px #4c666a;
-}
-
-#workspaces button.active {
-    background-color: #a5abb6;
-    color: #2b2b2b;
-    box-shadow: inset 0 -3px #2b2b2b;
-}
-
-#workspaces button.urgent {
-    background-color: #eb4d4b;
-}
-
 #tags {
-    border-radius: 25px;
-    margin-left: 5px;
-    margin-left: 5px;
+    background-color: #d8dee9;
+    border-radius: 15px;
     padding: 0px 15px 0px 15px;
-    background-color: rgba(0,0,0,0);
     color: #1b1b1b;
 }
 
 #tags button {
     color: #1b1b1b;
-    margin: 0 2px;
-    padding: 0px 4px 0px 4px;
+    margin: 0.5px 2px;
+    padding: 0px 7px 0px 7px;
 }
 
 #tags button:hover {
@@ -121,7 +66,7 @@ window#waybar.chromium {
 #mode,
 #idle_inhibitor,
 #mpd {
-    padding: 5px 15px 5px 15px;
+    padding: 0px 15px 0px 15px;
     color: #ffffff;
 }
 
@@ -131,24 +76,24 @@ window#waybar.chromium {
 }
 
 /* If workspaces is the leftmost module, omit left margin */
-.modules-left > widget:first-child > #workspaces {
-    margin-left: 0;
+.modules-left > widget:first-child > #custom-start {
+    margin-left: 10px;
 }
 
 /* If workspaces is the rightmost module, omit right margin */
-.modules-right > widget:last-child > #workspaces {
-    margin-right: 0px;
+.modules-right > widget:last-child > #custom-power {
+    margin-right: 10px;
 }
 
 #clock {
-    padding: 5px 15px 5px 15px;
-    border-radius: 25px;
+    padding: 0px 15px 0px 15px;
+    border-radius: 15px;
     background-color: #1b1b1b;
 }
 
 #battery {
-    border-radius: 25px;
-    padding: 5px 15px 5px 15px;
+    border-radius: 15px;
+    padding: 0px 15px 0px 15px;
     background-color: #301b1c;
     color: #0cf7e8;
 }
@@ -175,49 +120,41 @@ window#waybar.chromium {
     animation-direction: alternate;
 }
 
-label:focus {
-    background-color: #000000;
-}
-
 #cpu {
-    border-radius: 25px;
-    padding: 5px 15px 5px 15px;
+    border-radius: 15px;
+    padding: 0px 15px 0px 15px;
     background-color: #1b1b1b;
     color: #d8dee9;
 }
 
 #memory {
-    border-radius: 25px;
-    padding: 5px 15px 5px 15px;
+    border-radius: 15px;
+    padding: 0px 15px 0px 15px;
     background-color: #1b1b1b
 }
 
-#disk {
-    background-color: #964B00;
-}
-
 #backlight {
-    border-radius: 25px;
+    border-radius: 15px;
     background-color: #1b1b1b;
 }
 
 #network {
-    border-radius: 25px;
-    padding: 5px 15px 5px 15px;
+    border-radius: 15px;
+    padding: 0px 15px 0px 15px;
     background-color: #1b1b1b;
     color: #0cf7e8;
 }
 
 #network.disconnected {
-    border-radius: 25px;
+    border-radius: 15px;
     background-color: #1b1b1b;
     color: #4c666a;
 }
 
 #pulseaudio {
     background-color: #1b1b1b;
-    border-radius: 25px;
-    padding: 5px 15px 5px 15px;
+    border-radius: 15px;
+    padding: 0px 15px 0px 15px;
     color: #d8dee9;
 }
 
@@ -226,30 +163,8 @@ label:focus {
     color: #4c666a;
 }
 
-#custom-media {
-    background-color: #66cc99;
-    color: #2a5c45;
-    min-width: 100px;
-}
-
-#custom-media.custom-spotify {
-    background-color: #66cc99;
-}
-
-#custom-media.custom-vlc {
-    background-color: #ffa000;
-}
-
-#temperature {
-    background-color: #f0932b;
-}
-
-#temperature.critical {
-    background-color: #eb4d4b;
-}
-
 #tray {
-    border-radius: 25px;
+    border-radius: 15px;
     padding: 5px 15px 5px 15px;
     background-color: #1b1b1b;
 }
@@ -261,15 +176,6 @@ label:focus {
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
     background-color: #f52f2f;
-}
-
-#idle_inhibitor {
-    background-color: #2d3436;
-}
-
-#idle_inhibitor.activated {
-    background-color: #ecf0f1;
-    color: #2d3436;
 }
 
 #mpd {
@@ -291,50 +197,24 @@ label:focus {
     background-color: #4c666a;
 }
 
-#language {
-    background: #00b093;
-    color: #740864;
-    padding: 0 5px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state {
-    /*background: #97e1ad;*/
-    border: 5px;
-    border-color: #aced5c;
-    color: #f4f3ed;
-    padding: 0 0px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state > label {
-    padding: 0 5px;
-}
-
-#keyboard-state > label.locked {
-    background: rgba(0, 0, 0, 0.2);
-}
-
 #custom-start {
-    border-radius: 25px;
+    border-radius: 15px;
     padding: 0px 15px 0px 15px;
     background-color: #2b2b2b;
-    font-size: 25px;
     color: #14b3f7;
 }
+
 #custom-power {
     padding: 0px 15px 0px 15px;
-    border-radius: 25px;
+    border-radius: 15px;
     font-size: 25px;
     background-color: #301b1c;
     color: #24c796;
 }
 
 #custom-warp {
-    padding: 5px 15px 5px 15px;
-    border-radius: 25px;
+    padding: 0px 15px 0px 15px;
+    border-radius: 15px;
     background-color: #071a24;
     color: #d8dee9;
 }

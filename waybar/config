@@ -1,4 +1,5 @@
 {
+    // asd
     "width": 1900,
     "height": 43,
     "margin": 10,
@@ -53,7 +54,7 @@
     },
     "memory": {
         "interval": 5,
-        "format": " {}%"
+        "format": " {}%"
     },
     "temperature": {
         // "thermal-zone": 2,
@@ -89,12 +90,12 @@
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
-        "format": " {icon}  {volume}% -  {format_source}",
+        "format": " {icon} {volume}% | {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": "  {format_source}",
-        "format-source": "  {volume}%",
-        "format-source-muted": "  ",
+        "format-muted": " | {format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": "",
         "format-icons": {
             "headphone": "",
             "default": ["", "", ""]
@@ -103,8 +104,8 @@
         "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
     },
     "custom/start": {
-        "format": "",
-        "on-click": "rofi -show drun -icon-theme 'Vimix-Beryl-dark'"
+        "format": "<span font_family='Iosevka' font_size='20pt'></span>",
+        "on-click": "wofi --show drun"
     },
     "custom/power": {
         "format": "⏻",

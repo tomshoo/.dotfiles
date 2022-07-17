@@ -1,0 +1,10 @@
+hide_scroll=false
+height=50%
+width=20%
+prompt=Quit menu...
+lines=8
+location=3
+term=footclient
+insensitive=true
+allow_images=true
+parse_action=true

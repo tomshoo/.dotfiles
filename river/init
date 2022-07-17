@@ -1,94 +1,10 @@
 #!/bin/sh
 
-MAIN_RATIO="0.55"
-MAIN_LOW="0.25"
-MAIN_HIGH="0.75"
-SCRIPT_PATH="$HOME/.config/river/scripts"
-
-alias n_map="riverctl map normal"
-
-riverctl float-filter-add app-id thunar
-riverctl float-filter-add app-id Rofi
+export MAIN_RATIO="0.55"
+export MOZ_ENABLE_WAYLAND=1
 
 riverctl border-color-focused 0x0cf7e8
 riverctl border-color-unfocused 0xa3b3bb
 
-dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK MOZ_ENABLE_WAYLAND &
-systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP MOZ_ENABLE_WAYLAND &
-
-riverctl input "1739:32382:CUST0001:00_06CB:7E7E_Touchpad" tap enabled
-riverctl input "1739:32382:CUST0001:00_06CB:7E7E_Touchpad" natural-scroll enabled
-
-riverctl spawn "$HOME/.config/river/scripts/wallpaper.sh"
-riverctl spawn "$HOME/.config/river/scripts/waybar.sh"
-riverctl spawn "gsettings set org.gnome.desktop.wm.preferences button-layout ' '"
-
-riverctl spawn "rivertile -main-ratio $MAIN_RATIO"
-riverctl default-layout rivertile
-
-riverctl spawn dbus-launch
-
-riverctl spawn "foot --server"
-
-n_map Super Return spawn footclient
-n_map Super E spawn thunar
-n_map Alt P spawn "$HOME/.config/river/scripts/wallpaper.sh &"
-n_map Super Space spawn 'wofi --show drun'
-n_map Super W close
-n_map Super+Alt Q exit
-
-n_map Super+Control J move left 100
-n_map Super+Control K move down 100
-n_map Super+Control L move up 100
-n_map Super+Control Semicolon move right 100
-
-n_map Super+Shift J resize horizontal 100
-n_map Super+Shift K resize vertical -100
-n_map Super+Shift L resize vertical 100
-n_map Super+Shift Semicolon resize horizontal -100
-
-n_map Super J focus-view next
-n_map Super Semicolon focus-view previous
-n_map Super M zoom
-
-n_map Alt+Shift J send-layout-cmd rivertile "main-ratio -0.01"
-n_map Alt+Shift Semicolon send-layout-cmd rivertile "main-ratio +0.01"
-n_map Super Equal send-layout-cmd rivertile "main-ratio $MAIN_RATIO"
-n_map Super bracketleft send-layout-cmd rivertile "main-ratio $MAIN_LOW"
-n_map Super bracketright send-layout-cmd rivertile "main-ratio $MAIN_HIGH"
-n_map Super+Shift bar send-layout-cmd rivertile "main-ratio 0.5"
-n_map Super comma send-layout-cmd rivertile "main-count +1"
-n_map Super period send-layout-cmd rivertile "main-count -1"
-
-n_map Alt J swap next
-n_map Alt Semicolon swap previous
-
-riverctl map-pointer normal Super BTN_LEFT move-view
-riverctl map-pointer normal Super BTN_RIGHT resize-view
-
-for i in $(seq 1 9); do
-    tags=$((1 << ($i - 1)))
-    n_map Super $i set-focused-tags $tags
-    n_map Super+Shift $i set-view-tags $tags
-done
-
-n_map Super F toggle-fullscreen
-n_map Super+Shift S toggle-float
-
-for mode in normal locked; do
-    riverctl map $mode None XF86AudioRaiseVolume spawn "$SCRIPT_PATH/volume -i 5"
-    riverctl map $mode None XF86AudioLowerVolume spawn "$SCRIPT_PATH/volume -d 5"
-    riverctl map $mode None XF86AudioMute spawn "$SCRIPT_PATH/volume -m 0"
-    riverctl map $mode None XF86MonBrightnessUp spawn "$SCRIPT_PATH/brightness -i 2.5"
-    riverctl map $mode None XF86MonBrightnessDown spawn "$SCRIPT_PATH/brightness -d 2.5"
-
-    riverctl map $mode None Print spawn "grim -t png && dunstify -a Grim 'New Screenshot' 'Screenshot saved in ~/Pictures'"
-    riverctl map $mode Control Print spawn "grim -t png - | wl-copy -t image/png && dunstify -a Grim 'New Screenshot' 'Screenshot saved to clipboard'"
-done
-
-n_map Super+Alt J send-layout-cmd rivertile "main-location left"
-n_map Super+Alt K send-layout-cmd rivertile "main-location bottom"
-n_map Super+Alt L send-layout-cmd rivertile "main-location top"
-n_map Super+Alt Semicolon send-layout-cmd rivertile "main-location right"
-
-n_map Control+Alt Delete spawn /home/gh0st/.config/river/scripts/rofi-logout-menu
+luajit $HOME/.config/river/init.lua
+exec rivertile -main-ratio $MAIN_RATIO
