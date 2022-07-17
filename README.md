@@ -17,5 +17,5 @@ These are my configurations and themes for my setup of arch linux, and nothing e
 - [Foot](https://codeberg.org/dnkl/foot/)
 - [Dunst](https://github.com/dunst-project/dunst)
 
-**Nvim uses [Vundle](https://github.com/VundleVim/Vundle.vim) for plugin management.**
-**Tmux uses [tpm](https://github.com/tmux-plugins/tpm) for plugin management.**
+**Nvim uses [Packer](https://github.com/wbthomason/packer.nvim) for plugin management.**
+**Tmux uses [TPM](https://github.com/tmux-plugins/tpm) for plugin management.**
