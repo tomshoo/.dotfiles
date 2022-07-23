@@ -1,0 +1,35 @@
+@import "colors.rasi"
+
+configuration {
+    font: "Font Awesome 6 Free 60";
+}
+
+window {
+    width: 887px;
+    background-color: @bg-color;
+    border-radius: 25px;
+    children: ["listview"];
+    border-color: #14b3f7;
+}
+
+listview {
+    padding: 20px;
+    orientation: horizontal;
+    layout: horizontal;
+}
+
+element normal.normal, element alternate.normal {
+    text-color: @fg-color;
+    background-color: @bg-color-alt;
+}
+
+element selected.normal {
+    text-color: @fg-sel;
+    background-color: @bg-sel;
+}
+
+element {
+    border-radius: 10px;
+    padding: 25px;
+    margin: 2.5px;
+}

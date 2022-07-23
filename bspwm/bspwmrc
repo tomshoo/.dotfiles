@@ -44,3 +44,4 @@ polybar-msg cmd quit
 polybar --config=~/.config/polybar/config.ini --reload topbar &
 lxqt-policykit-agent &
 systemctl restart --user dunst.service
+mpc add /

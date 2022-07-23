@@ -20,6 +20,9 @@ local lsp_config = {
     rust_analyzer = {},
     bashls = {},
     asm_lsp = {},
+    jsonls = {},
+    cssls = {},
+    vimls = {}
 }
 
 function _G.setup(abilities)

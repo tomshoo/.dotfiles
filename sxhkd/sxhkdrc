@@ -17,10 +17,10 @@ super + Escape
 
 # Launch custom scripts
 ctrl + alt + Delete
-    ~/.local/bin/rofi-logout-menu
+    ~/.config/bspwm/scripts/logout.sh
 
 super + F12
-    ~/.local/bin/scratchpad.sh
+    ~/.config/bspwm/scripts/scratchpad.sh
 
 super + {_,shift +,ctrl +}apostrophe
     bspc node @parent --rotate {90,180,270}

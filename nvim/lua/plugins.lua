@@ -7,14 +7,15 @@ vim.cmd [[
   augroup end
 ]]
 
-return require('packer').startup(
+local packer = require("packer")
+
+return packer.startup({
     function(use)
         use 'wbthomason/packer.nvim'
         use "s1n7ax/nvim-terminal"
         use "preservim/tagbar"
         use "preservim/vim-markdown"
         use "godlygeek/tabular"
-        use "mhinz/vim-startify"
         use 'xolox/vim-session'
         use 'xolox/vim-misc'
         use 'lifepillar/vim-colortemplate'
@@ -24,6 +25,73 @@ return require('packer').startup(
         use 'antoinemadec/FixCursorHold.nvim'
         use 'tpope/vim-fugitive'
         use 'rbgrouleff/bclose.vim'
+        use {
+            'lewis6991/gitsigns.nvim',
+            config = function()
+                require('gitsigns').setup {}
+            end
+        }
+        use {
+            'folke/which-key.nvim',
+            config = function()
+                require('which-key').setup {}
+            end
+        }
+        use {
+            'goolord/alpha-nvim',
+            requires = { 'kyazdani42/nvim-web-devicons' },
+            config = function()
+                local dashboard = require('alpha.themes.dashboard')
+                dashboard.section.header.val = {
+                    [[|                                             ,--,  ,.-.       |]],
+                    [[|               ,                   \,       '-,-`,'-.' | ._   |]],
+                    [[|              /|           \    ,   |\         }  )/  / `-,', |]],
+                    [[|              [ ,          |\  /|   | |        /  \|  |/`  ,` |]],
+                    [[|              | |       ,.`  `,` `, | |  _,...(   (      .',  |]],
+                    [[|              \  \  __ ,-` `  ,  , `/ |,'      Y     (   /_L\ |]],
+                    [[|               \  \_\,``,   ` , ,  /  |         )         _,/ |]],
+                    [[|                \  '  `  ,_ _`_,-,<._.<        /         /    |]],
+                    [[|                 ', `>.,`  `  `   ,., |_      |         /     |]],
+                    [[|                   \/`  `,   `   ,`  | /__,.-`    _,   `\     |]],
+                    [[|               -,-..\  _  \  `  /  ,  / `._) _,-\`       \    |]],
+                    [[|                \_,,.) /\    ` /  / ) (-,, ``    ,        |   |]],
+                    [[|               ,` )  | \_\       '-`  |  `(               \   |]],
+                    [[|              /  /```(   , --, ,' \   |`<`    ,            |  |]],
+                    [[|             /  /_,--`\   <\  V /> ,` )<_/)  | \      _____)  |]],
+                    [[|       ,-, ,`   `   (_,\ \    |   /) / __/  /   `----`        |]],
+                    [[|      (-, \           ) \ ('_.-._)/ /,`    /                  |]],
+                    [[|      | /  `          `/ \\ V   V, /`     /                   |]],
+                    [[|   ,--\(        ,     <_/`\\     ||      /                    |]],
+                    [[|  (   ,``-     \/|         \-A.A-`|     /                     |]],
+                    [[|  ,>,_ )_,..(    )\          -,,_-`  _--`                     |]],
+                    [[| (_ \|`   _,/_  /  \_            ,--`                         |]],
+                    [[|  \( `   <.,../`     `-.._   _,-`                             |]],
+                }
+                dashboard.section.buttons.val = {
+                    dashboard.button("SPC f f", "  Find file", ":Telescope find_files hidden=true no_ignore=true<CR>"),
+                    dashboard.button("SPC f h", "  Recently opened files", "<cmd>Telescope frecency<CR>"),
+                    dashboard.button("SPC f r", "  Frecency/MRU", "<cmd>Telescope frecency<CR>"),
+                    dashboard.button("SPC f g", "  Find word", "<cmd>Telescope live_grep<cr>"),
+                    dashboard.button("SPC f p", "  Open recent Projects", "<cmd>Telescope projects<CR>"),
+                    dashboard.button("SPC s l", "  Open last session", "<cmd>SessionManager load_last_session<CR>"),
+                    dashboard.button("q", "Quit", "<cmd>quit<CR>"),
+                }
+                require 'alpha'.setup(dashboard.config)
+            end
+        }
+        use {
+            'nvim-telescope/telescope-frecency.nvim',
+            requires = 'tami5/sqlite.lua',
+            config = function()
+                require('telescope').setup()
+                require('telescope').load_extension('frecency')
+                require('telescope').load_extension('projects')
+            end
+        }
+        use {
+            'nvim-telescope/telescope.nvim',
+            requires = 'nvim-lua/plenary.nvim',
+        }
         use {
             'yioneko/nvim-yati',
             requires = 'nvim-treesitter/nvim-treesitter',
@@ -73,6 +141,7 @@ return require('packer').startup(
             requires = {
                 'hrsh7th/cmp-buffer',
                 'hrsh7th/cmp-path',
+                'hrsh7th/cmp-nvim-lua',
                 'hrsh7th/cmp-cmdline',
                 'hrsh7th/nvim-cmp',
                 'dcampos/nvim-snippy',
@@ -128,7 +197,9 @@ return require('packer').startup(
                     sources = {
                         { name = 'snippy' },
                         { name = 'nvim_lsp' },
-                        { name = 'buffer' }
+                        { name = 'path' },
+                        { name = 'buffer' },
+                        { name = 'nvim_lua' }
                     }
                 }
             end
@@ -145,7 +216,6 @@ return require('packer').startup(
         }
         use {
             'akinsho/toggleterm.nvim',
-            tag = 'v2.*',
             config = function() require("toggleterm").setup {}
             end
         }
@@ -191,7 +261,8 @@ return require('packer').startup(
             event = { "BufEnter", "BufNewFile", "BufRead" },
             config = function() require("nvim-treesitter.configs").setup {
                     yati = { enable = true },
-                    ensure_installed = { "c", "lua", "rust", "python", "vim" },
+                    ensure_installed = { "c", "lua", "rust", "python", "vim", "toml", "bash", "comment", "rasi", "json",
+                        "jsonc", "cpp", "markdown" },
                     sync_install = false,
                     highlight = {
                         enable = true,
@@ -259,5 +330,20 @@ return require('packer').startup(
                 }
             end
         }
-    end
-)
+        use {
+            'ahmedkhalf/project.nvim',
+            config = function()
+                require('project_nvim').setup {
+                    silent_chdir = false
+                }
+            end
+        }
+    end,
+    config = {
+        display = {
+            open_fn = function()
+                return require("packer.util").float({ border = 'rounded' })
+            end
+        }
+    }
+})

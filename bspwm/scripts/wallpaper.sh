@@ -6,4 +6,6 @@ len=$(for i in ${!walls[@]}; do
     echo ${walls[$1]}
 done | wc -l)
 
-feh --bg-fill "${walls[$(( $RANDOM % $len ))]}"
+wallpaper="${walls[$(( $RANDOM % $len ))]}"
+feh --bg-fill "$wallpaper"
+betterlockscreen --update $wallpaper

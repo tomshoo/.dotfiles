@@ -55,11 +55,7 @@
 #input {
     border-radius: 10px;
     margin: 10px;
-    padding: 10px 20px;
+    padding: 5px 20px;
     border: 1.5px solid #0cf7e8;
     background-color: #2b2b2b;
-}
-#input image {
-    margin: 5px;
-    padding: 5px;
 }

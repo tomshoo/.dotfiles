@@ -32,7 +32,7 @@ function lock() {
     fi
 }
 
-if [ "$ACTION" == $QUIT ]; then
+if [ "$ACTION" == "$QUIT" ]; then
     if [ ! -z $(pidof Hyprland) ]; then
         hyprctl dispatch exit 0
     elif [ ! -z $(pidof river) ]; then
