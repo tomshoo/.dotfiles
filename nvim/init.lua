@@ -1,6 +1,7 @@
 require('plugins')
 require('aucmd')
 require("maps")
+require("config")
 
 vim.cmd [[
 let $PATH .= ":/home/gh0st/.cargo/bin/"

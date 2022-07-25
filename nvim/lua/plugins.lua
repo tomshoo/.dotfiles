@@ -26,6 +26,10 @@ return packer.startup({
         use 'tpope/vim-fugitive'
         use 'rbgrouleff/bclose.vim'
         use {
+            'akinsho/bufferline.nvim',
+            requires = "kyazdani42/nvim-web-devicons"
+        }
+        use {
             'lewis6991/gitsigns.nvim',
             config = function()
                 require('gitsigns').setup {}
@@ -40,44 +44,6 @@ return packer.startup({
         use {
             'goolord/alpha-nvim',
             requires = { 'kyazdani42/nvim-web-devicons' },
-            config = function()
-                local dashboard = require('alpha.themes.dashboard')
-                dashboard.section.header.val = {
-                    [[|                                             ,--,  ,.-.       |]],
-                    [[|               ,                   \,       '-,-`,'-.' | ._   |]],
-                    [[|              /|           \    ,   |\         }  )/  / `-,', |]],
-                    [[|              [ ,          |\  /|   | |        /  \|  |/`  ,` |]],
-                    [[|              | |       ,.`  `,` `, | |  _,...(   (      .',  |]],
-                    [[|              \  \  __ ,-` `  ,  , `/ |,'      Y     (   /_L\ |]],
-                    [[|               \  \_\,``,   ` , ,  /  |         )         _,/ |]],
-                    [[|                \  '  `  ,_ _`_,-,<._.<        /         /    |]],
-                    [[|                 ', `>.,`  `  `   ,., |_      |         /     |]],
-                    [[|                   \/`  `,   `   ,`  | /__,.-`    _,   `\     |]],
-                    [[|               -,-..\  _  \  `  /  ,  / `._) _,-\`       \    |]],
-                    [[|                \_,,.) /\    ` /  / ) (-,, ``    ,        |   |]],
-                    [[|               ,` )  | \_\       '-`  |  `(               \   |]],
-                    [[|              /  /```(   , --, ,' \   |`<`    ,            |  |]],
-                    [[|             /  /_,--`\   <\  V /> ,` )<_/)  | \      _____)  |]],
-                    [[|       ,-, ,`   `   (_,\ \    |   /) / __/  /   `----`        |]],
-                    [[|      (-, \           ) \ ('_.-._)/ /,`    /                  |]],
-                    [[|      | /  `          `/ \\ V   V, /`     /                   |]],
-                    [[|   ,--\(        ,     <_/`\\     ||      /                    |]],
-                    [[|  (   ,``-     \/|         \-A.A-`|     /                     |]],
-                    [[|  ,>,_ )_,..(    )\          -,,_-`  _--`                     |]],
-                    [[| (_ \|`   _,/_  /  \_            ,--`                         |]],
-                    [[|  \( `   <.,../`     `-.._   _,-`                             |]],
-                }
-                dashboard.section.buttons.val = {
-                    dashboard.button("SPC f f", "  Find file", ":Telescope find_files hidden=true no_ignore=true<CR>"),
-                    dashboard.button("SPC f h", "  Recently opened files", "<cmd>Telescope frecency<CR>"),
-                    dashboard.button("SPC f r", "  Frecency/MRU", "<cmd>Telescope frecency<CR>"),
-                    dashboard.button("SPC f g", "  Find word", "<cmd>Telescope live_grep<cr>"),
-                    dashboard.button("SPC f p", "  Open recent Projects", "<cmd>Telescope projects<CR>"),
-                    dashboard.button("SPC s l", "  Open last session", "<cmd>SessionManager load_last_session<CR>"),
-                    dashboard.button("q", "Quit", "<cmd>quit<CR>"),
-                }
-                require 'alpha'.setup(dashboard.config)
-            end
         }
         use {
             'nvim-telescope/telescope-frecency.nvim',
@@ -224,8 +190,8 @@ return packer.startup({
             run = ':!cargo install --locked code-minimap'
         }
         use {
-            'vim-airline/vim-airline',
-            requires = 'vim-airline/vim-airline-themes'
+            'nvim-lualine/lualine.nvim',
+            requires = { 'kyazdani42/nvim-web-devicons', opt = true }
         }
         use {
             'navarasu/onedark.nvim',
