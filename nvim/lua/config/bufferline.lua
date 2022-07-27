@@ -15,8 +15,7 @@ function M.setup()
         pattern = '*',
         callback = function()
             if vim.bo.filetype == 'NvimTree' then
-                local width = vim.api.nvim_win_get_width(0)
-                require('bufferline.state').set_offset(width, 'Explorer')
+                require('bufferline.state').set_offset(35, 'Explorer')
             end
         end
     })

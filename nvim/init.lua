@@ -5,7 +5,6 @@ require("config")
 
 vim.cmd [[
 let $PATH .= ":/home/gh0st/.cargo/bin/"
-syntax on
 filetype plugin indent on
 
 cnoreabbrev <expr> W ((getcmdtype() is# ':' && getcmdline() is# 'W')?('w'):('W'))
@@ -13,20 +12,13 @@ cnoreabbrev <expr> Q ((getcmdtype() is# ':' && getcmdline() is# 'Q')?('q'):('Q')
 cnoreabbrev <expr> WQ ((getcmdtype() is# ':' && getcmdline() is# 'WQ')?('wq'):('WQ'))
 cnoreabbrev <expr> Wq ((getcmdtype() is# ':' && getcmdline() is# 'Wq')?('wq'):('Wq'))
 
-au WinLeave * set nocursorline
-au WinEnter * set cursorline
-set cursorline
-
-set fillchars+=stl:\ ,stlnc:\
+autocmd WinLeave * set nocursorline
+autocmd WinEnter * set cursorline
 
 set rtp+=~/.config/nvim/
 
 " Settings that are deprecated
-set nowrap
-set noshowmode
-set nocompatible
 set t_Co=256
-set wildmode=list:longest:full
 
 " Configure backup and undo thingies
 set undodir=~/.vim/tmp/undo//
@@ -42,20 +34,15 @@ endif
 if !isdirectory(expand(&directory))
     call mkdir(expand(&directory), "pset")
 endif
-
-
-set guicursor=v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor21,n:hor10
 ]]
--- Configure vim airline
-vim.g.airline_theme = "onedark"
-vim.g["airline#extensions#tabline#enabled"] = 1
-if not vim.fn.exists("g:airline_symbols")
-then
-    vim.g["airline_symbols"] = {
-        space = "  ",
-        colnr = ' '
-    }
-end
+
+vim.opt.wrap = false
+vim.opt.wildmode = "list:longest:full"
+
+vim.opt.fillchars:append("stl: ")
+vim.opt.fillchars:append("stlnc:·")
+
+vim.opt.guicursor = "v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor21,n:hor10"
 
 vim.opt.list = true
 vim.opt.listchars:append("eol:⏎")
@@ -87,10 +74,6 @@ then
     vim.opt.conceallevel = 2
     vim.opt.concealcursor = "niv"
 end
-
--- Fern extra settings
-vim.g["fern#disable_default_mappings"] = 1
-vim.g["fern#renderer"]                 = "nerdfont"
 
 -- Vim session settings
 vim.g.session_autosave   = "no"
@@ -134,11 +117,6 @@ vim.g.minimap_close_buftypes = {
     "quickfix",
     "dashboard",
     "nowrite",
-}
-vim.g.startify_session_before_save = {
-    "TagbarClose",
-    "MinimapClose",
-    "NvimTreeClose"
 }
 
 -- VSCode like Home key

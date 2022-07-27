@@ -22,26 +22,18 @@ return packer.startup({
         use 'lifepillar/vim-colortemplate'
         use 'ryanoasis/vim-devicons'
         use 'lilydjwg/colorizer'
-        use 'preservim/nerdcommenter'
+        use 'numToStr/Comment.nvim'
         use 'antoinemadec/FixCursorHold.nvim'
         use 'tpope/vim-fugitive'
         use 'rbgrouleff/bclose.vim'
         use 'folke/tokyonight.nvim'
+        use 'lewis6991/gitsigns.nvim'
+        use 'folke/which-key.nvim'
+        use 'ahmedkhalf/project.nvim'
+        use 'windwp/nvim-autopairs'
         use {
             'romgrk/barbar.nvim',
             requires = 'kyazdani42/nvim-web-devicons'
-        }
-        use {
-            'lewis6991/gitsigns.nvim',
-            config = function()
-                require('gitsigns').setup {}
-            end
-        }
-        use {
-            'folke/which-key.nvim',
-            config = function()
-                require('which-key').setup {}
-            end
         }
         use {
             'goolord/alpha-nvim',
@@ -50,11 +42,6 @@ return packer.startup({
         use {
             'nvim-telescope/telescope-frecency.nvim',
             requires = 'tami5/sqlite.lua',
-            config = function()
-                require('telescope').setup()
-                require('telescope').load_extension('frecency')
-                require('telescope').load_extension('projects')
-            end
         }
         use {
             'nvim-telescope/telescope.nvim',
@@ -171,6 +158,10 @@ return packer.startup({
                     }
                 }
                 cmp.setup.cmdline(':', {
+                    mapping = cmp.mapping.preset.insert({
+                        ['<C-Up>'] = cmp.mapping.select_prev_item(),
+                        ['<C-Down>'] = cmp.mapping.select_next_item(),
+                    }),
                     sources = { { name = 'cmdline' } }
                 })
 
@@ -203,63 +194,18 @@ return packer.startup({
             requires = { 'kyazdani42/nvim-web-devicons', opt = true }
         }
         use {
-            'windwp/nvim-autopairs',
-            config = function() require("nvim-autopairs").setup {
-                    disable_filetype = {
-                        "scratch",
-                        "nofile"
-                    },
-                    check_ts = true,
-                }
-            end
-        }
-        use {
             'nvim-treesitter/nvim-treesitter',
             run = ":TSUpdate",
-            event = { "BufEnter", "BufNewFile", "BufRead" },
-            config = function() require("nvim-treesitter.configs").setup {
-                    yati = { enable = true },
-                    ensure_installed = { "c", "lua", "rust", "python", "vim", "toml", "bash", "comment", "rasi", "json",
-                        "jsonc", "cpp", "markdown" },
-                    sync_install = false,
-                    highlight = {
-                        enable = true,
-                        use_languagetree = true,
-                        additional_vim_regex_highlighting = true,
-                    },
-                    indent = {
-                        enable = true
-                    },
-                }
-            end
         }
         use {
             "lukas-reineke/indent-blankline.nvim",
             after = "nvim-treesitter",
-            config = function() require("indent_blankline").setup {
-                    show_current_context = true,
-                    show_current_context_start = true,
-                    space_char_blankline = " ",
-                    show_end_of_line = true,
-                    filetype_exclude = {
-                        "startify"
-                    }
-                }
-            end
         }
         use {
             "kyazdani42/nvim-tree.lua",
             requires = {
                 "kyazdani42/nvim-web-devicons"
             },
-        }
-        use {
-            'ahmedkhalf/project.nvim',
-            config = function()
-                require('project_nvim').setup {
-                    silent_chdir = false
-                }
-            end
         }
     end,
     config = {
