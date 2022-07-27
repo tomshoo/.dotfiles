@@ -18,7 +18,7 @@ local filetype = {
 
 local cfg = {
     options = {
-        theme = 'auto',
+        theme = 'tokyonight',
         disabled_filetypes = {
             "alpha",
             "NvimTree",

@@ -159,6 +159,7 @@ function Scratch()
     setlocal buftype=nofile
     setlocal bufhidden=hide
     file scratch
+    set ft=scratch
     ]]
 end
 

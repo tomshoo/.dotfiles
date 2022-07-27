@@ -1,4 +1,4 @@
-local _G = {}
+local M = {}
 local lsp_config = {
     sumneko_lua = {
         settings = {
@@ -25,7 +25,7 @@ local lsp_config = {
     vimls = {}
 }
 
-function _G.setup(abilities)
+function M.setup(abilities)
     local stat, lsp = pcall(require, "lspconfig")
     if not stat then
         return
@@ -42,4 +42,4 @@ function _G.setup(abilities)
     end
 end
 
-return _G;
+return M;

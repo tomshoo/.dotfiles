@@ -1,3 +1,5 @@
+require('config.colorscheme').setup()
+require('config.nvimtree').setup()
 require('config.lualine').setup()
 require('config.bufferline').setup()
 require('config.dashboard').setup()

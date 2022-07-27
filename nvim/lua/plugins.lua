@@ -13,6 +13,7 @@ return packer.startup({
     function(use)
         use 'wbthomason/packer.nvim'
         use "s1n7ax/nvim-terminal"
+        use 'jghauser/mkdir.nvim'
         use "preservim/tagbar"
         use "preservim/vim-markdown"
         use "godlygeek/tabular"
@@ -25,9 +26,10 @@ return packer.startup({
         use 'antoinemadec/FixCursorHold.nvim'
         use 'tpope/vim-fugitive'
         use 'rbgrouleff/bclose.vim'
+        use 'folke/tokyonight.nvim'
         use {
-            'akinsho/bufferline.nvim',
-            requires = "kyazdani42/nvim-web-devicons"
+            'romgrk/barbar.nvim',
+            requires = 'kyazdani42/nvim-web-devicons'
         }
         use {
             'lewis6991/gitsigns.nvim',
@@ -165,9 +167,16 @@ return packer.startup({
                         { name = 'nvim_lsp' },
                         { name = 'path' },
                         { name = 'buffer' },
-                        { name = 'nvim_lua' }
+                        { name = 'nvim_lua' },
                     }
                 }
+                cmp.setup.cmdline(':', {
+                    sources = { { name = 'cmdline' } }
+                })
+
+                cmp.setup.cmdline('/', {
+                    sources = { { name = 'buffer' } }
+                })
             end
         }
         use {
@@ -192,23 +201,6 @@ return packer.startup({
         use {
             'nvim-lualine/lualine.nvim',
             requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-        }
-        use {
-            'navarasu/onedark.nvim',
-            config = function()
-                if vim.fn.exists('g:neovide') == 1 then
-                    require('onedark').setup {
-                        transparent = false,
-                        style = 'deep'
-                    }
-                else
-                    require("onedark").setup {
-                        transparent = true,
-                        style = "darker"
-                    }
-                end
-                require('onedark').load()
-            end
         }
         use {
             'windwp/nvim-autopairs',
@@ -260,41 +252,6 @@ return packer.startup({
             requires = {
                 "kyazdani42/nvim-web-devicons"
             },
-            config = function() require("nvim-tree").setup {
-                    disable_netrw = true,
-                    hijack_netrw = true,
-                    auto_reload_on_write = true,
-                    open_on_tab = true,
-                    hijack_cursor = true,
-                    sync_root_with_cwd = true,
-                    reload_on_bufenter = true,
-                    respect_buf_cwd = true,
-                    filters = {
-                        dotfiles = true
-                    },
-                    git = {
-                        show_on_dirs = true
-                    },
-                    view = {
-                        side = "left",
-                        width = 35,
-                        signcolumn = "auto"
-                    },
-                    renderer = {
-                        group_empty = true,
-                        highlight_opened_files = "icon",
-                        indent_markers = {
-                            enable = true
-                        },
-                        icons = {
-                            git_placement = "after",
-                            show = {
-                                folder_arrow = false
-                            }
-                        }
-                    }
-                }
-            end
         }
         use {
             'ahmedkhalf/project.nvim',
