@@ -26,9 +26,17 @@ local function projects()
     end
 end
 
+local function terminal()
+    local ok, term = pcall(require, 'toggleterm')
+    if ok then
+        term.setup()
+    end
+end
+
 -- Load everything
 require('config.treesitter').setup()
 require('config.telescope').setup()
+require('config.lsp').setup()
 require('config.colorscheme').setup()
 require('config.nvimtree').setup()
 require('config.lualine').setup()
@@ -36,8 +44,10 @@ require('config.bufferline').setup()
 require('config.dashboard').setup()
 require('config.autopairs').setup()
 require('config.indentguide').setup()
+require('config.trouble').setup()
 
 commenter()
 gitsigns()
 keycmp()
 projects()
+terminal()
