@@ -1,5 +1,4 @@
 * {
-    /* `otf-font-awesome` is required to be installed for icons */
     font-family: JetBrainsMonoNL, "Font Awesome 6 Brands", "Font Awesome 6 Free", Helvetica, Arial, sans-serif;
     font-size: 14px;
     padding: 3px 0px;
@@ -8,7 +7,7 @@
 window#waybar {
     background-color: rgba(64, 70, 71, 0.95);
     margin: 0;
-    border-radius: 20px;
+    border-radius: 0px 0px 15px 15px;
     color: #d8dee9;
     transition-property: background-color;
     transition-duration: .5s;
@@ -16,8 +15,9 @@ window#waybar {
 
 #tags {
     background-color: #d8dee9;
-    border-radius: 15px;
+    border-radius: 0px 0px 15px 15px;
     padding: 0px 15px 0px 15px;
+    box-shadow: 0px -4px 0px 0px #d8dee9;
     color: #1b1b1b;
 }
 
@@ -130,7 +130,7 @@ window#waybar {
 #memory {
     border-radius: 15px;
     padding: 0px 15px 0px 15px;
-    background-color: #1b1b1b
+    background-color: #1b1b1b;
 }
 
 #backlight {

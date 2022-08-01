@@ -1,16 +1,39 @@
 {
     // asd
     "width": 1900,
-    "height": 43,
-    "margin": 10,
     "spacing": 7,
     "mode": "dock",
-    "modules-center": ["river/tags", "wlr/workspaces"],
-    "modules-left": ["custom/start", "mpd", "clock", "memory", "cpu", "tray"],
-    "modules-right": ["custom/warp", "network", "pulseaudio", "backlight", "battery", "custom/power"],
+    "modules-center": [
+        "river/tags",
+        "wlr/workspaces"
+    ],
+    "modules-left": [
+        "custom/start",
+        "mpd",
+        "clock",
+        "memory",
+        "cpu",
+        "tray"
+    ],
+    "modules-right": [
+        "custom/warp",
+        "network",
+        "pulseaudio",
+        "backlight",
+        "battery",
+        "custom/power"
+    ],
     "river/tags": {
         "tag-labels": [
-            "", "", "", "", "", "", "", "", ""
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
         ]
     },
     "keyboard-state": {
@@ -62,7 +85,11 @@
         // "format-critical": "{temperatureC}°C {icon}",
         "critical-threshold": 80,
         "format": "{temperatureC}°C {icon}",
-        "format-icons": ["", "", ""]
+        "format-icons": [
+            "",
+            "",
+            ""
+        ]
     },
     "backlight": {
         "format": "  {percent}%"
@@ -77,7 +104,14 @@
         "format": "{icon} {capacity}%",
         "format-charging": " {capacity}%",
         "format-plugged": " {capacity}%",
-        "format-icons": ["", "", "", "", ""]
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ],
+        "interval": 15
     },
     "network": {
         "format-wifi": "  {bandwidthDownBytes} ({signalStrength}%)",
@@ -98,25 +132,32 @@
         "format-source-muted": "",
         "format-icons": {
             "headphone": "",
-            "default": ["", "", ""]
+            "default": [
+                "",
+                "",
+                ""
+            ]
         },
         "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
     },
     "custom/start": {
         "format": "<span font_family='Iosevka' font_size='20pt'></span>",
-        "on-click": "wofi --show drun"
+        "on-click": "wofi --show drun",
+        "tooltip": false
     },
     "custom/power": {
         "format": "⏻",
-        "on-click": "~/.config/river/scripts/rofi-logout-menu"
+        "on-click": "~/.config/river/scripts/rofi-logout-menu",
+        "tooltip": false
     },
     "custom/warp": {
         "exec": "~/.local/bin/mywarp --show-icon",
         "interval": 2,
         "format": {},
         "exec-on-event": true,
-        "on-click": "~/.local/bin/mywarp --toggle"
+        "on-click": "~/.local/bin/mywarp --toggle",
+        "tooltip": false
     },
     "mpd": {
         "format": "{stateIcon}  {consumeIcon} {randomIcon} {repeatIcon} {singleIcon} ",
