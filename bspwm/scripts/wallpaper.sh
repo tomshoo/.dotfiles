@@ -1,4 +1,4 @@
-WALLS_DIR=$HOME/.local/share/backgrounds
+WALLS_DIR=/usr/share/backgrounds
 walls=()
 readarray -d '' walls < <(find "$WALLS_DIR" -type f -print0)
 
