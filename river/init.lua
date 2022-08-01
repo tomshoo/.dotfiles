@@ -80,7 +80,7 @@ local dbus_env = {
     "MOZ_ENABLE_WAYLAND"
 }
 
-local systemctl_import = {
+local systemd_env = {
     "WAYLAND_DISPLAY",
     "DISPLAY",
     "XDG_CURRENT_DESKTOP",
@@ -119,6 +119,7 @@ local device = {
 -- Autostart applications
 launch(scripts .. "/wallpaper.sh")
 launch(scripts .. "/waybar.sh")
+launch("lxqt-policykit-agent")
 launch("foot --server")
 launch("dbus-launch")
 
@@ -136,7 +137,7 @@ local keybinding = {
             },
             {
                 key  = "B",
-                exec = "killall waybar"
+                exec = "killall -SIGUSR1 waybar"
             },
             {
                 key  = "E",
@@ -153,6 +154,10 @@ local keybinding = {
             {
                 key  = "Delete",
                 exec = scripts .. "/rofi-logout-menu",
+            },
+            {
+                key = "B",
+                exec = "killall waybar"
             }
         },
         ["Alt"] = {
@@ -237,12 +242,24 @@ local keybinding = {
                 exec = "focus-view previous"
             },
             {
+                key  = "K",
+                exec = "attach-mode bottom"
+            },
+            {
+                key = "L",
+                exec = "attach-mode top"
+            },
+            {
                 key  = "M",
                 exec = "zoom"
             },
             {
                 key  = "F",
                 exec = "toggle-fullscreen"
+            },
+            {
+                key  = "T",
+                exec = "toggle-float"
             },
             {
                 key     = "BTN_RIGHT",
@@ -298,10 +315,6 @@ local keybinding = {
                 exec     = "resize horizontal -100",
                 kbrepeat = true
             },
-            {
-                key  = "S",
-                exec = "toggle-float"
-            }
         },
         ["Alt"] = {
             {
@@ -419,6 +432,6 @@ for _, app in ipairs(floating_apps) do
     os.execute(string.format([[riverctl float-filter-add app-id "%s"]], app))
 end
 
-os.execute(string.format("systemctl --user import-environment %s", table.concat(systemctl_import, ' ')))
+os.execute(string.format("systemctl --user import-environment %s", table.concat(systemd_env, ' ')))
 os.execute(string.format("dbus-update-activation-environment --systemd %s", table.concat(dbus_env, ' ')))
 os.execute(string.format("riverctl default-layout %s", tiler))

@@ -1,14 +1,17 @@
-WALLS_DIR=$HOME/.local/share/backgrounds
+WALLS_DIR=/usr/share/backgrounds
 readarray -d '' walls < <(find "$WALLS_DIR" -type f -print0)
 
-swabg_pid=$(pidof swaybg)
+bg_pid=$(pidof wbg)
 
-[ ! -z $swabg_pid ] && kill $swabg_pid
+echo $bg_pid
+if [ ! -z "${bg_pid}" ]; then
+    killall wbg
+fi
 
 len=$(for i in ${!walls[@]}; do
     echo ${walls[$1]}
 done | wc -l)
 
 wall=${walls[$(( $RANDOM % $len ))]}
-swaybg --mode fill --image "$wall" &
+wbg "$wall" &
 cp "$wall" /tmp/current_wallpaper

@@ -43,9 +43,11 @@ if [ "$ACTION" == "$QUIT" ]; then
 elif [ "$ACTION" == "$LOCK" ]; then
     lock
 elif [ "$ACTION" == "$SUSPEND" ]; then
-    lock && systemctl suspend
+    lock &
+    systemctl suspend
 elif [ "$ACTION" == "$HIBERNATE" ]; then
-    lock && systemctl suspend-then-hibernate
+    lock &
+    systemctl suspend-then-hibernate
 elif [ "$ACTION" == "$RESTART" ]; then
     systemctl reboot
 elif [ "$ACTION" == "$SHUTDOWN" ]; then
