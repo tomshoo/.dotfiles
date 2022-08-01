@@ -76,6 +76,8 @@ element alternate.active {
 
 element selected.normal {
     text-color: @fg-sel;
+    border: 2px 0px 3px 0px;
+    border-color: @fg-sel;
     background-color: @bg-sel;
 }
 

@@ -5,7 +5,7 @@ configuration {
 }
 
 window {
-    width: 745px;
+    width: 887px;
     background-color: @bg-color;
     border-radius: 25px;
     children: ["listview"];
