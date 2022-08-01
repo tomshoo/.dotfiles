@@ -1,16 +1,18 @@
-CTable = {}
+M = {}
 
-function CTable.setup()
-    vim.cmd [[
-    " Spectial keys for rust
-    augroup RustKeys
-        autocmd!
-        autocmd FileType rust nnoremap <Leader>e :lua require('rust-tools.expand_macro').expand_macro()<CR>
-        autocmd FileType rust nnoremap <Leader>i :lua require('rust-tools.inlay_hints').toggle_inlay_hints()<CR>
-        autocmd FileType rust nnoremap <Leader>r :lua require('rust-tools.runnables').runnables()<CR>
-        autocmd FileType rust nnoremap <Leader>h :lua require'rust-tools.hover_actions'.hover_actions()<CR>
-    augroup END
-    ]]
+function M.setup()
+    local RustKeys = vim.api.nvim_create_augroup("RustKeys", { clear = true })
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "rust",
+        group = RustKeys,
+        callback = function()
+            local req = "<cmd>lua require"
+            map("n", "<Leader>e", req .. "('rust-tools.expand_macro').expand_macro()<CR>")
+            map("n", "<Leader>i", req .. "('rust-tools.inlay_hints').inlay_hints()<CR>")
+            map("n", "<Leader>r", req .. "('rust-tools.runnables').runnables()<CR>")
+            map("n", "<Leader>h", req .. "('rust-tools.hover_actions').hover_actions()<CR>")
+        end
+    })
 end
 
-return CTable
+return M

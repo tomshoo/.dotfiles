@@ -26,10 +26,6 @@ local cfg = {
             "Trouble",
             "toggleterm"
         },
-        component_separators = {
-            left = "",
-            right = ""
-        }
     },
     sections = {
         lualine_a = { "mode" },

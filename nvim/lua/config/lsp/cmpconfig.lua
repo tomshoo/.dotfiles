@@ -1,11 +1,33 @@
 local M = {}
+local icons = {
+    Text = " ",
+    Method = "m ",
+    Function = " ",
+    Constructor = " ",
+    Field = " ",
+    Variable = " ",
+    Class = " ",
+    Interface = " ",
+    Module = " ",
+    Property = " ",
+    Unit = " ",
+    Value = "ﮜ ",
+    Enum = " ",
+    Keyword = " ",
+    Snippet = " ",
+    Color = " ",
+    File = " ",
+    Reference = " ",
+    Folder = " ",
+    EnumMember = " ",
+    Constant = " ",
+    Struct = "﬘ ",
+    Event = " ",
+    Operator = " ",
+    TypeParameter = " ",
+}
 
-local function generate_config()
-    local cok, cmp = pcall(require, 'cmp')
-    if not cok then
-        return nil
-    end
-
+local function generate_config(cmp)
     local sok, snippy = pcall(require, 'snippy')
 
     local config = {
@@ -51,7 +73,28 @@ local function generate_config()
             { name = 'path' },
             { name = 'buffer' },
             { name = 'nvim_lua' },
-        }
+        },
+        formatting = {
+            fields = { "kind", "abbr", "menu" },
+            format = function(entry, vim_item)
+                local kind = require('lspkind').cmp_format({
+                    mode = "symbol_text",
+                    maxwidth = 50,
+                    symbol_map = icons
+                })(entry, vim_item)
+                local strings = vim.split(kind.kind, " ", { triempty = true })
+                kind.kind = " " .. strings[1] .. " "
+                kind.menu = "        " .. ({
+                    nvim_lsp = "[L]",
+                    snippy = "[S]",
+                    buffer = "[B]",
+                    path = "[F]",
+                    nvim_lua = "[V]"
+                })[entry.source.name] .. " (" .. strings[3] .. ")"
+
+                return kind
+            end,
+        },
     }
 
     if sok then
@@ -64,25 +107,28 @@ local function generate_config()
     return config
 end
 
-function M.setup()
-    local cfg = generate_config()
-    if cfg == nil then
-        return false
+local function event_setup(cmp)
+    local ok, pair = pcall(require, 'nvim-autopairs.completion.cmp')
+
+    if not ok then
+        return nil
     end
 
-    local cmp = require('cmp')
-    cmp.setup(cfg)
-    cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.insert({
-            ['<C-Up>'] = cmp.mapping.select_prev_item(),
-            ['<C-Down>'] = cmp.mapping.select_next_item(),
-        }),
-        sources = { { name = 'cmdline' } }
-    })
+    cmp.event:on(
+        'confirm_done',
+        pair.on_confirm_done()
+    )
+end
 
-    cmp.setup.cmdline('/', {
-        sources = { { name = 'buffer' } }
-    })
+function M.setup()
+    local ok, cmp = pcall(require, 'cmp')
+    if not ok then
+        return false
+    end
+    local cfg = generate_config(cmp)
+    event_setup(cmp)
+
+    cmp.setup(cfg)
     return true
 end
 

@@ -1,25 +1,18 @@
-CTable = {}
+local M = {}
 
-local fn = vim.fn
+function M.setup()
+    vim.api.nvim_create_autocmd("BufWritePost", {
+        pattern = "*",
+        callback = function()
+            local cf = vim.fn.expand('%:p:h:t') .. '/' .. vim.fn.expand('%:t')
 
-function CTable.ReloadConfig()
-    local cfgpath = fn.stdpath('config')
-    local current_file = fn.expand('%:p')
-    if current_file == cfgpath .. '/init.lua' then
-        vim.cmd [[
-            source %
-        ]]
-    elseif current_file == cfgpath .. '/lua/plugins.lua' then
-        vim.cmd [[
-            source % | PackerCompile
-        ]]
-    end
+            if cf == "nvim/init.lua" then
+                vim.cmd [[source %]]
+            elseif cf == "lua/plugins.lua" then
+                vim.cmd [[source % | PackerCompile]]
+            end
+        end
+    })
 end
 
-function CTable.setup()
-    vim.cmd [[
-        autocmd BufWritePost * lua require('aucmd.reload').ReloadConfig()
-    ]]
-end
-
-return CTable
+return M

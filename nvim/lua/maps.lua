@@ -3,7 +3,7 @@ vim.cmd [[
     let mapleader = " "
 ]]
 
-local map = function(mode, key, action, opts)
+_G.map = function(mode, key, action, opts)
     local options = {
         noremap = true,
         silent = true
@@ -31,12 +31,12 @@ local function set()
     map("n", "<Leader>bq", "<cmd>bd<CR>")
     map("n", "<Leader>bQ", "<cmd>bw<CR>")
 
-    map("n", "<Leader>u"   , "<cmd>TSToggle highlight<CR>")
-    map("n", "<F3>"        , "<cmd>TagbarToggle<CR>")
-    map("n", "<F4>"        , "<cmd>MinimapToggle<CR>")
+    map("n", "<Leader>u", "<cmd>TSToggle highlight<CR>")
+    map("n", "<F3>", "<cmd>TagbarToggle<CR>")
+    map("n", "<F4>", "<cmd>MinimapToggle<CR>")
     map("n", "<Leader><F4>", "<cmd>MinimapRescan<CR> :MinimapRefresh<CR>")
 
-    map("n", "<F2>"     , "<cmd>NvimTreeToggle<CR>")
+    map("n", "<F2>", "<cmd>NvimTreeToggle<CR>")
     map("n", "<Leader>`", "<cmd>ToggleTerm<CR>")
 
     map("n", "<Home>", "<cmd>lua ExtendedHome()<CR>")
@@ -52,6 +52,8 @@ local function set()
     map("n", "<Leader>fg", "<cmd>Telescope live_grep<CR>")
     map("n", "<Leader>fr", "<cmd>Telescope frecency<CR>")
     map("n", "<Leader>fp", "<cmd>Telescope projects<CR>")
+
+    map("n", "<C>s", "<cmd>SessionSave<CR>", { silent = false })
 
     map("n", "<Leader>q", "<cmd>quit<CR>")
 end

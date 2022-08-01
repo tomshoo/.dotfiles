@@ -4,5 +4,5 @@ if os.getenv("XDG_SESSION_TYPE") == "wayland"
 then
     vim.opt.guifont = { "Iosevka Nerd Font", ":h12" }
 else
-    vim.opt.guifont = { "Fira Code", ":h7" }
+    vim.opt.guifont = { "FiraCode Nerd Font", ":h7" }
 end

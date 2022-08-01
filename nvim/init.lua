@@ -1,10 +1,9 @@
-require('plugins')
-require('aucmd')
 require("maps")
+require('plugins')
 require("config")
+require('aucmd')
 
 vim.cmd [[
-let $PATH .= ":/home/gh0st/.cargo/bin/"
 filetype plugin indent on
 
 cnoreabbrev <expr> W ((getcmdtype() is# ':' && getcmdline() is# 'W')?('w'):('W'))
@@ -14,8 +13,6 @@ cnoreabbrev <expr> Wq ((getcmdtype() is# ':' && getcmdline() is# 'Wq')?('wq'):('
 
 autocmd WinLeave * set nocursorline
 autocmd WinEnter * set cursorline
-
-set rtp+=~/.config/nvim/
 
 " Settings that are deprecated
 set t_Co=256
@@ -36,11 +33,14 @@ if !isdirectory(expand(&directory))
 endif
 ]]
 
-vim.opt.wrap = false
-vim.opt.wildmode = "list:longest:full"
+vim.opt.wrap       = false
+vim.opt.wildmode   = "list:longest:full"
+vim.opt.signcolumn = "yes:1"
 
 vim.opt.fillchars:append("stl: ")
 vim.opt.fillchars:append("stlnc:·")
+
+vim.opt.rtp:append(os.getenv("HOME") .. "/.config/nvim/")
 
 vim.opt.guicursor = "v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor21,n:hor10"
 
@@ -75,12 +75,6 @@ then
     vim.opt.concealcursor = "niv"
 end
 
--- Vim session settings
-vim.g.session_autosave   = "no"
-vim.g.session_autoload   = "yes"
-vim.g.minimap_auto_start = 1
-vim.g.minimap_git_colors = 1
-
 -- Some thing I had in my old config dont really remember why
 vim.g.cursorhold_updatetime = 100
 
@@ -89,35 +83,6 @@ vim.g.loaded_netrw             = 1
 vim.g.loaded_netrwPlugin       = 1
 vim.g.loaded_netrwSettings     = 1
 vim.g.loaded_netrwFileHandlers = 1
-
--- Configure minimap
-vim.g.minimap_block_filetypes = {
-    "startify",
-    "tagbar",
-    "ale-fix-suggest",
-    "fugitive",
-    "NvimTree",
-    "help",
-    "scratch",
-    "dashboard",
-    ""
-}
-
-vim.g.minimap_block_buftypes = {
-    "terminal",
-    "startify",
-    "dashboard",
-    "nofile"
-}
-
-vim.g.minimap_close_buftypes = {
-    "nofile",
-    "terminal",
-    "prompt",
-    "quickfix",
-    "dashboard",
-    "nowrite",
-}
 
 -- VSCode like Home key
 function ExtendedHome()
