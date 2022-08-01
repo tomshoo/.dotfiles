@@ -18,7 +18,15 @@ local lsp_config = {
     },
     pyright = {},
     clangd = {},
-    rust_analyzer = {},
+    rust_analyzer = {
+        settings = {
+            ["rust-analyzer"] = {
+                checkOnSave = {
+                    allTargets = false
+                }
+            }
+        }
+    },
     bashls = {},
     asm_lsp = {},
     jsonls = {},
@@ -44,7 +52,6 @@ function M.setup()
     if fok then
         formatter.setup()
     end
-
     for server, config in pairs(lsp_config) do
         if fok then
             config.on_attach = formatter.on_attach

@@ -7,6 +7,7 @@ function M.setup()
     end
 
     telescope.setup()
+    telescope.load_extension('persisted')
     telescope.load_extension('frecency')
     telescope.load_extension('projects')
 end

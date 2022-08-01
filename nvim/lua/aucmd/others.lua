@@ -1,15 +1,18 @@
-local CTable = {}
+local M = {}
 
-function CTable.setup()
-    vim.cmd [[
-    " Relative smartline
-    set number
-    augroup numbertoggle
-        autocmd!
-        autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
-        autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
-    augroup END
-    ]]
+function M.setup()
+    local numbertoggle = vim.api.nvim_create_augroup("numbertoggle", { clear = true })
+    vim.opt.number = true
+    vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "WinEnter" }, {
+        group = numbertoggle,
+        pattern = "*",
+        command = [[if &nu && mode() != "i" | set rnu | endif]]
+    })
+    vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, {
+        group = numbertoggle,
+        pattern = "*",
+        command = [[if &nu | set nornu | endif]]
+    })
 end
 
-return CTable
+return M

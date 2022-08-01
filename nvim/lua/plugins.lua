@@ -1,3 +1,16 @@
+local fn = vim.fn
+local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+if fn.empty(fn.glob(install_path)) > 0 then
+    PACKER_BOOTSTRAP = fn.system({
+        'git',
+        'clone',
+        '--depth',
+        '1',
+        'https://github.com/wbthomason/packer.nvim',
+        install_path
+    })
+end
+
 vim.cmd [[packadd packer.nvim]]
 
 vim.cmd [[
@@ -9,22 +22,32 @@ vim.cmd [[
 
 local packer = require("packer")
 
+packer.init({
+
+    display = {
+        open_fn = function()
+            return require("packer.util").float({ border = 'rounded' })
+        end
+    }
+})
+
 return packer.startup({
     function(use)
+        use 'lewis6991/impatient.nvim'
+        use 'olimorris/persisted.nvim'
         use 'wbthomason/packer.nvim'
         use "s1n7ax/nvim-terminal"
         use 'jghauser/mkdir.nvim'
         use "preservim/tagbar"
         use "preservim/vim-markdown"
         use "godlygeek/tabular"
-        use 'xolox/vim-session'
         use 'xolox/vim-misc'
         use 'lifepillar/vim-colortemplate'
         use 'ryanoasis/vim-devicons'
         use 'lilydjwg/colorizer'
         use 'numToStr/Comment.nvim'
         use 'antoinemadec/FixCursorHold.nvim'
-        use 'tpope/vim-fugitive'
+        use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
         use 'rbgrouleff/bclose.vim'
         use 'folke/tokyonight.nvim'
         use 'lewis6991/gitsigns.nvim'
@@ -33,31 +56,27 @@ return packer.startup({
         use 'windwp/nvim-autopairs'
         use 'folke/trouble.nvim'
         use 'akinsho/toggleterm.nvim'
+        use 'kyazdani42/nvim-web-devicons'
+        use 'romgrk/barbar.nvim'
+        use "kyazdani42/nvim-tree.lua"
+        use 'goolord/alpha-nvim'
+        use 'simrat39/rust-tools.nvim'
+        use "lukas-reineke/lsp-format.nvim"
+        use 'nvim-lualine/lualine.nvim'
+        use 'kosayoda/nvim-lightbulb'
+        use 'gelguy/wilder.nvim'
+        use 'petertriho/nvim-scrollbar'
         use {
-            'romgrk/barbar.nvim',
-            requires = 'kyazdani42/nvim-web-devicons'
-        }
-        use {
-            'goolord/alpha-nvim',
-            requires = { 'kyazdani42/nvim-web-devicons' },
+            'nvim-telescope/telescope.nvim',
+            requires = 'nvim-lua/plenary.nvim',
         }
         use {
             'nvim-telescope/telescope-frecency.nvim',
             requires = 'tami5/sqlite.lua',
         }
         use {
-            'nvim-telescope/telescope.nvim',
-            requires = 'nvim-lua/plenary.nvim',
-        }
-        use {
             'yioneko/nvim-yati',
             requires = 'nvim-treesitter/nvim-treesitter',
-        }
-        use {
-            'simrat39/rust-tools.nvim',
-        }
-        use {
-            "lukas-reineke/lsp-format.nvim",
         }
         use {
             'hrsh7th/cmp-nvim-lsp',
@@ -65,23 +84,15 @@ return packer.startup({
                 'hrsh7th/cmp-buffer',
                 'hrsh7th/cmp-path',
                 'hrsh7th/cmp-nvim-lua',
-                'hrsh7th/cmp-cmdline',
                 'hrsh7th/nvim-cmp',
                 'dcampos/nvim-snippy',
-                'dcampos/cmp-snippy'
+                'dcampos/cmp-snippy',
+                'onsails/lspkind.nvim'
             }
         }
         use {
             'neovim/nvim-lspconfig',
             requires = 'williamboman/nvim-lsp-installer'
-        }
-        use {
-            'wfxr/minimap.vim',
-            run = ':!cargo install --locked code-minimap'
-        }
-        use {
-            'nvim-lualine/lualine.nvim',
-            requires = 'kyazdani42/nvim-web-devicons'
         }
         use {
             'nvim-treesitter/nvim-treesitter',
@@ -91,16 +102,10 @@ return packer.startup({
             "lukas-reineke/indent-blankline.nvim",
             after = "nvim-treesitter",
         }
-        use {
-            "kyazdani42/nvim-tree.lua",
-            requires = "kyazdani42/nvim-web-devicons"
-        }
-    end,
-    config = {
-        display = {
-            open_fn = function()
-                return require("packer.util").float({ border = 'rounded' })
-            end
-        }
-    }
+
+
+        if PACKER_BOOTSTRAP then
+            require('packer').sync()
+        end
+    end
 })
