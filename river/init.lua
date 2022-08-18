@@ -8,7 +8,7 @@ local main_low   = 0.25
 local main_high  = 0.75
 
 -- Set default tiling manager
-local tiler = "rivertile"
+local tiler = "rivercarro"
 
 -- Handlers
 local notifier = function(options)
@@ -90,7 +90,9 @@ local systemd_env = {
 local floating_apps = {
     "thunar",
     "Rofi",
-    "org.kde.dolphin"
+    "org.kde.dolphin",
+    "lxqt-policykit-agent",
+    "io.github.seadve.Mousai"
 }
 
 -- GSettings configurations
@@ -224,6 +226,10 @@ local keybinding = {
             {
                 key  = "bar",
                 exec = "main-ratio 0.5"
+            },
+            {
+                key = "M",
+                exec = "main-location monocle"
             }
         }
     },

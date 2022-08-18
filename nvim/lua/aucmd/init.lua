@@ -1,7 +1,8 @@
 local autable = {
     "aucmd.reload",
-    "aucmd.filetypes",
+    "aucmd.title",
     "aucmd.others",
+    "aucmd.filetype"
 }
 
 for _, conf in ipairs(autable) do

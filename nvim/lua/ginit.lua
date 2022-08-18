@@ -1,6 +1,6 @@
 vim.g.neovide_cursor_vfx_mode = "railgun"
 vim.g.onedark_terminal_italics = 1
-if os.getenv("XDG_SESSION_TYPE") == "wayland"
+if os.getenv("XDG_SESSION_TYPE") == "wayland" and os.getenv("WAYLAND_DISPLAY")
 then
     vim.opt.guifont = { "Iosevka Nerd Font", ":h12" }
 else

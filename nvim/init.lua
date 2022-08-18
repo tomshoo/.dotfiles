@@ -4,6 +4,7 @@ require("config")
 require('aucmd')
 
 vim.cmd [[
+colorscheme everblush-custom
 filetype plugin indent on
 
 cnoreabbrev <expr> W ((getcmdtype() is# ':' && getcmdline() is# 'W')?('w'):('W'))
@@ -35,9 +36,8 @@ endif
 
 vim.opt.wrap       = false
 vim.opt.wildmode   = "list:longest:full"
-vim.opt.signcolumn = "yes:1"
+vim.opt.signcolumn = "auto:3"
 
-vim.opt.fillchars:append("stl: ")
 vim.opt.fillchars:append("stlnc:·")
 
 vim.opt.rtp:append(os.getenv("HOME") .. "/.config/nvim/")
@@ -45,11 +45,12 @@ vim.opt.rtp:append(os.getenv("HOME") .. "/.config/nvim/")
 vim.opt.guicursor = "v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor21,n:hor10"
 
 vim.opt.list = true
-vim.opt.listchars:append("eol:⏎")
-vim.opt.listchars:append("tab:␉·")
-vim.opt.listchars:append("trail:␠")
-vim.opt.listchars:append("nbsp:⎵")
-vim.opt.listchars:append("space:·")
+vim.opt.listchars:append({
+    eol = "⏎",
+    tab = "␉·",
+    trail = "␠",
+    nbsp = "⎵",
+})
 
 vim.opt.ruler = true
 vim.opt.mouse = "a"

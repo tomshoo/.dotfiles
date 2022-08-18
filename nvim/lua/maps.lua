@@ -28,7 +28,7 @@ local function set()
 
     map("n", "<Leader>bn", "<cmd>bn<CR>")
     map("n", "<Leader>bp", "<cmd>bp<CR>")
-    map("n", "<Leader>bq", "<cmd>bd<CR>")
+    map("n", "<Leader>bq", "<cmd>bd|quit!<CR>")
     map("n", "<Leader>bQ", "<cmd>bw<CR>")
 
     map("n", "<Leader>u", "<cmd>TSToggle highlight<CR>")
@@ -44,6 +44,8 @@ local function set()
 
     map("n", "<Leader>s", "<cmd>lua Scratch()<CR>")
 
+    map("n", "tw", "<cmd>Twilight<CR>")
+
     map("n", "<Leader>tt", "<cmd>Trouble<CR>")
     map("n", "<Leader>td", "<cmd>Trouble document_diagnostics<CR>")
     map("n", "<Leader>tw", "<cmd>Trouble workspace_diagnostics<CR>")
@@ -53,9 +55,13 @@ local function set()
     map("n", "<Leader>fr", "<cmd>Telescope frecency<CR>")
     map("n", "<Leader>fp", "<cmd>Telescope projects<CR>")
 
-    map("n", "<C>s", "<cmd>SessionSave<CR>", { silent = false })
+    map("n", "<C-s>", "<cmd>SessionSave<CR>", { silent = false })
 
-    map("n", "<Leader>q", "<cmd>quit<CR>")
+    map("n", "<Tab>", "<cmd>foldopen<CR>")
+    map("n", "<S-Tab>", "<cmd>foldclose<CR>")
+
+    map("n", "<Leader>q", "<cmd>quit!<CR>")
+    map("n", "<Leader>Q", "<cmd>quitall!<CR>")
 end
 
 return set()

@@ -6,4 +6,4 @@ for pid in ${waybar_pid}; do
     kill $pid
 done
 
-waybar
+waybar --config .config/river/waybar/config --style .config/river/waybar/style.css

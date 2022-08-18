@@ -21,7 +21,7 @@ local icons = {
     Folder = " ",
     EnumMember = " ",
     Constant = " ",
-    Struct = "﬘ ",
+    Struct = " ",
     Event = " ",
     Operator = " ",
     TypeParameter = " ",
@@ -73,6 +73,7 @@ local function generate_config(cmp)
             { name = 'path' },
             { name = 'buffer' },
             { name = 'nvim_lua' },
+            { name = 'crates' }
         },
         formatting = {
             fields = { "kind", "abbr", "menu" },
@@ -89,7 +90,8 @@ local function generate_config(cmp)
                     snippy = "[S]",
                     buffer = "[B]",
                     path = "[F]",
-                    nvim_lua = "[V]"
+                    nvim_lua = "[V]",
+                    crates = "[C]"
                 })[entry.source.name] .. " (" .. strings[3] .. ")"
 
                 return kind

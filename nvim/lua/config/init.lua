@@ -18,6 +18,25 @@ local plug_table = {
     "project_nvim",
     "toggleterm",
     "scrollbar",
+    "scrollbar.handlers.search",
+    "indent-o-magic",
+    'config.treesitter',
+    'config.session',
+    'config.telescope',
+    'config.lsp',
+    'config.git',
+    'config.autopairs',
+    'config.nvimtree',
+    'config.lualine',
+    'config.bufferline',
+    'config.dashboard',
+    'config.indentguide',
+    'config.trouble',
+    'config.wilder',
+    'config.norg',
+    'config.ufo',
+    'config.colorizing',
+    --[[To be checked]] "twilight"
 }
 
 local function load_all()
@@ -30,20 +49,6 @@ local function load_all()
 end
 
 -- Load everything
-require('config.treesitter').setup()
-require('config.session').setup()
-require('config.telescope').setup()
-require('config.lsp').setup()
-require('config.git').setup()
-require('config.autopairs').setup()
-require('config.colorscheme').setup()
-require('config.nvimtree').setup()
-require('config.lualine').setup()
-require('config.bufferline').setup()
-require('config.dashboard').setup()
-require('config.indentguide').setup()
-require('config.trouble').setup()
-require('config.wilder').setup()
 
 load_all()
 

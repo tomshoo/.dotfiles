@@ -5,17 +5,16 @@
     "mode": "dock",
     "modules-center": [
         "river/tags",
-        "wlr/workspaces"
     ],
     "modules-left": [
         "custom/start",
         "mpd",
         "clock",
         "memory",
-        "cpu",
-        "tray"
+        "cpu"
     ],
     "modules-right": [
+        "tray",
         "custom/warp",
         "network",
         "pulseaudio",
