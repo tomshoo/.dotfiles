@@ -4,7 +4,7 @@ require("config")
 require('aucmd')
 
 vim.cmd [[
-colorscheme everblush-custom
+colorscheme oxocarbon
 filetype plugin indent on
 
 cnoreabbrev <expr> W ((getcmdtype() is# ':' && getcmdline() is# 'W')?('w'):('W'))
@@ -36,7 +36,7 @@ endif
 
 vim.opt.wrap       = false
 vim.opt.wildmode   = "list:longest:full"
-vim.opt.signcolumn = "auto:3"
+vim.opt.signcolumn = "auto:2"
 
 vim.opt.fillchars:append("stlnc:·")
 

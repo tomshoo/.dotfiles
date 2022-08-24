@@ -1,10 +1,33 @@
 local M = {}
 
-function LspStatus()
+local modes = {
+    n = { icon = " " },
+    i = { icon = " " },
+    v = { icon = " " },
+    [''] = { icon = "זּ " },
+    V = { icon = " " },
+    c = { icon = " " },
+    no = { icon = "! " },
+    s = { icon = "麗" },
+    S = { icon = "礪" },
+    [''] = { icon = "" },
+    ic = { icon = " " },
+    R = { icon = "菱" },
+    Rv = { icon = "菱" },
+    cv = { icon = "? " },
+    ce = { icon = "? " },
+    r = { icon = " " },
+    rm = { icon = "||" },
+    ['r?'] = { icon = " " },
+    ['!'] = { icon = " " },
+    t = { icon = " " },
+}
+
+local function get_lsp()
     local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
     local clients = vim.lsp.get_active_clients()
     if next(clients) == nil then
-        return nil
+        return clients.name
     end
     for _, client in ipairs(clients) do
         local filetypes = client.config.filetypes
@@ -12,32 +35,26 @@ function LspStatus()
             return client.name
         end
     end
-    return nil
+    return false
+
 end
 
-local filetype = {
-    function()
-        local res = vim.o.filetype
-        if LspStatus() then
-            res = res .. ' '
-        end
-        return res
+local conditions = {
+    buffer_not_empty = function()
+        return not (vim.fn.line('$') == 1 and vim.fn.getline(1) == '')
     end,
-    icon = (function()
-        local ok, devicon = pcall(require, 'nvim-web-devicons')
-        if not ok then
-            return nil
-        end
-        local ic, cl = devicon.get_icon_color(vim.fn.expand('%:t'))
-        if ic then
-            return {
-                string.format("%s", ic),
-                align = 'right',
-                color = { fg = cl }
-            }
-        end
-        return nil
-    end)()
+    hide_in_width = function()
+        return vim.fn.winwidth(0) > 80
+    end,
+    check_git_workspace = function()
+        local filepath = vim.fn.expand('%:p:h')
+        local gitdir = vim.fn.finddir('.git', filepath .. ';')
+        return gitdir and #gitdir > 0 and #gitdir < #filepath
+    end,
+    lsp_is_active = function()
+        if get_lsp() then return true end
+        return false
+    end
 }
 
 local diagnostics = {
@@ -48,7 +65,65 @@ local diagnostics = {
         error = "X: ",
         warn = "!: ",
         hint = "?: ",
-    }
+    },
+    cond = conditions.lsp_is_active
+}
+
+local filename = {
+    function()
+        local name = vim.fn.expand('%:t')
+        if name == "" or name == nil then
+            return " "
+        end
+
+        if vim.bo.modified then
+            name = "ﯽ " .. name
+        elseif vim.bo.readonly then
+            name = " " .. name
+        end
+
+        return name
+    end,
+    color = function()
+        if vim.bo.modified then
+            return { fg = "#e57474" }
+        elseif vim.bo.readonly then
+            return { fg = "#f40000" }
+        end
+        return { fg = "#dadada" }
+    end,
+}
+
+local filesize = {
+    "filesize",
+    cond = function()
+        return conditions.buffer_not_empty() and conditions.hide_in_width()
+    end
+}
+
+local lsp = {
+    function()
+        if conditions.hide_in_width() then
+            return get_lsp()
+        end
+        return ""
+    end,
+    cond = conditions.lsp_is_active,
+    icon = ""
+}
+
+local stylespace = {
+    function()
+        return " "
+    end,
+    color = { bg = "#0000ff" },
+    padding = 0
+}
+
+local mode = {
+    function()
+        return modes[vim.fn.mode()].icon
+    end
 }
 
 local cfg = {
@@ -56,36 +131,39 @@ local cfg = {
         theme = 'auto',
         disabled_filetypes = {
             "alpha",
-            "NvimTree",
-            "minimap",
+            -- "NvimTree",
             "Trouble",
-            "toggleterm"
         },
-        component_separator = { left = "", right = "" }
+        component_separators = "",
+        section_separators = ""
     },
     sections = {
-        lualine_a = { "mode" },
+        lualine_a = { stylespace, mode },
         lualine_b = {
             "branch",
             "diff",
+            lsp,
+            diagnostics,
+            filesize,
         },
         lualine_c = {
-            diagnostics,
-            "filename"
+            '%=',
+            filename
         },
         lualine_x = {
-            "encoding",
+            { "encoding", cond = conditions.hide_in_width },
             "fileformat",
-            filetype
+            { "filetype", icon = { align = 'right' } },
         },
-        lualine_y = { "progress" },
+        lualine_y = { "location" },
         lualine_z = {
-            "location",
-            "spaces"
+            "progress",
+            stylespace
         }
-    }
-
+    },
+    extensions = { 'toggleterm', 'nvim-tree' }
 }
+
 
 function M.setup()
     local ok, lualine = pcall(require, 'lualine')

@@ -13,7 +13,6 @@ function M.setup()
         [':'] = wilder.popupmenu_renderer({
             highlighter = wilder.basic_highlighter(),
             left = { ' ', wilder.popupmenu_devicons() },
-            min_width = '100%',
             min_height = 0,
             max_height = '30%',
             prompt_position = 'top',

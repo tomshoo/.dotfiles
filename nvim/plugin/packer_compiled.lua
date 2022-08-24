@@ -94,6 +94,11 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/bclose.vim",
     url = "https://github.com/rbgrouleff/bclose.vim"
   },
+  ["bufdelete.nvim"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/bufdelete.nvim",
+    url = "https://github.com/famiu/bufdelete.nvim"
+  },
   ["cmp-buffer"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/cmp-buffer",
@@ -124,11 +129,6 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/crates.nvim",
     url = "https://github.com/saecki/crates.nvim"
   },
-  everblush = {
-    loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/everblush",
-    url = "https://github.com/Everblush/everblush.nvim"
-  },
   ["gitsigns.nvim"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
@@ -140,10 +140,8 @@ _G.packer_plugins = {
     url = "https://github.com/lewis6991/impatient.nvim"
   },
   ["indent-blankline.nvim"] = {
-    load_after = {},
     loaded = true,
-    needs_bufread = false,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/opt/indent-blankline.nvim",
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/indent-blankline.nvim",
     url = "https://github.com/lukas-reineke/indent-blankline.nvim"
   },
   ["indent-o-matic"] = {
@@ -236,6 +234,11 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-terminal",
     url = "https://github.com/s1n7ax/nvim-terminal"
   },
+  ["nvim-toggler"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-toggler",
+    url = "https://github.com/nguyenvukhang/nvim-toggler"
+  },
   ["nvim-tree.lua"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-tree.lua",
@@ -281,6 +284,11 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-yati",
     url = "https://github.com/yioneko/nvim-yati"
   },
+  ["oxocarbon.nvim"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/oxocarbon.nvim",
+    url = "https://github.com/shaunsingh/oxocarbon.nvim"
+  },
   ["packer.nvim"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/packer.nvim",
@@ -315,6 +323,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/sqlite.lua",
     url = "https://github.com/tami5/sqlite.lua"
+  },
+  ["sxhkd-vim"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/sxhkd-vim",
+    url = "https://github.com/kovetskiy/sxhkd-vim"
   },
   tabular = {
     loaded = true,
@@ -394,11 +407,6 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Load plugins in order defined by `after`
-time([[Sequenced loading]], true)
-vim.cmd [[ packadd nvim-treesitter ]]
-vim.cmd [[ packadd indent-blankline.nvim ]]
-time([[Sequenced loading]], false)
 if should_profile then save_profiles() end
 
 end)

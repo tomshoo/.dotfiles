@@ -1,7 +1,7 @@
 local M = {}
 local icons = {
     Text = " ",
-    Method = "m ",
+    Method = " ",
     Function = " ",
     Constructor = " ",
     Field = " ",

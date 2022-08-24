@@ -13,6 +13,14 @@ function M.setup()
         pattern = "*",
         command = [[if &nu | set nornu | endif]]
     })
+    vim.api.nvim_create_autocmd({ "WinLeave" }, {
+        pattern = "*",
+        command = [[set nocursorline]]
+    })
+    vim.api.nvim_create_autocmd({ "WinLeave" }, {
+        pattern = "*",
+        command = [[set cursorline]]
+    })
 end
 
 return M

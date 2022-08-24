@@ -42,9 +42,12 @@ return packer.startup({
         use 'brenoprata10/nvim-highlight-colors'
         use "preservim/tagbar"
         use 'elkowar/yuck.vim'
+        use 'kovetskiy/sxhkd-vim'
         use "preservim/vim-markdown"
+        use 'famiu/bufdelete.nvim'
         use "godlygeek/tabular"
         use 'xolox/vim-misc'
+        use 'nguyenvukhang/nvim-toggler'
         use 'lifepillar/vim-colortemplate'
         use 'ryanoasis/vim-devicons'
         use 'numToStr/Comment.nvim'
@@ -53,7 +56,6 @@ return packer.startup({
         use 'rbgrouleff/bclose.vim'
         use 'Darazaki/indent-o-matic'
         use 'bluz71/vim-nightfly-guicolors'
-        use { 'Everblush/everblush.nvim', as = 'everblush' }
         use 'lewis6991/gitsigns.nvim'
         use 'folke/which-key.nvim'
         use 'ahmedkhalf/project.nvim'
@@ -73,10 +75,17 @@ return packer.startup({
             'petertriho/nvim-scrollbar',
             requires = 'kevinhwang91/nvim-hlslens'
         }
-        use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
+        use {
+            'kevinhwang91/nvim-ufo',
+            requires = 'kevinhwang91/promise-async'
+        }
         use {
             'nvim-telescope/telescope.nvim',
             requires = 'nvim-lua/plenary.nvim',
+        }
+        use {
+            'shaunsingh/oxocarbon.nvim',
+            run = './install.sh'
         }
         use {
             'TimUntersberger/neogit',
@@ -85,6 +94,12 @@ return packer.startup({
         use {
             'nvim-telescope/telescope-frecency.nvim',
             requires = 'tami5/sqlite.lua',
+        }
+        use {
+            'neovim/nvim-lspconfig',
+            requires = {
+                'williamboman/nvim-lsp-installer',
+            }
         }
         use {
             'hrsh7th/cmp-nvim-lsp',
@@ -97,13 +112,9 @@ return packer.startup({
                 'dcampos/cmp-snippy',
                 'onsails/lspkind.nvim',
                 'saecki/crates.nvim',
-                'ray-x/lsp_signature.nvim'
             }
         }
-        use {
-            'neovim/nvim-lspconfig',
-            requires = 'williamboman/nvim-lsp-installer'
-        }
+        use 'ray-x/lsp_signature.nvim'
         use {
             'nvim-treesitter/nvim-treesitter',
             run = ":TSUpdate",
@@ -111,15 +122,14 @@ return packer.startup({
                 'yioneko/nvim-yati',
                 'nvim-treesitter/nvim-treesitter-context',
                 'nvim-treesitter/nvim-treesitter-textobjects',
-                'p00f/nvim-ts-rainbow'
+                'p00f/nvim-ts-rainbow',
             }
         }
         use {
             "lukas-reineke/indent-blankline.nvim",
-            after = "nvim-treesitter",
+            requires = "nvim-treesitter/nvim-treesitter",
         }
         use 'nvim-neorg/neorg'
-
 
         if PACKER_BOOTSTRAP then
             require('packer').sync()

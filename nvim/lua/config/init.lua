@@ -12,14 +12,14 @@ _G.__luacache_config = {
 require('impatient')
 
 local plug_table = {
-    "Comment",
-    "gitsigns",
-    "which-key",
-    "project_nvim",
-    "toggleterm",
-    "scrollbar",
-    "scrollbar.handlers.search",
-    "indent-o-magic",
+    'Comment',
+    'gitsigns',
+    'which-key',
+    'project_nvim',
+    'toggleterm',
+    'scrollbar',
+    'scrollbar.handlers.search',
+    'indent-o-magic',
     'config.treesitter',
     'config.session',
     'config.telescope',
@@ -36,7 +36,8 @@ local plug_table = {
     'config.norg',
     'config.ufo',
     'config.colorizing',
-    --[[To be checked]] "twilight"
+    'config.toggler',
+    'twilight'
 }
 
 local function load_all()

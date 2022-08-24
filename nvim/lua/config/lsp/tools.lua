@@ -9,7 +9,6 @@ local function rusttools(formatter, sigup)
     tool.setup {
         autoSetHints = true,
         server = {
-            standalone = true,
             on_attach = function(client, bufnr)
                 if formatter then
                     formatter.on_attach(client)
