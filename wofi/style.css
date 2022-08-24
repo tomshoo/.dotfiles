@@ -1,5 +1,4 @@
 * {
-    all: unset;
     font-family: JetBrainsMonoNL, "Symbols Nerd Font", "Roboto Mono";
     font-size: 15px;
 }
@@ -17,14 +16,14 @@
 #inner-box {
     padding: 10px;
     margin: 10px;
-    background-color: #2b2b2b;
-    color: #aeb3bb;
+    background-color: #dde1e6;
+    color: #131313;
 }
 
 #scroll {
     border-radius: 10px;
-    background-color: #2b2b2b;
-    border: 2px solid #48b0fa;
+    background-color: #dde1e6;
+    border: 2px solid #78a9ff;
     margin: 10px;
 }
 
@@ -35,12 +34,13 @@
 }
 
 #entry expander list {
-    background-color: #176fad;
+    background-color: #33b1ff;
     border-radius: 10px;
 }
 
 #entry:selected {
-    background-color: #176fad;
+    color: #131313;
+    background-color: #33b1ff;
 }
 
 #entry > box {
@@ -55,9 +55,9 @@
 #input {
     border-radius: 10px;
     margin: 10px;
-    padding: 10px 20px;
-    border: 1.5px solid #0cf7e8;
-    background-color: #2b2b2b;
+    padding: 05px 15px;
+    border: 1.5px solid #82cfff;
+    background-color: #131313;
 }
 #input image {
     margin: 5px;
