@@ -1,11 +1,6 @@
 #!/bin/sh
 
 export MAIN_RATIO="0.55"
-export MOZ_ENABLE_WAYLAND=1
-
-riverctl border-color-focused 0x48b0fa
-riverctl border-color-unfocused 0x176fad
-riverctl border-width 1
 
 luajit $HOME/.config/river/init.lua
 exec rivercarro -main-ratio $MAIN_RATIO -inner-gaps 9 -outer-gaps 9 -no-smart-gaps

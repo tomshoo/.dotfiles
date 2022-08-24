@@ -1,10 +1,8 @@
 {
-    // asd
-    "width": 1900,
-    "spacing": 7,
+    "spacing": 1,
     "mode": "dock",
     "modules-center": [
-        "river/tags",
+        "river/tags"
     ],
     "modules-left": [
         "custom/start",
@@ -24,15 +22,15 @@
     ],
     "river/tags": {
         "tag-labels": [
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
         ]
     },
     "keyboard-state": {
@@ -159,8 +157,8 @@
     },
     "mpd": {
         "format": "{stateIcon}  {consumeIcon} {randomIcon} {repeatIcon} {singleIcon} ",
-        "format-disconnected": "Disconnected ",
-        "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ",
+        "format-disconnected": "ﲁ ",
+        "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon} <span color='#f53c3c'></span>  ",
         "interval": 2,
         "consume-icons": {
             "on": " " // Icon shows only when "consume" is on
@@ -181,10 +179,11 @@
         },
         "tooltip-format": "MPD (connected)",
         "tooltip-format-disconnected": "MPD (disconnected)",
-        "on-click": "mpc toggle",
-        "on-click-right": "mpc stop",
-        "on-scroll-up": "mpc next",
-        "on-scroll-down": "mpc prev",
-        "smooth-scrolling-threshold": 3
+        "on-click-middle": "mpc toggle",
+        "on-click-right": "mpc next",
+        "on-click-left": "mpc prev",
+        "on-scroll-down": "mpc stop",
+        "on-scroll-up": "mpc update",
+        "smooth-scrolling-threshold": 1
     }
 }

@@ -1,72 +1,49 @@
 * {
-    font-family: JetBrainsMonoNL, "Font Awesome 6 Brands", "Font Awesome 6 Free", Helvetica, Arial, sans-serif;
+    all: unset;
+    font-family: JetBrainsMonoNL, "Font Awesome 6 Brands", "Font Awesome 6 Free", JetBrainsMono Nerd Font, Helvetica, Arial, sans-serif;
     font-size: 14px;
-    padding: 3px 0px;
+}
+
+tooltip {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(64, 70, 71, 0.95);
 }
 
 window#waybar {
     background-color: rgba(64, 70, 71, 0.95);
     margin: 0;
-    border-radius: 0px 0px 15px 15px;
     color: #d8dee9;
     transition-property: background-color;
     transition-duration: .5s;
 }
 
-#workspaces {
-    background-color: #d8dee9;
-    border-radius: 0 0 15px 15px;
-    padding: 0 10px;
-}
-
-#workspaces button {
-    color: #1b1b1b;
-    padding: 0 7px;
-}
-
-#workspaces button.focused {
-    background-color: #4c666a;
-}
-
-#workspaces button.active {
-    background-color: rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 -2px #2b2b2b;
-}
-
-#workspaces button:hover {
-    background-color: rgba(0, 0, 0, 0.2);
-    color: #2b2b2b;
-}
-
 #tags {
-    background-color: #d8dee9;
-    border-radius: 0px 0px 15px 15px;
-    padding: 0px 15px 0px 15px;
+    padding: 0px 15px;
     box-shadow: 0px -4px 0px 0px #d8dee9;
-    color: #1b1b1b;
 }
 
 #tags button {
-    color: #1b1b1b;
-    margin: 0.5px 2px;
-    padding: 0px 7px 0px 7px;
+    color: #dadada;
+    border-radius: 0px;
+    padding: 0px 15px 0px 15px;
 }
 
 #tags button:hover {
-    background: rgba(0, 0, 0, 0.2);
+    color: #b4b9b8;
+    background: rgba(0,0,0, 0.2);
     box-shadow: inset 0 -2px #2b2b2b;
-    color: #2b2b2b;
 }
 
 #tags button.occupied {
-    color: #2b2b2b;
-    box-shadow: inset 0 -3px #2b2b2b;
+    color: #b4b9b8;
+    box-shadow: inset 0 -3px #b4b9b8;
 }
 
 #tags button.focused {
     background-color: #64727d;
     color: #d8dee9;
-    box-shadow: inset 0 -4px #2b2b2b;
+    box-shadow: inset 0 -4px #dadada;
 }
 
 #mode {
@@ -112,12 +89,10 @@ window#waybar {
 
 #clock {
     padding: 0px 15px 0px 15px;
-    border-radius: 15px;
     background-color: #1b1b1b;
 }
 
 #battery {
-    border-radius: 15px;
     padding: 0px 15px 0px 15px;
     background-color: #301b1c;
     color: #0cf7e8;
@@ -146,39 +121,33 @@ window#waybar {
 }
 
 #cpu {
-    border-radius: 15px;
     padding: 0px 15px 0px 15px;
     background-color: #1b1b1b;
     color: #d8dee9;
 }
 
 #memory {
-    border-radius: 15px;
     padding: 0px 15px 0px 15px;
     background-color: #1b1b1b;
 }
 
 #backlight {
-    border-radius: 15px;
     background-color: #1b1b1b;
 }
 
 #network {
-    border-radius: 15px;
     padding: 0px 15px 0px 15px;
     background-color: #1b1b1b;
     color: #0cf7e8;
 }
 
 #network.disconnected {
-    border-radius: 15px;
     background-color: #1b1b1b;
     color: #4c666a;
 }
 
 #pulseaudio {
     background-color: #1b1b1b;
-    border-radius: 15px;
     padding: 0px 15px 0px 15px;
     color: #d8dee9;
 }
@@ -189,7 +158,6 @@ window#waybar {
 }
 
 #tray {
-    border-radius: 15px;
     padding: 5px 15px 5px 15px;
     background-color: #1b1b1b;
 }
@@ -204,7 +172,6 @@ window#waybar {
 }
 
 #mpd {
-    border-radius: 15px;
     padding: 5px 15px 5px 15px;
     background-color: #1b1b1b;
     color: #d8dee9;
@@ -223,7 +190,6 @@ window#waybar {
 }
 
 #custom-start {
-    border-radius: 15px;
     padding: 0px 15px 0px 15px;
     background-color: #2b2b2b;
     color: #14b3f7;
@@ -231,15 +197,13 @@ window#waybar {
 
 #custom-power {
     padding: 0px 15px 0px 15px;
-    border-radius: 15px;
-    font-size: 25px;
+    font-size: 20px;
     background-color: #301b1c;
     color: #24c796;
 }
 
 #custom-warp {
     padding: 0px 15px 0px 15px;
-    border-radius: 15px;
     background-color: #071a24;
     color: #d8dee9;
 }

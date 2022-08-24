@@ -3,7 +3,7 @@ local bits = require("bit")
 
 -- Configure variables for init
 local scripts    = os.getenv("HOME") .. "/.config/river/scripts"
-local main_ratio = 0.55
+local main_ratio = os.getenv("MAIN_RATIO")
 local main_low   = 0.25
 local main_high  = 0.75
 
@@ -116,6 +116,12 @@ local device = {
         ["tap"] = "enabled",
         ["natural-scroll"] = "enabled"
     }
+}
+
+local border = {
+    ["color-focused"] = "0x48b0fa",
+    ["color-unfocused"] = "0x000000",
+    width = 1
 }
 
 -- Autostart applications
@@ -436,6 +442,10 @@ end
 
 for _, app in ipairs(floating_apps) do
     os.execute(string.format([[riverctl float-filter-add app-id "%s"]], app))
+end
+
+for prop, value in pairs(border) do
+    os.execute(string.format([[riverctl border-%s %s]], prop, value))
 end
 
 os.execute(string.format("systemctl --user import-environment %s", table.concat(systemd_env, ' ')))
