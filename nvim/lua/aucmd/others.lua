@@ -13,11 +13,11 @@ function M.setup()
         pattern = "*",
         command = [[if &nu | set nornu | endif]]
     })
-    vim.api.nvim_create_autocmd({ "WinLeave" }, {
+    vim.api.nvim_create_autocmd({ "BufWinLeave", "WinLeave" }, {
         pattern = "*",
         command = [[set nocursorline]]
     })
-    vim.api.nvim_create_autocmd({ "WinLeave" }, {
+    vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
         pattern = "*",
         command = [[set cursorline]]
     })

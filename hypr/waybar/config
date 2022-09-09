@@ -147,7 +147,7 @@
     },
     "mpd": {
         "format": "{stateIcon}  {consumeIcon} {randomIcon} {repeatIcon} {singleIcon} ",
-        "format-disconnected": "ﲁ ",
+        "format-disconnected": "",
         "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon} <span color='#f53c3c'></span>  ",
         "interval": 2,
         "consume-icons": {

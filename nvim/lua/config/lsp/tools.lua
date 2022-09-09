@@ -16,18 +16,22 @@ local function rusttools(formatter, sigup)
                 if sigup then
                     require('lsp_signature').on_attach(sigup, bufnr)
                 end
-                local opts = { buffer = bufnr, noremap = true, silent = true }
-                vim.keymap.set("n", "<Leader>h", tool.hover_actions.hover_actions, opts)
-                vim.keymap.set("n", "<Leader>a", tool.code_action_group.code_action_group, opts)
-                vim.keymap.set("n", "<Leader>e", tool.expand_macro.expand_macro, opts)
-                vim.keymap.set("n", "<Leader>r", tool.runnables.runnables, opts)
+                map("n", "<Leader>h", tool.hover_actions.hover_actions, { buffer = bufnr })
+                map("n", "<Leader>e", tool.expand_macro.expand_macro,
+                    { buffer = bufnr, desc = "Expand macro under cursor" })
+                require('config.lsp.mappings')(bufnr)
             end,
             ["rust-analyzer"] = {
                 checkOnSave = {
                     enable = true,
                     command = "clippy",
                     allTargets = false,
-                    overrideCommand = "clippy",
+                },
+                diagnostics = {
+                    disabled = { "unresolved-import" }
+                },
+                cargo = {
+                    loadOutDirsFromCheck = true
                 }
             }
         },

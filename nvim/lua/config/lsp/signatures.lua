@@ -1,6 +1,10 @@
 local M = {}
 
-local cfg = {}
+local cfg = {
+    always_trigger = true,
+    border = "rounded",
+    hint_prefix = "-> "
+}
 
 function M.setup()
     local ok, sig = pcall(require, 'lsp_signature')

@@ -40,6 +40,7 @@ return packer.startup({
         use 'samjwill/nvim-unception'
         use 'jghauser/mkdir.nvim'
         use 'brenoprata10/nvim-highlight-colors'
+        use 'linkinpark342/xonsh-vim'
         use "preservim/tagbar"
         use 'elkowar/yuck.vim'
         use 'kovetskiy/sxhkd-vim'
@@ -71,6 +72,7 @@ return packer.startup({
         use 'nvim-lualine/lualine.nvim'
         use 'kosayoda/nvim-lightbulb'
         use 'gelguy/wilder.nvim'
+        use 'folke/tokyonight.nvim'
         use {
             'petertriho/nvim-scrollbar',
             requires = 'kevinhwang91/nvim-hlslens'
@@ -82,10 +84,6 @@ return packer.startup({
         use {
             'nvim-telescope/telescope.nvim',
             requires = 'nvim-lua/plenary.nvim',
-        }
-        use {
-            'shaunsingh/oxocarbon.nvim',
-            run = './install.sh'
         }
         use {
             'TimUntersberger/neogit',
@@ -123,6 +121,7 @@ return packer.startup({
                 'nvim-treesitter/nvim-treesitter-context',
                 'nvim-treesitter/nvim-treesitter-textobjects',
                 'p00f/nvim-ts-rainbow',
+                'nvim-treesitter/playground'
             }
         }
         use {

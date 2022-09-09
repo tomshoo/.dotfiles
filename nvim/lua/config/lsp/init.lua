@@ -25,6 +25,21 @@ local lsp_config = {
     jsonls = {},
     cssls = {},
     vimls = {},
+    efm = {
+        flags = {
+            debounce_text_changes = 150,
+        },
+        init_options = { documentFormatting = true },
+        filetypes = { "python" },
+        settings = {
+            rootMarkers = { ".git/" },
+            languages = {
+                python = {
+                    { formatCommand = "black --quiet -", formatStdin = true }
+                }
+            }
+        }
+    }
 }
 
 function M.setup()
@@ -42,25 +57,9 @@ function M.setup()
         return false
     end
 
-    require('config.lsp.tools').setup(formatter, sigup)
     for server, config in pairs(lsp_config) do
         config.on_attach = function(client, bufnr)
-            local opts = { noremap = true, silent = true, buffer = bufnr }
-            vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-            vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-            vim.keymap.set('n', '<C-space>', vim.lsp.buf.hover, opts)
-            vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-            vim.keymap.set('n', '<C-i>', vim.lsp.buf.signature_help, opts)
-            vim.keymap.set('n', '<Leader>Wa', vim.lsp.buf.add_workspace_folder, opts)
-            vim.keymap.set('n', '<Leader>Wr', vim.lsp.buf.remove_workspace_folder, opts)
-            vim.keymap.set('n', '<Leader>Wl', function()
-                print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-            end, opts)
-            vim.keymap.set('n', '<Leader>D', vim.lsp.buf.type_definition, opts)
-            vim.keymap.set('n', '<Leader>f<F2>', vim.lsp.buf.rename, opts)
-            vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action, opts)
-            vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-            vim.keymap.set('n', '<Leader>f', vim.lsp.buf.formatting, opts)
+            require('config.lsp.mappings')(bufnr)
             if formatter then
                 formatter.on_attach(client)
             end
@@ -77,6 +76,8 @@ function M.setup()
         end
         lspconfig[server].setup(config)
     end
+    require('config.lsp.tools').setup(formatter, sigup)
+    require('config.lsp.lightbulb').setup()
     return true
 end
 

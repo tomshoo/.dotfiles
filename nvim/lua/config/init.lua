@@ -11,37 +11,36 @@ _G.__luacache_config = {
 
 require('impatient')
 
-local plug_table = {
-    'Comment',
-    'gitsigns',
-    'which-key',
-    'project_nvim',
-    'toggleterm',
-    'scrollbar',
-    'scrollbar.handlers.search',
-    'indent-o-magic',
-    'config.treesitter',
-    'config.session',
-    'config.telescope',
-    'config.lsp',
-    'config.git',
-    'config.autopairs',
-    'config.nvimtree',
-    'config.lualine',
-    'config.bufferline',
-    'config.dashboard',
-    'config.indentguide',
-    'config.trouble',
-    'config.wilder',
-    'config.norg',
-    'config.ufo',
-    'config.colorizing',
-    'config.toggler',
-    'twilight'
-}
-
 local function load_all()
-    for _, plug in ipairs(plug_table) do
+    for _, plug in ipairs({
+        'config.colorscheme',
+        'Comment',
+        'gitsigns',
+        'which-key',
+        'project_nvim',
+        'toggleterm',
+        'scrollbar',
+        'scrollbar.handlers.search',
+        'indent-o-magic',
+        'config.treesitter',
+        'config.session',
+        'config.telescope',
+        'config.lsp',
+        'config.git',
+        'config.autopairs',
+        'config.nvimtree',
+        'config.lualine',
+        'config.bufferline',
+        'config.dashboard',
+        'config.indentguide',
+        'config.trouble',
+        'config.wilder',
+        'config.norg',
+        'config.ufo',
+        'config.colorizing',
+        'config.toggler',
+        'twilight'
+    }) do
         local ok, loader = pcall(require, plug)
         if ok then
             loader.setup()
