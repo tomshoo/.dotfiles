@@ -2,16 +2,24 @@ local M = {}
 
 local cfg = {
     style = "night",
-    transparent = (function()
-        if vim.fn.exists('g:neovide') == 1 then
-            return false
-        else
-            return true
-        end
-    end)()
+    transparent = false,
+    styles = {
+        comments = "NONE",
+        keywords = "italic",
+        functions = "underline",
+        variables = "NONE",
+    },
+    lualine_bold = true
 }
 
 function M.setup()
+    if vim.fn.exists('g:neovide') == 0 then
+        local ok, _ = pcall(vim.cmd [[ set termguicolors | colorscheme nightfly ]])
+        if not ok then
+            return false
+        end
+        return true
+    end
     local colorscheme = 'tokyonight'
     local ok, colors = pcall(require, colorscheme)
     if not ok then

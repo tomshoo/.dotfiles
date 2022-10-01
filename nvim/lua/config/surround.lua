@@ -1,15 +1,14 @@
 local M = {}
 
-local cfg = {
-    ["core.defaults"] = {}
-}
+local cfg = {}
 
 function M.setup()
-    local ok, norg = pcall(require, 'neorg')
+    local ok, surr = pcall(require, 'nvim-surround')
     if not ok then
         return false
     end
-    norg.setup(cfg)
+
+    surr.setup(cfg)
     return true
 end
 

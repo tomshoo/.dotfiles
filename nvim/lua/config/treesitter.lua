@@ -16,7 +16,6 @@ local config = {
         "jsonc",
         "cpp",
         "markdown",
-        "norg"
     },
     sync_install = false,
     highlight = {

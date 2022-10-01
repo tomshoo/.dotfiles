@@ -1,8 +1,3 @@
-vim.cmd [[
-    noremap <Space> <Nop>
-    let mapleader = " "
-]]
-
 _G.map = function(mode, key, action, opts)
     local options = {
         remap = false,
@@ -14,11 +9,14 @@ _G.map = function(mode, key, action, opts)
     vim.keymap.set(mode, key, action, options)
 end
 
+map("n", "<Space>", "<Nop>")
+vim.g.mapleader = " "
+
 local function set()
-    map("n", "<S-h>", "<C-w>h", { noremap = false })
-    map("n", "<S-j>", "<C-w>j", { noremap = false })
-    map("n", "<S-k>", "<C-w>k", { noremap = false })
-    map("n", "<S-l>", "<C-w>l", { noremap = false })
+    map("n", "<S-h>", "<C-w>h", { remap = true })
+    map("n", "<S-j>", "<C-w>j", { remap = true })
+    map("n", "<S-k>", "<C-w>k", { remap = true })
+    map("n", "<S-l>", "<C-w>l", { remap = true })
 
     map("n", "<Leader>sv", "<C-w>v<cmd>enew<CR>", { desc = "Open a new vertical split" })
     map("n", "<Leader>sh", "<C-w>h<cmd>enew<CR>", { desc = "Open a new horizontal split" })
@@ -32,13 +30,14 @@ local function set()
     map("n", "<Leader>bQ", "<cmd>bw<CR>", { desc = "Completly wipe current buffer" })
 
     map("n", "<Leader>u", "<cmd>TSToggle highlight<CR>")
-    map("n", "<F3>", "<cmd>TagbarToggle<CR>")
+    map("n", "<F3>", "<cmd>SymbolsOutline<CR>")
 
     map("n", "<F2>", "<cmd>NvimTreeToggle<CR>")
     map("n", "<Leader>`", "<cmd>ToggleTerm<CR>")
 
     map("n", "<Home>", extended_home)
     map("i", "<Home>", "<C-o><Home>", { remap = true })
+    map("n", "<C-a>", "ggVG")
 
     map("n", "<Leader>s", scratchpad, { desc = "Launch a scratchpad" })
 

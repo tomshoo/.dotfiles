@@ -29,12 +29,15 @@ local handler = function(virtText, lnum, endLnum, width, truncate)
 end
 
 local ftMap = {
-    toml = { 'treesitter', 'indent' },
-    rust = { 'treesitter', 'indent' },
     NeogitCommitMessage = { 'indent' }
 }
 
 function M.setup()
+    local ok, ufo = pcall(require, 'ufo')
+    if not ok then
+        return false
+    end
+
     vim.opt.foldcolumn = '1'
     vim.opt.foldlevelstart = 1000
 
@@ -43,17 +46,17 @@ function M.setup()
 
 
     -- global handler
-    require('ufo').setup({
+    ufo.setup({
         fold_virt_text_handler = handler,
         provider_selector = function(_, ft, _)
-            return ftMap[ft]
+            return ftMap[ft] or { 'treesitter', 'indent' }
         end
     })
 
     -- buffer scope handler
     -- will override global handler if it is existed
     local bufnr = vim.api.nvim_get_current_buf()
-    require('ufo').setFoldVirtTextHandler(bufnr, handler)
+    ufo.setFoldVirtTextHandler(bufnr, handler)
 end
 
 return M

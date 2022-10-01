@@ -86,13 +86,13 @@ local function generate_config(cmp)
                 local strings = vim.split(kind.kind, " ", { triempty = true })
                 kind.kind = " " .. strings[1] .. " "
                 kind.menu = "        " .. ({
-                    nvim_lsp = "[L]",
-                    snippy = "[S]",
-                    buffer = "[B]",
-                    path = "[F]",
-                    nvim_lua = "[V]",
-                    crates = "[C]"
-                })[entry.source.name] .. " (" .. strings[3] .. ")"
+                    nvim_lsp = " ",
+                    snippy = " ",
+                    buffer = " ",
+                    path = "/ ",
+                    nvim_lua = " ",
+                    crates = " "
+                })[entry.source.name] .. " [ " .. strings[3] .. " ]"
 
                 return kind
             end,
@@ -101,8 +101,7 @@ local function generate_config(cmp)
 
     if sok then
         config.snippet = {
-            expand = function(args) snippy.expand_snippet(args.body)
-            end
+            expand = function(args) snippy.expand_snippet(args.body) end
         }
     end
 

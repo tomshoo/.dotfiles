@@ -184,11 +184,6 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/neogit",
     url = "https://github.com/TimUntersberger/neogit"
   },
-  neorg = {
-    loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/neorg",
-    url = "https://github.com/nvim-neorg/neorg"
-  },
   ["nvim-autopairs"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-autopairs",
@@ -224,6 +219,11 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
   },
+  ["nvim-neoclip.lua"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-neoclip.lua",
+    url = "https://github.com/AckslD/nvim-neoclip.lua"
+  },
   ["nvim-scrollbar"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-scrollbar",
@@ -234,10 +234,10 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-snippy",
     url = "https://github.com/dcampos/nvim-snippy"
   },
-  ["nvim-terminal"] = {
+  ["nvim-surround"] = {
     loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-terminal",
-    url = "https://github.com/s1n7ax/nvim-terminal"
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-surround",
+    url = "https://github.com/kylechui/nvim-surround"
   },
   ["nvim-toggler"] = {
     loaded = true,
@@ -289,6 +289,11 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/nvim-yati",
     url = "https://github.com/yioneko/nvim-yati"
   },
+  orgmode = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/orgmode",
+    url = "https://github.com/nvim-orgmode/orgmode"
+  },
   ["packer.nvim"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/packer.nvim",
@@ -329,20 +334,15 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/sqlite.lua",
     url = "https://github.com/tami5/sqlite.lua"
   },
-  ["sxhkd-vim"] = {
+  ["symbols-outline.nvim"] = {
     loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/sxhkd-vim",
-    url = "https://github.com/kovetskiy/sxhkd-vim"
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/symbols-outline.nvim",
+    url = "https://github.com/simrat39/symbols-outline.nvim"
   },
   tabular = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/tabular",
     url = "https://github.com/godlygeek/tabular"
-  },
-  tagbar = {
-    loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/tagbar",
-    url = "https://github.com/preservim/tagbar"
   },
   ["telescope-frecency.nvim"] = {
     loaded = true,
@@ -374,21 +374,6 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/twilight.nvim",
     url = "https://github.com/folke/twilight.nvim"
   },
-  ["vim-colortemplate"] = {
-    loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/vim-colortemplate",
-    url = "https://github.com/lifepillar/vim-colortemplate"
-  },
-  ["vim-devicons"] = {
-    loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/vim-devicons",
-    url = "https://github.com/ryanoasis/vim-devicons"
-  },
-  ["vim-markdown"] = {
-    loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/vim-markdown",
-    url = "https://github.com/preservim/vim-markdown"
-  },
   ["vim-misc"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/vim-misc",
@@ -408,16 +393,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/wilder.nvim",
     url = "https://github.com/gelguy/wilder.nvim"
-  },
-  ["xonsh-vim"] = {
-    loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/xonsh-vim",
-    url = "https://github.com/linkinpark342/xonsh-vim"
-  },
-  ["yuck.vim"] = {
-    loaded = true,
-    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/yuck.vim",
-    url = "https://github.com/elkowar/yuck.vim"
   }
 }
 

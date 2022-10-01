@@ -2,10 +2,8 @@ local fn = vim.fn
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
     PACKER_BOOTSTRAP = fn.system({
-        'git',
-        'clone',
-        '--depth',
-        '1',
+        'git', 'clone',
+        '--depth', '1',
         'https://github.com/wbthomason/packer.nvim',
         install_path
     })
@@ -20,115 +18,83 @@ vim.cmd [[
   augroup end
 ]]
 
-local packer = require("packer")
+local packer = require('packer')
 
 packer.init({
 
     display = {
         open_fn = function()
-            return require("packer.util").float({ border = 'rounded' })
+            return require('packer.util').float({ border = 'rounded' })
         end
     }
 })
 
 return packer.startup({
     function(use)
-        use 'wbthomason/packer.nvim'
-        use 'lewis6991/impatient.nvim'
-        use 'olimorris/persisted.nvim'
-        use "s1n7ax/nvim-terminal"
-        use 'samjwill/nvim-unception'
-        use 'jghauser/mkdir.nvim'
-        use 'brenoprata10/nvim-highlight-colors'
-        use 'linkinpark342/xonsh-vim'
-        use "preservim/tagbar"
-        use 'elkowar/yuck.vim'
-        use 'kovetskiy/sxhkd-vim'
-        use "preservim/vim-markdown"
-        use 'famiu/bufdelete.nvim'
-        use "godlygeek/tabular"
-        use 'xolox/vim-misc'
-        use 'nguyenvukhang/nvim-toggler'
-        use 'lifepillar/vim-colortemplate'
-        use 'ryanoasis/vim-devicons'
-        use 'numToStr/Comment.nvim'
-        use "folke/twilight.nvim"
-        use 'antoinemadec/FixCursorHold.nvim'
-        use 'rbgrouleff/bclose.vim'
-        use 'Darazaki/indent-o-matic'
-        use 'bluz71/vim-nightfly-guicolors'
-        use 'lewis6991/gitsigns.nvim'
-        use 'folke/which-key.nvim'
-        use 'ahmedkhalf/project.nvim'
-        use 'windwp/nvim-autopairs'
-        use 'folke/trouble.nvim'
-        use 'akinsho/toggleterm.nvim'
-        use 'kyazdani42/nvim-web-devicons'
-        use 'romgrk/barbar.nvim'
-        use "kyazdani42/nvim-tree.lua"
-        use 'goolord/alpha-nvim'
-        use 'simrat39/rust-tools.nvim'
-        use "lukas-reineke/lsp-format.nvim"
-        use 'nvim-lualine/lualine.nvim'
-        use 'kosayoda/nvim-lightbulb'
-        use 'gelguy/wilder.nvim'
-        use 'folke/tokyonight.nvim'
-        use {
-            'petertriho/nvim-scrollbar',
-            requires = 'kevinhwang91/nvim-hlslens'
-        }
-        use {
-            'kevinhwang91/nvim-ufo',
-            requires = 'kevinhwang91/promise-async'
-        }
-        use {
-            'nvim-telescope/telescope.nvim',
-            requires = 'nvim-lua/plenary.nvim',
-        }
-        use {
-            'TimUntersberger/neogit',
-            requires = 'nvim-lua/plenary.nvim'
-        }
-        use {
-            'nvim-telescope/telescope-frecency.nvim',
-            requires = 'tami5/sqlite.lua',
-        }
-        use {
-            'neovim/nvim-lspconfig',
-            requires = {
-                'williamboman/nvim-lsp-installer',
-            }
-        }
-        use {
-            'hrsh7th/cmp-nvim-lsp',
-            requires = {
-                'hrsh7th/cmp-buffer',
-                'hrsh7th/cmp-path',
-                'hrsh7th/cmp-nvim-lua',
-                'hrsh7th/nvim-cmp',
-                'dcampos/nvim-snippy',
-                'dcampos/cmp-snippy',
-                'onsails/lspkind.nvim',
-                'saecki/crates.nvim',
-            }
-        }
-        use 'ray-x/lsp_signature.nvim'
-        use {
-            'nvim-treesitter/nvim-treesitter',
-            run = ":TSUpdate",
-            requires = {
-                'yioneko/nvim-yati',
-                'nvim-treesitter/nvim-treesitter-context',
-                'nvim-treesitter/nvim-treesitter-textobjects',
-                'p00f/nvim-ts-rainbow',
-                'nvim-treesitter/playground'
-            }
-        }
-        use {
-            "lukas-reineke/indent-blankline.nvim",
-            requires = "nvim-treesitter/nvim-treesitter",
-        }
-        use 'nvim-neorg/neorg'
+        use({ 'wbthomason/packer.nvim' })
+        use({ 'lewis6991/impatient.nvim' })
+        use({ 'olimorris/persisted.nvim' })
+        use({ 'samjwill/nvim-unception' })
+        use({ 'jghauser/mkdir.nvim' })
+        use({ 'brenoprata10/nvim-highlight-colors' })
+        use({ 'famiu/bufdelete.nvim' })
+        use({ 'godlygeek/tabular' })
+        use({ 'xolox/vim-misc' })
+        use({ 'nguyenvukhang/nvim-toggler' })
+        use({ 'numToStr/Comment.nvim' })
+        use({ 'folke/twilight.nvim' })
+        use({ 'antoinemadec/FixCursorHold.nvim' })
+        use({ 'rbgrouleff/bclose.vim' })
+        use({ 'Darazaki/indent-o-matic' })
+        use({ 'bluz71/vim-nightfly-guicolors' })
+        use({ 'lewis6991/gitsigns.nvim' })
+        use({ 'folke/which-key.nvim' })
+        use({ 'ahmedkhalf/project.nvim' })
+        use({ 'windwp/nvim-autopairs' })
+        use({ 'folke/trouble.nvim' })
+        use({ 'akinsho/toggleterm.nvim' })
+        use({ 'kyazdani42/nvim-web-devicons' })
+        use({ 'romgrk/barbar.nvim' })
+        use({ 'kyazdani42/nvim-tree.lua' })
+        use({ 'goolord/alpha-nvim' })
+        use({ 'simrat39/rust-tools.nvim' })
+        use({ 'simrat39/symbols-outline.nvim' })
+        use({ 'lukas-reineke/lsp-format.nvim' })
+        use({ 'nvim-lualine/lualine.nvim' })
+        use({ 'kosayoda/nvim-lightbulb' })
+        use({ 'gelguy/wilder.nvim' })
+        use({ 'folke/tokyonight.nvim' })
+        use({ 'kylechui/nvim-surround' })
+        use({ 'AckslD/nvim-neoclip.lua' })
+        use({ 'ray-x/lsp_signature.nvim' })
+        use({ 'nvim-orgmode/orgmode' })
+
+        use({ 'petertriho/nvim-scrollbar', requires = 'kevinhwang91/nvim-hlslens' })
+        use({ 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' })
+        use({ 'nvim-telescope/telescope.nvim', requires = 'nvim-lua/plenary.nvim' })
+        use({ 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' })
+        use({ 'nvim-telescope/telescope-frecency.nvim', requires = 'tami5/sqlite.lua', })
+        use({ 'neovim/nvim-lspconfig', requires = 'williamboman/nvim-lsp-installer' })
+        use({ 'lukas-reineke/indent-blankline.nvim', requires = 'nvim-treesitter/nvim-treesitter' })
+
+        use({ 'hrsh7th/cmp-nvim-lsp', requires = {
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-path',
+            'hrsh7th/cmp-nvim-lua',
+            'hrsh7th/nvim-cmp',
+            'dcampos/nvim-snippy',
+            'dcampos/cmp-snippy',
+            'onsails/lspkind.nvim',
+            'saecki/crates.nvim',
+        } })
+
+        use({ 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate', requires = {
+            'yioneko/nvim-yati',
+            'nvim-treesitter/nvim-treesitter-context',
+            'nvim-treesitter/nvim-treesitter-textobjects',
+            'p00f/nvim-ts-rainbow',
+            'nvim-treesitter/playground'
+        } })
 
         if PACKER_BOOTSTRAP then
             require('packer').sync()

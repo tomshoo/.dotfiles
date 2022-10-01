@@ -20,6 +20,7 @@ local function rusttools(formatter, sigup)
                 map("n", "<Leader>e", tool.expand_macro.expand_macro,
                     { buffer = bufnr, desc = "Expand macro under cursor" })
                 require('config.lsp.mappings')(bufnr)
+                require('config.lsp.highlight_symbol').setup(client, bufnr)
             end,
             ["rust-analyzer"] = {
                 checkOnSave = {

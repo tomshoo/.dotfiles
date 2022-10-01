@@ -19,9 +19,6 @@ local lsp_config = {
     pyright = {},
     clangd = {},
     bashls = {},
-    asm_lsp = {
-        command = "asm-lsp",
-    },
     jsonls = {},
     cssls = {},
     vimls = {},
@@ -39,7 +36,9 @@ local lsp_config = {
                 }
             }
         }
-    }
+    },
+    html = {},
+    gopls = {},
 }
 
 function M.setup()
@@ -66,6 +65,7 @@ function M.setup()
             if sigup then
                 require('lsp_signature').on_attach(sigup, bufnr)
             end
+            require('config.lsp.highlight_symbol').setup(bufnr)
         end
         if cmpup then
             config.capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -78,6 +78,19 @@ function M.setup()
     end
     require('config.lsp.tools').setup(formatter, sigup)
     require('config.lsp.lightbulb').setup()
+    require('config.lsp.symbols').setup()
+
+    vim.cmd [[
+        highlight! DiagnosticLineNrError guibg=#51202A guifg=#FF0000 gui=bold
+        highlight! DiagnosticLineNrWarn guibg=#51412A guifg=#FFA500 gui=bold
+        highlight! DiagnosticLineNrInfo guibg=#1E535D guifg=#00FFFF gui=bold
+        highlight! DiagnosticLineNrHint guibg=#1E205D guifg=#0000FF gui=bold
+
+        sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
+        sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticLineNrWarn
+        sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticLineNrInfo
+        sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticLineNrHint
+    ]]
     return true
 end
 

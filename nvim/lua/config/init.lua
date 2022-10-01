@@ -35,10 +35,12 @@ local function load_all()
         'config.indentguide',
         'config.trouble',
         'config.wilder',
-        'config.norg',
+        'config.org',
         'config.ufo',
-        'config.colorizing',
+        'config.colorizer',
         'config.toggler',
+        'config.surround',
+        'config.clipboard',
         'twilight'
     }) do
         local ok, loader = pcall(require, plug)
@@ -49,21 +51,4 @@ local function load_all()
 end
 
 -- Load everything
-
 load_all()
-
-local signs = {
-    Error = " ",
-    Warning = " ",
-    Hint = " ",
-    Information = " "
-}
-
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, {
-        text = icon,
-        texthl = hl,
-        numhl = ""
-    })
-end

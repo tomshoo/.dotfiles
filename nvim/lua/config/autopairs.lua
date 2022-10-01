@@ -36,18 +36,21 @@ function M.setup()
                 local context = opts.line:sub(col - 1, col + 2)
                 return vim.tbl_contains({ '(  )', '{  }', '[  ]' }, context)
             end),
+
         rule('', ' )')
             :with_pair(condition.none())
             :with_move(function(opts) return opts.char == ')' end)
             :with_cr(condition.none())
             :with_del(condition.none())
             :use_key(')'),
+
         rule('', ' }')
             :with_pair(condition.none())
             :with_move(function(opts) return opts.char == '}' end)
             :with_cr(condition.none())
             :with_del(condition.none())
             :use_key('}'),
+
         rule('', ' ]')
             :with_pair(condition.none())
             :with_move(function(opts) return opts.char == ']' end)

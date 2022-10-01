@@ -11,15 +11,15 @@ function M.setup()
     vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, {
         group = numbertoggle,
         pattern = "*",
-        command = [[if &nu | set nornu | endif]]
+        command = "if &nu | set nornu | endif"
     })
-    vim.api.nvim_create_autocmd({ "BufWinLeave", "WinLeave" }, {
+    vim.api.nvim_create_autocmd({ "InsertEnter", "BufWinLeave", "WinLeave" }, {
         pattern = "*",
-        command = [[set nocursorline]]
+        command = "set nocursorline"
     })
-    vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+    vim.api.nvim_create_autocmd({ "InsertLeave", "FocusGained", "BufWinEnter", "WinEnter" }, {
         pattern = "*",
-        command = [[set cursorline]]
+        command = "set cursorline"
     })
 end
 

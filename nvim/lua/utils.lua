@@ -1,5 +1,5 @@
 -- Launch Scratchpad to well.. scratch
-function _G.scratchpad()
+_G.scratchpad = function()
     vim.cmd [[
         vsplit
         noswapfile hide enew
@@ -11,7 +11,7 @@ function _G.scratchpad()
 end
 
 -- VSCode like Home key
-function _G.extended_home()
+_G.extended_home = function()
     local col = vim.fn.col('.')
     vim.cmd "normal! ^"
     if col == vim.fn.col('.') then

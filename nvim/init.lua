@@ -1,3 +1,5 @@
+_G.version = vim.version()
+
 require('utils')
 require("maps")
 require('plugins')
@@ -28,20 +30,20 @@ endif
 
 vim.opt.wrap       = false
 vim.opt.wildmode   = "list:longest:full"
-vim.opt.signcolumn = "auto:2"
+vim.opt.signcolumn = "yes:2"
 
 vim.opt.fillchars:append("stlnc:·")
 
 vim.opt.rtp:append(os.getenv("HOME") .. "/.config/nvim/")
 
-vim.opt.guicursor = "v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor21,n:hor10"
+vim.opt.guicursor = "r-v-c-sm:block,i-ci-ve:ver25,cr-o:hor21,n:hor10"
 
 vim.opt.list = true
 vim.opt.listchars:append({
-    eol = "⏎",
-    tab = "␉·",
+    eol   = "⏎",
+    tab   = "␉·",
     trail = "␠",
-    nbsp = "⎵",
+    nbsp  = "⎵",
 })
 
 vim.opt.ruler = true
@@ -64,11 +66,11 @@ vim.g.colorizer_startup = 1
 -- For Conceal markers
 if vim.fn.has('conceal')
 then
-    vim.opt.conceallevel = 2
-    vim.opt.concealcursor = "nv"
+    vim.opt.conceallevel  = 2
+    vim.opt.concealcursor = "nvc"
 end
 
--- Some thing I had in my old config dont really remember why
+-- Set cursorhold update time to a larger value to not make things messed up
 vim.g.cursorhold_updatetime = 100
 
 -- Disable netrw

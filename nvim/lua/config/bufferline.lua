@@ -15,7 +15,7 @@ function M.setup()
         pattern = '*',
         callback = function()
             if vim.bo.filetype == 'NvimTree' then
-                require('bufferline.state').set_offset(35, 'Explorer')
+                require('bufferline.api').set_offset(35, 'Explorer')
             end
         end
     })
