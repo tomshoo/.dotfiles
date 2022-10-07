@@ -1,6 +1,41 @@
 #!/bin/sh
 
 export MAIN_RATIO="0.55"
+export SCRIPTS="$HOME/.config/river/scripts/"
+export TILER="rivertile"
 
-luajit $HOME/.config/river/init.lua
-exec rivercarro -main-ratio $MAIN_RATIO -inner-gaps 9 -outer-gaps 9 -no-smart-gaps
+if [ -z "$(pidof pipewire)" ]; then
+    pipewire &
+    sleep 1
+    pipewire-pulse &
+fi
+
+[ -z "$(pidof mpd)" ]   && mpd &
+[ -z "$(pidof dunst)" ] && dunst &
+
+luajit "$HOME/.config/river/init.lua"
+
+riverctl map normal Mod4       Return spawn "footclient -- tmux"
+riverctl map normal Mod4       Space  spawn "wofi --show drun"
+riverctl map normal Mod4       B      spawn "killall -SIGUSR1 waybar"
+riverctl map normal Mod4       E      spawn "thunar"
+riverctl map normal Mod4+Shift B      spawn "$SCRIPTS/waybar.sh"
+riverctl map normal Mod4+Shift Return spawn "footclient"
+
+for i in $(seq 1 9); do
+    riverctl map normal Mod4       "$i" spawn "$SCRIPTS/workspace.sh -g $i"
+    riverctl map normal Mod4+Mod1  "$i" spawn "$SCRIPTS/workspace.sh -m $i"
+    riverctl map normal Mod4+Shift "$i" spawn "$SCRIPTS/workspace.sh -s $i"
+done
+
+for mode in normal locked; do
+    riverctl map $mode None XF86AudioRaiseVolume  "$SCRIPTS/volume -i 5"
+    riverctl map $mode None XF86AudioLowerVolume  "$SCRIPTS/volume -d 5"
+    riverctl map $mode None XF86AudioMute         "$SCRIPTS/volume -m 0"
+    riverctl map $mode None XF86MonBrightnessUp   "$SCRIPTS/brightness -i 2.5"
+    riverctl map $mode None XF86MonBrightnessDown "$SCRIPTS/brightness -d 2.5"
+done
+
+echo $TILER
+riverctl default-layout "$TILER"
+exec rivertile -main-ratio $MAIN_RATIO -outer-padding 4 -view-padding 3

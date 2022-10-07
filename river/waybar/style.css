@@ -1,6 +1,6 @@
 * {
     all: unset;
-    font-family: JetBrainsMonoNL, "Font Awesome 6 Brands", "Font Awesome 6 Free", JetBrainsMono Nerd Font, Helvetica, Arial, sans-serif;
+    font-family: JetBrainsMono Nerd Font, Helvetica, Arial, sans-serif;
     font-size: 14px;
 }
 
@@ -191,7 +191,7 @@ window#waybar {
 #custom-start {
     padding: 0px 15px 0px 15px;
     background-color: #2b2b2b;
-    color: #14b3f7;
+    color: #24c796;
 }
 
 #custom-power {

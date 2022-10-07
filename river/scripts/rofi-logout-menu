@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #LOCK=""
 #QUIT=""
@@ -15,7 +15,7 @@ SUSPEND=" Suspend"
 HIBERNATE=" Hibernate"
 RESTART=" Restart"
 
-ACTION=$(echo -e "$LOCK
+ACTION=$(echo "$LOCK
 $QUIT
 $SUSPEND
 $HIBERNATE
@@ -24,7 +24,7 @@ $RESTART"|wofi --conf "$HOME/.config/wofi/config_alt" --show dmenu)
 
 echo $ACTION
 
-function lock() {
+lock() {
     if [ -f /tmp/current_wallpaper ]; then
         swaylock -s fill -i /tmp/current_wallpaper
     else
@@ -44,12 +44,12 @@ elif [ "$ACTION" == "$LOCK" ]; then
     lock
 elif [ "$ACTION" == "$SUSPEND" ]; then
     lock &
-    systemctl suspend
+    loginctl suspend
 elif [ "$ACTION" == "$HIBERNATE" ]; then
     lock &
-    systemctl suspend-then-hibernate
+    loginctl suspend-then-hibernate
 elif [ "$ACTION" == "$RESTART" ]; then
-    systemctl reboot
+    loginctl reboot
 elif [ "$ACTION" == "$SHUTDOWN" ]; then
-    systemctl poweroff
+    loginctl poweroff
 fi

@@ -98,23 +98,28 @@
             "critical": 15
         },
         "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": "ﮣ {capacity}%",
         "format-icons": [
-            "",
-            "",
-            "",
-            "",
-            ""
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
         ],
         "interval": 15
     },
     "network": {
         "format-wifi": "  {bandwidthDownBytes} ({signalStrength}%)",
-        "format-ethernet": "  {ipaddr}/{cidr}",
-        "tooltip-format": "  {ifname} via {gwaddr}",
+        "format-ethernet": "  {ipaddr}/{cidr}",
+        "tooltip-format": "  {ifname} via {gwaddr}",
         "tooltip-format-wifi": "{ifname} {essid} via {gwaddr} ip: {ipaddr}",
-        "format-linked": "  {ifname} (No IP)",
+        "format-linked": "  {ifname} (No IP)",
         "format-disconnected": "",
         "format-alt": "{ifname}: {ipaddr}/{cidr}"
     },
@@ -123,27 +128,27 @@
         "format": " {icon} {volume}% | {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": " | {format_source}",
+        "format-muted": "婢 | {format_source}",
         "format-source": " {volume}%",
         "format-source-muted": "",
         "format-icons": {
             "headphone": "",
             "default": [
-                "",
-                "",
-                ""
+                "奄",
+                "奔",
+                "墳"
             ]
         },
         "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
     },
     "custom/start": {
-        "format": "<span font_family='Iosevka' font_size='20pt'></span>",
+        "format": "<span font_family='Iosevka' font_size='20pt'></span>",
         "on-click": "wofi --show drun",
         "tooltip": false
     },
     "custom/power": {
-        "format": "⏻",
+        "format": "襤",
         "on-click": "~/.config/river/scripts/rofi-logout-menu",
         "tooltip": false
     },
@@ -156,8 +161,8 @@
         "tooltip": false
     },
     "mpd": {
-        "format": "{stateIcon}  {consumeIcon} {randomIcon} {repeatIcon} {singleIcon} ",
-        "format-disconnected": "ﲁ ",
+        "format": "{stateIcon}  {consumeIcon} {randomIcon} {repeatIcon} {singleIcon}",
+        "format-disconnected": "   ",
         "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon} <span color='#f53c3c'></span>  ",
         "interval": 2,
         "consume-icons": {

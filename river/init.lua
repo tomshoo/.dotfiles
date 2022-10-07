@@ -1,14 +1,11 @@
--- Required for luajit v5.1 bitwise operations
-local bits = require("bit")
-
 -- Configure variables for init
-local scripts    = os.getenv("HOME") .. "/.config/river/scripts"
+local scripts    = os.getenv("SCRIPTS")
 local main_ratio = os.getenv("MAIN_RATIO")
 local main_low   = 0.25
 local main_high  = 0.75
 
 -- Set default tiling manager
-local tiler = "rivercarro"
+local tiler = os.getenv("TILER")
 
 -- Handlers
 local notifier = function(options)
@@ -80,12 +77,12 @@ local dbus_env = {
     "MOZ_ENABLE_WAYLAND"
 }
 
-local systemd_env = {
-    "WAYLAND_DISPLAY",
-    "DISPLAY",
-    "XDG_CURRENT_DESKTOP",
-    "MOZ_ENABLE_WAYLAND"
-}
+-- local systemd_env = {
+--     "WAYLAND_DISPLAY",
+--     "DISPLAY",
+--     "XDG_CURRENT_DESKTOP",
+--     "MOZ_ENABLE_WAYLAND"
+-- }
 
 local floating_apps = {
     "thunar",
@@ -103,7 +100,7 @@ local gsettings = {
     ["org.gnome.desktop.interface"] = {
         ["cursor-theme"] = "Vimix-Beryl-dark",
         ["icon-theme"]   = "Vimix-Beryl-dark",
-        ["gtk-theme"]    = "vimix-dark-beryl",
+        ["gtk-theme"]    = "Orchis-Dark-Compact",
     },
     ["org.gnome.desktop.default-applications.terminal"] = {
         exec = "footclient"
@@ -125,8 +122,8 @@ local border = {
 }
 
 -- Autostart applications
-launch(scripts .. "/wallpaper.sh")
-launch(scripts .. "/waybar.sh")
+launch(scripts .. "wallpaper.sh")
+launch(scripts .. "waybar.sh")
 launch("lxqt-policykit-agent")
 launch("foot --server")
 launch("dbus-launch")
@@ -134,49 +131,25 @@ launch("dbus-launch")
 -- Key binding configurations
 local keybinding = {
     command = {
-        ["Super"] = {
-            {
-                key  = "Return",
-                exec = "footclient",
-            },
-            {
-                key  = "Space",
-                exec = "wofi --show drun",
-            },
-            {
-                key  = "B",
-                exec = "killall -SIGUSR1 waybar"
-            },
-            {
-                key  = "E",
-                exec = "thunar",
-            }
-        },
-        ["Super+Shift"] = {
-            {
-                key  = "B",
-                exec = scripts .. "/waybar.sh"
-            }
-        },
-        ["Control+Alt"] = {
+        ["Control+Mod1"] = {
             {
                 key  = "Delete",
-                exec = scripts .. "/rofi-logout-menu",
+                exec = scripts .. "rofi-logout-menu",
             },
             {
                 key = "B",
                 exec = "killall waybar"
             }
         },
-        ["Alt"] = {
+        ["Mod1"] = {
             {
                 key  = "P",
-                exec = scripts .. "/wallpaper.sh",
+                exec = scripts .. "wallpaper.sh",
             }
         }
     },
     tiling = {
-        ["Super"] = {
+        ["Mod4"] = {
             {
                 key  = "Equal",
                 exec = string.format([[main-ratio %f]], main_ratio)
@@ -198,7 +171,7 @@ local keybinding = {
                 exec = "main-count -1"
             }
         },
-        ["Super+Alt"] = {
+        ["Mod4+Mod1"] = {
             {
                 key  = "J",
                 exec = "main-location left"
@@ -216,7 +189,7 @@ local keybinding = {
                 exec = "main-location right"
             }
         },
-        ["Alt+Shift"] = {
+        ["Mod1+Shift"] = {
             {
                 key      = "J",
                 exec     = "main-ratio -0.01",
@@ -228,7 +201,7 @@ local keybinding = {
                 kbrepeat = true
             }
         },
-        ["Super+Shift"] = {
+        ["Mod4+Shift"] = {
             {
                 key  = "bar",
                 exec = "main-ratio 0.5"
@@ -240,7 +213,7 @@ local keybinding = {
         }
     },
     river = {
-        ["Super"] = {
+        ["Mod4"] = {
             {
                 key  = "W",
                 exec = "close"
@@ -284,7 +257,7 @@ local keybinding = {
                 exec    = "move-view"
             }
         },
-        ["Super+Control"] = {
+        ["Mod4+Control"] = {
             {
                 key      = "J",
                 exec     = "move left 100",
@@ -306,7 +279,7 @@ local keybinding = {
                 kbrepeat = true
             }
         },
-        ["Super+Shift"] = {
+        ["Mod4+Shift"] = {
             {
                 key      = "J",
                 exec     = "resize horizontal 100",
@@ -328,7 +301,7 @@ local keybinding = {
                 kbrepeat = true
             },
         },
-        ["Alt"] = {
+        ["Mod1"] = {
             {
                 key  = "J",
                 exec = "swap next"
@@ -338,7 +311,7 @@ local keybinding = {
                 exec = "swap previous"
             }
         },
-        ["Super+Alt"] = { {
+        ["Mod4+Mod1"] = { {
             key  = "Q",
             exec = "exit"
         } }
@@ -377,15 +350,6 @@ cmap("Control+Shift", "Print", string.format([[grim -t png -g "$(slurp)" - | wl-
         message = "Screenshot copied to clipboard"
     }))
 )
-
--- Volume and brightness control
-for _, rmode in pairs({ "normal", "locked" }) do
-    cmap("None", "XF86AudioRaiseVolume", scripts .. "/volume -i 5", { mode = rmode, kbrepeat = true })
-    cmap("None", "XF86AudioLowerVolume", scripts .. "/volume -d 5", { mode = rmode, kbrepeat = true })
-    cmap("None", "XF86AudioMute", scripts .. "/volume -m 0", { mode = rmode, kbrepeat = true })
-    cmap("None", "XF86MonBrightnessUp", scripts .. "/brightness -i 2.5", { mode = rmode, kbrepeat = true })
-    cmap("None", "XF86MonBrightnessDown", scripts .. "/brightness -d 2.5", { mode = rmode, kbrepeat = true })
-end
 
 -- Handlers
 for dev, tab in pairs(device) do
@@ -426,13 +390,6 @@ for bindstyle, modifiers in pairs(keybinding) do
     end
 end
 
--- Set mappings for view tags
-for i = 1, 9 do
-    local tag_id = bits.lshift(1, i - 1)
-    map("Super", string.format("%d", i), string.format("set-focused-tags %d", tag_id))
-    map("Super+Shift", string.format("%d", i), string.format("set-view-tags %d", tag_id))
-end
-
 -- Configure Gnome GTK settings
 for class, properties in pairs(gsettings) do
     for property, value in pairs(properties) do
@@ -448,6 +405,6 @@ for prop, value in pairs(border) do
     os.execute(string.format([[riverctl border-%s %s]], prop, value))
 end
 
-os.execute(string.format("systemctl --user import-environment %s", table.concat(systemd_env, ' ')))
-os.execute(string.format("dbus-update-activation-environment --systemd %s", table.concat(dbus_env, ' ')))
-os.execute(string.format("riverctl default-layout %s", tiler))
+-- os.execute(string.format("systemctl --user import-environment %s", table.concat(systemd_env, ' ')))
+-- os.execute(string.format("dbus-update-activation-environment --systemd %s", table.concat(dbus_env, ' ')))
+os.execute(string.format("dbus-update-activation-environment %s", table.concat(dbus_env, ' ')))
