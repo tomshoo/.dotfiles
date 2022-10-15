@@ -47,7 +47,6 @@ vim.opt.listchars:append({
 })
 
 vim.opt.ruler = true
-vim.opt.mouse = "a"
 vim.opt.list  = true
 
 vim.opt.title       = true

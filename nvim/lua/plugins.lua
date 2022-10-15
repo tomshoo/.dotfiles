@@ -68,14 +68,24 @@ return packer.startup({
         use({ 'AckslD/nvim-neoclip.lua' })
         use({ 'ray-x/lsp_signature.nvim' })
         use({ 'nvim-orgmode/orgmode' })
+        use({ 'jose-elias-alvarez/null-ls.nvim' })
+        use({ 'aserowy/tmux.nvim' })
+        use({ 'marko-cerovac/material.nvim' })
+        use({ 'tiagovla/tokyodark.nvim' })
 
         use({ 'petertriho/nvim-scrollbar', requires = 'kevinhwang91/nvim-hlslens' })
         use({ 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' })
-        use({ 'nvim-telescope/telescope.nvim', requires = 'nvim-lua/plenary.nvim' })
+        -- use({ 'nvim-telescope/telescope.nvim', requires = 'nvim-lua/plenary.nvim' })
         use({ 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' })
-        use({ 'nvim-telescope/telescope-frecency.nvim', requires = 'tami5/sqlite.lua', })
+        -- use({ 'nvim-telescope/telescope-frecency.nvim', requires = 'tami5/sqlite.lua' })
         use({ 'neovim/nvim-lspconfig', requires = 'williamboman/nvim-lsp-installer' })
         use({ 'lukas-reineke/indent-blankline.nvim', requires = 'nvim-treesitter/nvim-treesitter' })
+
+        use({ 'nvim-telescope/telescope.nvim', requires = {
+            { 'nvim-lua/plenary.nvim' },
+            { 'nvim-telescope/telescope-ui-select.nvim' },
+            { 'nvim-telescope/telescope-frecency.nvim', requires = 'tami5/sqlite.lua' }
+        } })
 
         use({ 'hrsh7th/cmp-nvim-lsp', requires = {
             'hrsh7th/cmp-buffer',

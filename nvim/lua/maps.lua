@@ -13,10 +13,8 @@ map("n", "<Space>", "<Nop>")
 vim.g.mapleader = " "
 
 local function set()
-    map("n", "<S-h>", "<C-w>h", { remap = true })
-    map("n", "<S-j>", "<C-w>j", { remap = true })
-    map("n", "<S-k>", "<C-w>k", { remap = true })
-    map("n", "<S-l>", "<C-w>l", { remap = true })
+    map("n", "<esc>", "<cmd>noh<CR><cmd>echo ''<CR>", { remap = true })
+    map("n", "x", [["_x]])
 
     map("n", "<Leader>sv", "<C-w>v<cmd>enew<CR>", { desc = "Open a new vertical split" })
     map("n", "<Leader>sh", "<C-w>h<cmd>enew<CR>", { desc = "Open a new horizontal split" })
@@ -49,8 +47,10 @@ local function set()
 
     map("n", "<Leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Find files in the current directory" })
     map("n", "<Leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Find files by content" })
-    map("n", "<Leader>fr", "<cmd>Telescope frecency<CR>", { desc = "List frecently viewed files" })
+    map("n", "<Leader>fr", "<cmd>Telescope frecency theme=ivy previewer=false<CR>",
+        { desc = "List frecently viewed files" })
     map("n", "<Leader>fp", "<cmd>Telescope projects<CR>", { desc = "List all projects" })
+    map("n", "<Leader>bl", "<cmd>Telescope buffers<CR>", { desc = "List all projects" })
 
     map("n", "<C-s>", "<cmd>SessionSave<CR>", { desc = "Save the current session" })
 

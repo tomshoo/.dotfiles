@@ -41,6 +41,7 @@ local function load_all()
         'config.toggler',
         'config.surround',
         'config.clipboard',
+        'config.tmux',
         'twilight'
     }) do
         local ok, loader = pcall(require, plug)

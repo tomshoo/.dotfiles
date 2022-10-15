@@ -174,6 +174,11 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
   },
+  ["material.nvim"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/material.nvim",
+    url = "https://github.com/marko-cerovac/material.nvim"
+  },
   ["mkdir.nvim"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/mkdir.nvim",
@@ -183,6 +188,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/neogit",
     url = "https://github.com/TimUntersberger/neogit"
+  },
+  ["null-ls.nvim"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
+    url = "https://github.com/jose-elias-alvarez/null-ls.nvim"
   },
   ["nvim-autopairs"] = {
     loaded = true,
@@ -349,15 +359,30 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/telescope-frecency.nvim",
     url = "https://github.com/nvim-telescope/telescope-frecency.nvim"
   },
+  ["telescope-ui-select.nvim"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/telescope-ui-select.nvim",
+    url = "https://github.com/nvim-telescope/telescope-ui-select.nvim"
+  },
   ["telescope.nvim"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
+  ["tmux.nvim"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/tmux.nvim",
+    url = "https://github.com/aserowy/tmux.nvim"
+  },
   ["toggleterm.nvim"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/toggleterm.nvim",
     url = "https://github.com/akinsho/toggleterm.nvim"
+  },
+  ["tokyodark.nvim"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/tokyodark.nvim",
+    url = "https://github.com/tiagovla/tokyodark.nvim"
   },
   ["tokyonight.nvim"] = {
     loaded = true,

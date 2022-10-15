@@ -1,6 +1,6 @@
 local M = {}
 
-local function rusttools(formatter, sigup)
+local function rusttools()
     local ok, tool = pcall(require, 'rust-tools')
     if not ok then
         return
@@ -9,19 +9,6 @@ local function rusttools(formatter, sigup)
     tool.setup {
         autoSetHints = true,
         server = {
-            on_attach = function(client, bufnr)
-                if formatter then
-                    formatter.on_attach(client)
-                end
-                if sigup then
-                    require('lsp_signature').on_attach(sigup, bufnr)
-                end
-                map("n", "<Leader>h", tool.hover_actions.hover_actions, { buffer = bufnr })
-                map("n", "<Leader>e", tool.expand_macro.expand_macro,
-                    { buffer = bufnr, desc = "Expand macro under cursor" })
-                require('config.lsp.mappings')(bufnr)
-                require('config.lsp.highlight_symbol').setup(client, bufnr)
-            end,
             ["rust-analyzer"] = {
                 checkOnSave = {
                     enable = true,
@@ -44,8 +31,8 @@ local function rusttools(formatter, sigup)
     }
 end
 
-function M.setup(formatter, sigup)
-    rusttools(formatter, sigup)
+function M.setup()
+    rusttools()
 end
 
 return M

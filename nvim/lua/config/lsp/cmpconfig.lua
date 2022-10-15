@@ -79,20 +79,22 @@ local function generate_config(cmp)
             fields = { "kind", "abbr", "menu" },
             format = function(entry, vim_item)
                 local kind = require('lspkind').cmp_format({
-                    mode = "symbol_text",
-                    maxwidth = 50,
+                    mode       = "text_symbol",
+                    maxwidth   = 50,
                     symbol_map = icons
                 })(entry, vim_item)
+
                 local strings = vim.split(kind.kind, " ", { triempty = true })
-                kind.kind = " " .. strings[1] .. " "
-                kind.menu = "        " .. ({
-                    nvim_lsp = " ",
-                    snippy = " ",
-                    buffer = " ",
-                    path = "/ ",
-                    nvim_lua = " ",
-                    crates = " "
-                })[entry.source.name] .. " [ " .. strings[3] .. " ]"
+
+                kind.kind = " + [ " .. strings[2] .. " " .. strings[1] .. " ] "
+                kind.menu = ({
+                    nvim_lsp = "[ LSP ]",
+                    snippy   = "[ SNIPPY ]",
+                    buffer   = "[ BUFFER ]",
+                    path     = "[ PATH ]",
+                    nvim_lua = "[ VIM ]",
+                    crates   = "[ CRATES ]"
+                })[entry.source.name] .. " "
 
                 return kind
             end,

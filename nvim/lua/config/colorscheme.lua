@@ -13,9 +13,14 @@ local cfg = {
 }
 
 function M.setup()
+    if os.getenv("TERM") == "linux" then
+        vim.cmd.colorscheme("ron")
+        return true
+    end
     if vim.fn.exists('g:neovide') == 0 then
-        local ok, _ = pcall(vim.cmd [[ set termguicolors | colorscheme nightfly ]])
+        local ok, _ = pcall(vim.cmd.colorscheme, "tokyonight-night")
         if not ok then
+            vim.cmd.colorscheme('elflord')
             return false
         end
         return true
@@ -27,7 +32,7 @@ function M.setup()
     end
 
     colors.setup(cfg)
-    local tok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
+    local tok, _ = pcall(vim.cmd.colorscheme, colorscheme)
     if not tok then
         return false
     end

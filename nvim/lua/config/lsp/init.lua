@@ -22,31 +22,14 @@ local lsp_config = {
     jsonls = {},
     cssls = {},
     vimls = {},
-    efm = {
-        flags = {
-            debounce_text_changes = 150,
-        },
-        init_options = { documentFormatting = true },
-        filetypes = { "python" },
-        settings = {
-            rootMarkers = { ".git/" },
-            languages = {
-                python = {
-                    { formatCommand = "black --quiet -", formatStdin = true }
-                }
-            }
-        }
-    },
     html = {},
     gopls = {},
 }
 
 function M.setup()
     local cmpup = require('config.lsp.cmpconfig').setup()
-    local sigup = require('config.lsp.signatures').setup()
     local ok, installer = pcall(require, 'nvim-lsp-installer')
     local lok, lspconfig = pcall(require, 'lspconfig')
-    local formatter = require('config.lsp.formatter').setup()
     if ok then
         installer.setup {
             automatic_installation = true,
@@ -57,18 +40,8 @@ function M.setup()
     end
 
     for server, config in pairs(lsp_config) do
-        config.on_attach = function(client, bufnr)
-            require('config.lsp.mappings')(bufnr)
-            if formatter then
-                formatter.on_attach(client)
-            end
-            if sigup then
-                require('lsp_signature').on_attach(sigup, bufnr)
-            end
-            require('config.lsp.highlight_symbol').setup(bufnr)
-        end
         if cmpup then
-            config.capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+            config.capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
             config.capabilities.textDocument.foldinRange = {
                 dynamicRegistration = false,
                 lineFoldingOnly = true
@@ -76,7 +49,7 @@ function M.setup()
         end
         lspconfig[server].setup(config)
     end
-    require('config.lsp.tools').setup(formatter, sigup)
+    require('config.lsp.tools').setup()
     require('config.lsp.lightbulb').setup()
     require('config.lsp.symbols').setup()
 
