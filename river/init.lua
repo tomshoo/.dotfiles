@@ -86,6 +86,7 @@ local dbus_env = {
 
 local floating_apps = {
     "thunar",
+    "pcmanfm",
     "Rofi",
     "org.kde.dolphin",
     "lxqt-policykit-agent",
@@ -98,8 +99,8 @@ local gsettings = {
         ["button-layout"] = [[' ']]
     },
     ["org.gnome.desktop.interface"] = {
-        ["cursor-theme"] = "Vimix-Beryl-dark",
-        ["icon-theme"]   = "Vimix-Beryl-dark",
+        ["cursor-theme"] = "Breeze_Snow",
+        ["icon-theme"]   = "Papirus-Dark",
         ["gtk-theme"]    = "Orchis-Dark-Compact",
     },
     ["org.gnome.desktop.default-applications.terminal"] = {
@@ -122,8 +123,8 @@ local border = {
 }
 
 -- Autostart applications
-launch(scripts .. "wallpaper.sh")
-launch(scripts .. "waybar.sh")
+launch(scripts .. "/wallpaper.sh")
+launch(scripts .. "/waybar.sh")
 launch("lxqt-policykit-agent")
 launch("foot --server")
 launch("dbus-launch")
@@ -131,20 +132,11 @@ launch("dbus-launch")
 -- Key binding configurations
 local keybinding = {
     command = {
-        ["Control+Mod1"] = {
-            {
-                key  = "Delete",
-                exec = scripts .. "rofi-logout-menu",
-            },
-            {
-                key = "B",
-                exec = "killall waybar"
-            }
-        },
+        ["Control+Mod1"] = {},
         ["Mod1"] = {
             {
                 key  = "P",
-                exec = scripts .. "wallpaper.sh",
+                exec = scripts .. "/wallpaper.sh",
             }
         }
     },

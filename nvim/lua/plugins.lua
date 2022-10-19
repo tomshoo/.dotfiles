@@ -72,6 +72,7 @@ return packer.startup({
         use({ 'aserowy/tmux.nvim' })
         use({ 'marko-cerovac/material.nvim' })
         use({ 'tiagovla/tokyodark.nvim' })
+        use({ 'anntzer/vim-cython' })
 
         use({ 'petertriho/nvim-scrollbar', requires = 'kevinhwang91/nvim-hlslens' })
         use({ 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' })

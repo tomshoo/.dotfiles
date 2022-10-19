@@ -1,4 +1,6 @@
-WALLS_DIR=/usr/share/backgrounds
+#!/bin/bash
+
+WALLS_DIR=~/.local/share/backgrounds
 readarray -d '' walls < <(find "$WALLS_DIR" -type f -print0)
 
 bg_pid=$(pidof wbg)

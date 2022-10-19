@@ -14,6 +14,8 @@ vim.g.mapleader = " "
 
 local function set()
     map("n", "<esc>", "<cmd>noh<CR><cmd>echo ''<CR>", { remap = true })
+    map("n", "<S-CR>", "o<esc>k", { remap = true })
+    map("n", "<C-CR>", "O<esc>j", { remap = true })
     map("n", "x", [["_x]])
 
     map("n", "<Leader>sv", "<C-w>v<cmd>enew<CR>", { desc = "Open a new vertical split" })
@@ -35,7 +37,6 @@ local function set()
 
     map("n", "<Home>", extended_home)
     map("i", "<Home>", "<C-o><Home>", { remap = true })
-    map("n", "<C-a>", "ggVG")
 
     map("n", "<Leader>s", scratchpad, { desc = "Launch a scratchpad" })
 

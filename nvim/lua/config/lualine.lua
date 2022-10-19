@@ -1,26 +1,55 @@
 local M = {}
 
+local colors = {
+    black       = "#06080A",
+    bg0         = "#11121D",
+    bg1         = "#1A1B2A",
+    bg2         = "#212234",
+    bg3         = "#353945",
+    bg4         = "#4A5057",
+    bg5         = "#282c34",
+    bg_red      = "#FE6D85",
+    bg_green    = "#98C379",
+    bg_blue     = "#9FBBF3",
+    diff_red    = "#773440",
+    diff_green  = "#587738",
+    diff_blue   = "#354A77",
+    diff_add    = "#1E2326",
+    diff_change = "#262b3d",
+    diff_delete = "#281B27",
+    fg          = "#A0A8CD",
+    red         = "#EE6D85",
+    orange      = "#F6955B",
+    yellow      = "#D7A65F",
+    green       = "#95C561",
+    blue        = "#7199EE",
+    cyan        = "#38A89D",
+    purple      = "#A485DD",
+    grey        = "#4A5057",
+    none        = "NONE",
+}
+
 local modes = {
-    n = { icon = " " },
-    i = { icon = " " },
-    v = { icon = " " },
-    [''] = { icon = "זּ " },
-    V = { icon = " " },
-    c = { icon = " " },
-    no = { icon = "! " },
-    s = { icon = "麗" },
-    S = { icon = "礪" },
-    [''] = { icon = "" },
-    ic = { icon = " " },
-    R = { icon = "菱" },
-    Rv = { icon = "菱" },
-    cv = { icon = "? " },
-    ce = { icon = "? " },
-    r = { icon = " " },
-    rm = { icon = "||" },
-    ['r?'] = { icon = " " },
-    ['!'] = { icon = " " },
-    t = { icon = " " },
+    n      = { icon = " ", color = colors.blue },
+    i      = { icon = " ", color = colors.green },
+    v      = { icon = " ", color = colors.cyan },
+    ['']  = { icon = "זּ ", color = colors.cyan },
+    V      = { icon = " ", color = colors.cyan },
+    c      = { icon = " ", color = colors.yellow },
+    no     = { icon = "! ", color = colors.blue },
+    s      = { icon = "麗", color = colors.purple },
+    S      = { icon = "礪", color = colors.purple },
+    ['']  = { icon = "礪", color = colors.purple },
+    ic     = { icon = " ", color = colors.green },
+    R      = { icon = "菱", color = colors.red },
+    Rv     = { icon = "菱", color = colors.red },
+    cv     = { icon = "? ", color = colors.yellow },
+    ce     = { icon = "? ", color = colors.yellow },
+    r      = { icon = " ", color = colors.orange },
+    rm     = { icon = "||", color = colors.orange },
+    ['r?'] = { icon = " ", color = colors.orange },
+    ['!']  = { icon = " ", color = colors.blue },
+    t      = { icon = " ", color = colors.grey },
 }
 
 local function get_lsp()
@@ -86,11 +115,11 @@ local filename = {
     end,
     color = function()
         if vim.bo.modified then
-            return { fg = "#e57474" }
+            return { fg = colors.red, bg = colors.diff_red }
         elseif vim.bo.readonly then
-            return { fg = "#f40000" }
+            return { fg = colors.black, bg = colors.bg_red }
         end
-        return { fg = "#dadada" }
+        return { fg = colors.black, bg = colors.bg_green }
     end,
 }
 
@@ -101,6 +130,15 @@ local filesize = {
     end
 }
 
+local window = {
+    function()
+        return vim.api.nvim_win_get_number(0)
+    end,
+    color = function()
+        return { fg = colors.black, bg = modes[vim.fn.mode()].color }
+    end,
+}
+
 local lsp = {
     function()
         if conditions.hide_in_width() then
@@ -109,26 +147,103 @@ local lsp = {
         return ""
     end,
     cond = conditions.lsp_is_active,
-    icon = ""
+    icon = " "
+}
+
+local trailing_space = {
+    function()
+        local space = vim.fn.search([[\s\+$]], 'nwc')
+        return space ~= 0 and "TW:" .. space or ""
+    end,
+    color = { fg = colors.black, bg = colors.blue },
+    cond = conditions.hide_in_width
+}
+
+local mixed_indent = {
+    function()
+        local space_pat = [[\v^ +]]
+        local tab_pat = [[\v^\t+]]
+        local space_indent = vim.fn.search(space_pat, 'nwc')
+        local tab_indent = vim.fn.search(tab_pat, 'nwc')
+        local mixed = (space_indent > 0 and tab_indent > 0)
+        local mixed_same_line
+        if not mixed then
+            mixed_same_line = vim.fn.search([[\v^(\t+ | +\t)]], 'nwc')
+            mixed = mixed_same_line > 0
+        end
+        if not mixed then return '' end
+        if mixed_same_line ~= nil and mixed_same_line > 0 then
+            return 'MI:' .. mixed_same_line
+        end
+        local space_indent_cnt = vim.fn.searchcount({ pattern = space_pat, max_count = 1e3 }).total
+        local tab_indent_cnt = vim.fn.searchcount({ pattern = tab_pat, max_count = 1e3 }).total
+        if space_indent_cnt > tab_indent_cnt then
+            return 'MI:' .. tab_indent
+        else
+            return 'MI:' .. space_indent
+        end
+    end,
+    color = { fg = colors.black, bg = colors.red },
+    cond = conditions.hide_in_width
 }
 
 local stylespace = {
     function()
         return " "
     end,
-    color = { bg = "#0000ff" },
+    color = function() return { bg = modes[vim.fn.mode()].color } end,
     padding = 0
 }
 
 local mode = {
     function()
         return modes[vim.fn.mode()].icon
-    end
+    end,
+    color = function() return { fg = modes[vim.fn.mode()].color, bg = colors.bg0 } end
+}
+
+local fileformat = {
+    'fileformat',
+    fmt = string.upper,
+    icons_enabled = false
+}
+
+local theme = {
+    normal = {
+        a = { bg = colors.bg0, fg = colors.blue, gui = 'bold' },
+        b = { bg = colors.bg1, fg = colors.fg },
+        c = { bg = colors.bg2, fg = colors.blue }
+    },
+    insert = {
+        a = { bg = colors.bg0, fg = colors.green, gui = 'bold' },
+        b = { bg = colors.bg1, fg = colors.fg },
+        c = { bg = colors.bg2, fg = colors.green }
+    },
+    visual = {
+        a = { bg = colors.bg0, fg = colors.purple, gui = 'bold' },
+        b = { bg = colors.bg1, fg = colors.fg },
+        c = { bg = colors.bg2, fg = colors.purple }
+    },
+    replace = {
+        a = { bg = colors.bg0, fg = colors.red, gui = 'bold' },
+        b = { bg = colors.bg1, fg = colors.fg },
+        c = { bg = colors.bg2, fg = colors.red }
+    },
+    command = {
+        a = { bg = colors.bg0, fg = colors.yellow, gui = 'bold' },
+        b = { bg = colors.bg1, fg = colors.fg },
+        c = { bg = colors.bg2, fg = colors.black }
+    },
+    inactive = {
+        a = { bg = colors.bg2, fg = colors.grey, gui = 'bold' },
+        b = { bg = colors.bg2, fg = colors.grey },
+        c = { bg = colors.bg2, fg = colors.grey }
+    }
 }
 
 local cfg = {
     options = {
-        theme = 'auto',
+        theme = theme,
         disabled_filetypes = {
             "alpha",
             -- "NvimTree",
@@ -138,9 +253,9 @@ local cfg = {
         section_separators = ""
     },
     sections = {
-        lualine_a = { stylespace, mode },
+        lualine_a = { window, mode },
         lualine_b = {
-            "branch",
+            { "branch", fmt = string.upper },
             "diff",
             lsp,
             diagnostics,
@@ -148,14 +263,14 @@ local cfg = {
         },
         lualine_c = {
             '%=',
-            filename
+            filename,
+            mixed_indent,
+            trailing_space
         },
         lualine_x = {
-            { "encoding", cond = conditions.hide_in_width },
-            "fileformat",
-            { "filetype", icon = { align = 'right' } },
+            { "encoding", cond = conditions.hide_in_width, fmt = string.upper },
         },
-        lualine_y = { "location" },
+        lualine_y = { fileformat, { "filetype", icon = { align = 'right' } }, "location" },
         lualine_z = {
             "progress",
             stylespace

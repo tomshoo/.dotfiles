@@ -399,6 +399,11 @@ _G.packer_plugins = {
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/twilight.nvim",
     url = "https://github.com/folke/twilight.nvim"
   },
+  ["vim-cython"] = {
+    loaded = true,
+    path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/vim-cython",
+    url = "https://github.com/anntzer/vim-cython"
+  },
   ["vim-misc"] = {
     loaded = true,
     path = "/home/gh0st/.local/share/nvim/site/pack/packer/start/vim-misc",

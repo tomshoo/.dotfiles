@@ -1,8 +1,36 @@
-#!/bin/sh
+#!/bin/bash
 
 export MAIN_RATIO="0.55"
-export SCRIPTS="$HOME/.config/river/scripts/"
+export SCRIPTS="$HOME/.config/river/scripts"
 export TILER="rivertile"
+
+SCRATCH_TAG=$((1 << 31))
+ALL_TAGS=$(( (( 1 << 32 ) - 1) ^ (SCRATCH_TAG + ( 1 << 30 )) ))
+
+workspace() {
+    while getopts g:m:s:t: flag; do
+        case "${flag}" in
+            g) 
+                tag_id=$(( (1 << (OPTARG - 1)) + ( 1 << 30 ) ))
+                riverctl set-focused-tags "${tag_id}"
+                echo $tag_id > ~/.cache/rivertag
+                ;;
+            m)
+                tag_id=$(( 1 << (OPTARG - 1) ))
+                riverctl toggle-view-tags $tag_id
+                ;;
+            s) 
+                tag_id=$(( 1 << (OPTARG - 1) ))
+                riverctl set-view-tags $tag_id
+                ;;
+            t) 
+                tag_id=$(( 1 << (OPTARG - 1) ))
+                riverctl toggle-focused-tags "${tag_id}"
+                ;;
+            *) echo "Usage: $0 -[g|m|s]"; exit 1 ;;
+        esac
+    done
+}
 
 if [ -z "$(pidof pipewire)" ]; then
     pipewire &
@@ -10,32 +38,40 @@ if [ -z "$(pidof pipewire)" ]; then
     pipewire-pulse &
 fi
 
-[ -z "$(pidof mpd)" ]   && mpd &
+[ -z "$(pidof mpd)" ]   && mpd --no-daemon &
 [ -z "$(pidof dunst)" ] && dunst &
+
+riverctl spawn-tagmask $ALL_TAGS
 
 luajit "$HOME/.config/river/init.lua"
 
-riverctl map normal Mod4       Return spawn "footclient -- tmux"
-riverctl map normal Mod4       Space  spawn "wofi --show drun"
-riverctl map normal Mod4       B      spawn "killall -SIGUSR1 waybar"
-riverctl map normal Mod4       E      spawn "thunar"
-riverctl map normal Mod4+Shift B      spawn "$SCRIPTS/waybar.sh"
-riverctl map normal Mod4+Shift Return spawn "footclient"
+riverctl map normal Mod4       0 toggle-focused-tags $SCRATCH_TAG
+riverctl map normal Mod4+Shift 0 set-view-tags       $SCRATCH_TAG
+riverctl map normal Mod4+Shift S toggle-view-tags    $(( 1 << 30 ))
+
+riverctl map normal Mod4         Return spawn "footclient -- tmux"
+riverctl map normal Mod4         Space  spawn "wofi --show drun"
+riverctl map normal Mod4         B      spawn "killall -SIGUSR1 waybar"
+riverctl map normal Mod4         E      spawn "pcmanfm"
+riverctl map normal Mod4+Shift   B      spawn "$SCRIPTS/waybar.sh"
+riverctl map normal Mod4+Shift   Return spawn "footclient"
+riverctl map normal Mod1         P      spawn "$SCRIPTS/wallpaper.sh"
+riverctl map normal Mod1+Control Delete spawn "$SCRIPTS/rofi-logout-menu"
 
 for i in $(seq 1 9); do
-    riverctl map normal Mod4       "$i" spawn "$SCRIPTS/workspace.sh -g $i"
-    riverctl map normal Mod4+Mod1  "$i" spawn "$SCRIPTS/workspace.sh -m $i"
-    riverctl map normal Mod4+Shift "$i" spawn "$SCRIPTS/workspace.sh -s $i"
+    riverctl map normal Mod4       "$i" spawn "$(declare -pf workspace); workspace -g $i"
+    riverctl map normal Mod1       "$i" spawn "$(declare -pf workspace); workspace -t $i"
+    riverctl map normal Mod4+Mod1  "$i" spawn "$(declare -pf workspace); workspace -m $i"
+    riverctl map normal Mod4+Shift "$i" spawn "$(declare -pf workspace); workspace -s $i"
 done
 
 for mode in normal locked; do
-    riverctl map $mode None XF86AudioRaiseVolume  "$SCRIPTS/volume -i 5"
-    riverctl map $mode None XF86AudioLowerVolume  "$SCRIPTS/volume -d 5"
-    riverctl map $mode None XF86AudioMute         "$SCRIPTS/volume -m 0"
-    riverctl map $mode None XF86MonBrightnessUp   "$SCRIPTS/brightness -i 2.5"
-    riverctl map $mode None XF86MonBrightnessDown "$SCRIPTS/brightness -d 2.5"
+    riverctl map $mode None XF86AudioRaiseVolume  spawn "$SCRIPTS/volume -i 5"
+    riverctl map $mode None XF86AudioLowerVolume  spawn "$SCRIPTS/volume -d 5"
+    riverctl map $mode None XF86AudioMute         spawn "$SCRIPTS/volume -m 0"
+    riverctl map $mode None XF86MonBrightnessUp   spawn "$SCRIPTS/brightness -i 2.5"
+    riverctl map $mode None XF86MonBrightnessDown spawn "$SCRIPTS/brightness -d 2.5"
 done
 
-echo $TILER
 riverctl default-layout "$TILER"
 exec rivertile -main-ratio $MAIN_RATIO -outer-padding 4 -view-padding 3

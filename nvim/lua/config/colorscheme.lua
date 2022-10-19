@@ -18,7 +18,7 @@ function M.setup()
         return true
     end
     if vim.fn.exists('g:neovide') == 0 then
-        local ok, _ = pcall(vim.cmd.colorscheme, "tokyonight-night")
+        local ok, _ = pcall(vim.cmd.colorscheme, "tokyodark")
         if not ok then
             vim.cmd.colorscheme('elflord')
             return false

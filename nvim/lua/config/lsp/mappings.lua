@@ -10,7 +10,7 @@ return function(bufnr)
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, { buffer = bufnr, desc = "List folders in workspace" })
     map('n', '<Leader>D', "<cmd>Telescope lsp_type_definitions<cr>", { buffer = bufnr })
-    map('n', '<Leader>f<F5>', vim.lsp.buf.rename, { buffer = bufnr })
+    map('n', 'cr', vim.lsp.buf.rename, { buffer = bufnr })
     map('n', '<Leader>ca', vim.lsp.buf.code_action, { buffer = bufnr, desc = "View code actions for current buffer" })
     map('n', 'gr', "<cmd>Telescope lsp_references<cr>", { buffer = bufnr, desc = "List reference for under cursor" })
 end
