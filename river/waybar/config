@@ -1,18 +1,18 @@
 {
-    "spacing": 1,
     "mode": "dock",
+    "position": "bottom",
     "modules-center": [
-        "river/tags"
+        "clock"
     ],
     "modules-left": [
         "custom/start",
+        "river/tags",
         "mpd",
-        "clock",
-        "memory",
-        "cpu"
+        "tray"
     ],
     "modules-right": [
-        "tray",
+        "memory",
+        "cpu",
         "custom/warp",
         "network",
         "pulseaudio",
@@ -68,12 +68,12 @@
     },
     "cpu": {
         "interval": 5,
-        "format": " {usage}% ({avg_frequency} GHz)",
+        "format": " {usage:3}% {avg_frequency:5} GHz",
         "tooltip": false
     },
     "memory": {
         "interval": 5,
-        "format": " {}%"
+        "format": " {:3}%"
     },
     "temperature": {
         // "thermal-zone": 2,
@@ -143,7 +143,7 @@
         "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
     },
     "custom/start": {
-        "format": "<span font_family='Iosevka' font_size='20pt'></span>",
+        "format": "",
         "on-click": "wofi --show drun",
         "tooltip": false
     },
@@ -161,22 +161,22 @@
         "tooltip": false
     },
     "mpd": {
-        "format": "{stateIcon}  {consumeIcon} {randomIcon} {repeatIcon} {singleIcon}",
+        "format": "{stateIcon} {consumeIcon} {randomIcon} {repeatIcon} {singleIcon} ",
         "format-disconnected": "   ",
         "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon} <span color='#f53c3c'></span>  ",
         "interval": 2,
         "consume-icons": {
-            "on": " " // Icon shows only when "consume" is on
+            "on": "" // Icon shows only when "consume" is on
         },
         "random-icons": {
             "off": "<span color=\"#f53c3c\"></span> ", // Icon grayed out when "random" is off
-            "on": " "
+            "on": ""
         },
         "repeat-icons": {
-            "on": " "
+            "on": ""
         },
         "single-icons": {
-            "on": "1 "
+            "on": ""
         },
         "state-icons": {
             "paused": "",
