@@ -1,6 +1,7 @@
 local M = {}
 
 local cfg = {
+    branch_separator = "_",
     autosave = true,
     autoload = false,
     allowed_dirs = {

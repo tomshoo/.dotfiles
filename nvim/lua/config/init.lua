@@ -13,19 +13,19 @@ require('impatient')
 
 local function load_all()
     for _, plug in ipairs({
-        'config.colorscheme',
         'Comment',
         'gitsigns',
         'which-key',
-        'project_nvim',
         'toggleterm',
         'scrollbar',
         'scrollbar.handlers.search',
-        'indent-o-magic',
+        'config.colorscheme',
+        'config.projects',
         'config.treesitter',
         'config.session',
         'config.telescope',
         'config.lsp',
+        'config.lsp_progress',
         'config.git',
         'config.autopairs',
         'config.nvimtree',
@@ -35,19 +35,15 @@ local function load_all()
         'config.indentguide',
         'config.trouble',
         'config.wilder',
-        'config.org',
         'config.ufo',
         'config.colorizer',
-        'config.toggler',
         'config.surround',
         'config.clipboard',
         'config.tmux',
-        'twilight'
     }) do
-        local ok, loader = pcall(require, plug)
-        if ok then
-            loader.setup()
-        end
+        pcall(function()
+            require(plug).setup()
+        end)
     end
 end
 

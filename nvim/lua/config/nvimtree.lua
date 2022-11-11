@@ -18,7 +18,11 @@ local cfg = {
     view = {
         side = "left",
         width = 35,
-        signcolumn = "auto"
+        signcolumn = "yes"
+    },
+    diagnostics = {
+        enable = true,
+        show_on_dirs = true,
     },
     renderer = {
         group_empty = true,

@@ -1,72 +1,57 @@
 local M = {}
 
 local colors = {
-    black       = "#06080A",
-    bg0         = "#11121D",
-    bg1         = "#1A1B2A",
-    bg2         = "#212234",
-    bg3         = "#353945",
-    bg4         = "#4A5057",
-    bg5         = "#282c34",
-    bg_red      = "#FE6D85",
-    bg_green    = "#98C379",
-    bg_blue     = "#9FBBF3",
-    diff_red    = "#773440",
-    diff_green  = "#587738",
-    diff_blue   = "#354A77",
-    diff_add    = "#1E2326",
-    diff_change = "#262b3d",
-    diff_delete = "#281B27",
-    fg          = "#A0A8CD",
-    red         = "#EE6D85",
-    orange      = "#F6955B",
-    yellow      = "#D7A65F",
-    green       = "#95C561",
-    blue        = "#7199EE",
-    cyan        = "#38A89D",
-    purple      = "#A485DD",
-    grey        = "#4A5057",
-    none        = "NONE",
+    black       = '#06080A',
+    bg0         = '#11121D',
+    bg1         = '#1A1B2A',
+    bg2         = '#212234',
+    bg3         = '#353945',
+    bg4         = '#4A5057',
+    bg5         = '#282c34',
+    bg_red      = '#FE6D85',
+    bg_green    = '#98C379',
+    bg_blue     = '#9FBBF3',
+    diff_red    = '#773440',
+    diff_green  = '#587738',
+    diff_blue   = '#354A77',
+    diff_add    = '#1E2326',
+    diff_change = '#262b3d',
+    diff_delete = '#281B27',
+    fg          = '#A0A8CD',
+    red         = '#EE6D85',
+    orange      = '#F6955B',
+    yellow      = '#D7A65F',
+    green       = '#95C561',
+    blue        = '#7199EE',
+    cyan        = '#38A89D',
+    purple      = '#A485DD',
+    grey        = '#4A5057',
+    none        = 'NONE',
 }
 
 local modes = {
-    n      = { icon = " ", color = colors.blue },
-    i      = { icon = " ", color = colors.green },
-    v      = { icon = " ", color = colors.cyan },
-    ['']  = { icon = "זּ ", color = colors.cyan },
-    V      = { icon = " ", color = colors.cyan },
-    c      = { icon = " ", color = colors.yellow },
-    no     = { icon = "! ", color = colors.blue },
-    s      = { icon = "麗", color = colors.purple },
-    S      = { icon = "礪", color = colors.purple },
-    ['']  = { icon = "礪", color = colors.purple },
-    ic     = { icon = " ", color = colors.green },
-    R      = { icon = "菱", color = colors.red },
-    Rv     = { icon = "菱", color = colors.red },
-    cv     = { icon = "? ", color = colors.yellow },
-    ce     = { icon = "? ", color = colors.yellow },
-    r      = { icon = " ", color = colors.orange },
-    rm     = { icon = "||", color = colors.orange },
-    ['r?'] = { icon = " ", color = colors.orange },
-    ['!']  = { icon = " ", color = colors.blue },
-    t      = { icon = " ", color = colors.grey },
+    n      = { icon = ' ', color = colors.blue },
+    i      = { icon = ' ', color = colors.green },
+    v      = { icon = ' ', color = colors.cyan },
+    ['']  = { icon = 'זּ ', color = colors.cyan },
+    V      = { icon = ' ', color = colors.cyan },
+    c      = { icon = ' ', color = colors.yellow },
+    no     = { icon = '! ', color = colors.blue },
+    s      = { icon = '麗', color = colors.purple },
+    S      = { icon = '礪', color = colors.purple },
+    ['']  = { icon = '礪', color = colors.purple },
+    ic     = { icon = ' ', color = colors.green },
+    R      = { icon = '菱', color = colors.red },
+    Rv     = { icon = '菱', color = colors.red },
+    cv     = { icon = '? ', color = colors.yellow },
+    ce     = { icon = '? ', color = colors.yellow },
+    r      = { icon = ' ', color = colors.orange },
+    rm     = { icon = '||', color = colors.orange },
+    ['r?'] = { icon = ' ', color = colors.orange },
+    ['!']  = { icon = ' ', color = colors.blue },
+    t      = { icon = ' ', color = colors.grey },
 }
 
-local function get_lsp()
-    local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
-    local clients = vim.lsp.get_active_clients()
-    if next(clients) == nil then
-        return false
-    end
-    for _, client in ipairs(clients) do
-        local filetypes = client.config.filetypes
-        if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 and client.name ~= "null-ls" then
-            return client.name
-        end
-    end
-    return false
-
-end
 
 local conditions = {
     buffer_not_empty = function()
@@ -81,19 +66,29 @@ local conditions = {
         return gitdir and #gitdir > 0 and #gitdir < #filepath
     end,
     lsp_is_active = function()
-        if get_lsp() then return true end
+        local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
+        local clients = vim.lsp.get_active_clients()
+        if next(clients) == nil then
+            return false
+        end
+        for _, client in ipairs(clients) do
+            local filetypes = client.config.filetypes
+            if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+                return true
+            end
+        end
         return false
     end
 }
 
 local diagnostics = {
-    "diagnostics",
+    'diagnostics',
     sources = { 'nvim_lsp' },
-    sections = { "error", "warn", "hint" },
+    sections = { 'error', 'warn', 'hint' },
     symbols = {
-        error = "X: ",
-        warn = "!: ",
-        hint = "?: ",
+        error = ' ',
+        warn = ' ',
+        hint = ' ',
     },
     cond = conditions.lsp_is_active
 }
@@ -101,14 +96,14 @@ local diagnostics = {
 local filename = {
     function()
         local name = vim.fn.expand('%:t')
-        if name == "" or name == nil then
-            return " "
+        if name == '' or name == nil then
+            return ' '
         end
 
         if vim.bo.modified then
-            name = "ﯽ " .. name
+            name = 'ﯽ ' .. name
         elseif vim.bo.readonly then
-            name = " " .. name
+            name = ' ' .. name
         end
 
         return name
@@ -124,7 +119,7 @@ local filename = {
 }
 
 local filesize = {
-    "filesize",
+    'filesize',
     cond = function()
         return conditions.buffer_not_empty() and conditions.hide_in_width()
     end
@@ -141,19 +136,20 @@ local window = {
 
 local lsp = {
     function()
-        if conditions.hide_in_width() then
-            return get_lsp()
+        local names = {}
+        for _, client in ipairs(vim.lsp.get_active_clients({ bufnr = vim.fn.bufnr() })) do
+            table.insert(names, client.name)
         end
-        return ""
+        return '[' .. table.concat(names, ':') .. ']'
     end,
-    cond = conditions.lsp_is_active,
-    icon = " "
+    cond = function() return conditions.lsp_is_active() and conditions.hide_in_width() end,
+    icon = ' '
 }
 
 local trailing_space = {
     function()
         local space = vim.fn.search([[\s\+$]], 'nwc')
-        return space ~= 0 and "TW:" .. space or ""
+        return vim.fn.mode() ~= 'i' and space ~= 0 and ' ' .. space or ''
     end,
     color = { fg = colors.black, bg = colors.blue },
     cond = conditions.hide_in_width
@@ -178,9 +174,9 @@ local mixed_indent = {
         local space_indent_cnt = vim.fn.searchcount({ pattern = space_pat, max_count = 1e3 }).total
         local tab_indent_cnt = vim.fn.searchcount({ pattern = tab_pat, max_count = 1e3 }).total
         if space_indent_cnt > tab_indent_cnt then
-            return 'MI:' .. tab_indent
+            return vim.fn.mode() ~= 'i' and '' .. tab_indent or ''
         else
-            return 'MI:' .. space_indent
+            return vim.fn.mode() ~= 'i' and '' .. space_indent or ''
         end
     end,
     color = { fg = colors.black, bg = colors.red },
@@ -189,7 +185,7 @@ local mixed_indent = {
 
 local stylespace = {
     function()
-        return " "
+        return ' '
     end,
     color = function() return { bg = modes[vim.fn.mode()].color } end,
     padding = 0
@@ -207,6 +203,18 @@ local fileformat = {
     fmt = string.upper,
     icons_enabled = false
 }
+
+local function diff()
+    local gitsigns = vim.b.gitsigns_status_dict
+    _G.gitsigns = gitsigns
+    if gitsigns then
+        return {
+            added = gitsigns.added,
+            modified = gitsigns.modified,
+            removed = gitsigns.removed
+        }
+    end
+end
 
 local theme = {
     normal = {
@@ -241,22 +249,37 @@ local theme = {
     }
 }
 
-local cfg = {
+local help = {
     options = {
         theme = theme,
+    },
+    filetypes = { 'help' },
+    sections = {
+        lualine_a = { 'filename' },
+        lualine_b = {},
+        lualine_c = {},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = { 'searchcount' },
+    }
+}
+
+local cfg = {
+    options = {
+        theme = "auto",
         disabled_filetypes = {
-            "alpha",
-            -- "NvimTree",
-            "Trouble",
+            'alpha',
+            -- 'NvimTree',
+            'Trouble',
         },
-        component_separators = "",
-        section_separators = ""
+        component_separators = '',
+        section_separators = ''
     },
     sections = {
         lualine_a = { window, mode },
         lualine_b = {
-            { "branch", fmt = string.upper },
-            "diff",
+            { 'branch', fmt = string.upper },
+            { 'diff', source = diff, symbols = { added = ' ', modified = '柳 ', removed = ' ' } },
             lsp,
             diagnostics,
             filesize,
@@ -268,15 +291,15 @@ local cfg = {
             trailing_space
         },
         lualine_x = {
-            { "encoding", cond = conditions.hide_in_width, fmt = string.upper },
+            { 'encoding', cond = conditions.hide_in_width, fmt = string.upper },
         },
-        lualine_y = { fileformat, { "filetype", icon = { align = 'right' } }, "location" },
+        lualine_y = { fileformat, { 'filetype', icon = { align = 'right' } }, 'location' },
         lualine_z = {
-            "progress",
+            'progress',
             stylespace
         }
     },
-    extensions = { 'toggleterm', 'nvim-tree' }
+    extensions = { 'toggleterm', 'nvim-tree', help }
 }
 
 
