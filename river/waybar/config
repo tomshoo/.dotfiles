@@ -88,7 +88,9 @@
         ]
     },
     "backlight": {
-        "format": "  {percent}%"
+        "format": "  {percent}%",
+        "on-scroll-up": "brightnessctl set 1%-",
+        "on-scroll-down": "brightnessctl set +1%"
         //"format-icons": ["", "", "", "", "", "", "", "", ""]
     },
     "battery": {
@@ -115,7 +117,7 @@
         "interval": 15
     },
     "network": {
-        "format-wifi": "  {bandwidthDownBytes} ({signalStrength}%)",
+        "format-wifi": "  {bandwidthDownBytes:4} {signalStrength:3}%",
         "format-ethernet": "  {ipaddr}/{cidr}",
         "tooltip-format": "  {ifname} via {gwaddr}",
         "tooltip-format-wifi": "{ifname} {essid} via {gwaddr} ip: {ipaddr}",
@@ -125,10 +127,10 @@
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
-        "format": " {icon} {volume}% | {format_source}",
+        "format": " {icon} {volume}%  {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": "婢 | {format_source}",
+        "format-muted": "婢  {format_source}",
         "format-source": " {volume}%",
         "format-source-muted": "",
         "format-icons": {
@@ -143,7 +145,7 @@
         "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
     },
     "custom/start": {
-        "format": "",
+        "format": "",
         "on-click": "wofi --show drun",
         "tooltip": false
     },

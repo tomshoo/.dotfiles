@@ -1,17 +1,21 @@
 #!/bin/bash
+#
+riverctl map normal Mod4+Mod1 Q exit
 
 export MAIN_RATIO="0.55"
+export MAIN_HIGH="0.75"
+export MAIN_LOW="0.25"
 export SCRIPTS="$HOME/.config/river/scripts"
 export TILER="rivertile"
 
-SCRATCH_TAG=$((1 << 31))
-ALL_TAGS=$(( (( 1 << 32 ) - 1) ^ (SCRATCH_TAG + ( 1 << 30 )) ))
+export SCRATCHTAG=$(( 1 << 31 ))
+ALL_TAGS=$(( (( 1 << 32 ) - 1) ^ (SCRATCHTAG + ( 1 << 30 )) ))
 
 workspace() {
     while getopts g:m:s:t: flag; do
         case "${flag}" in
-            g) 
-                tag_id=$(( (1 << (OPTARG - 1)) + ( 1 << 30 ) ))
+            g)
+                tag_id=$(( (1 << (OPTARG - 1)) + (( 1 << 30 )) ))
                 riverctl set-focused-tags "${tag_id}"
                 echo $tag_id > ~/.cache/rivertag
                 ;;
@@ -19,11 +23,11 @@ workspace() {
                 tag_id=$(( 1 << (OPTARG - 1) ))
                 riverctl toggle-view-tags $tag_id
                 ;;
-            s) 
+            s)
                 tag_id=$(( 1 << (OPTARG - 1) ))
                 riverctl set-view-tags $tag_id
                 ;;
-            t) 
+            t)
                 tag_id=$(( 1 << (OPTARG - 1) ))
                 riverctl toggle-focused-tags "${tag_id}"
                 ;;
@@ -32,46 +36,110 @@ workspace() {
     done
 }
 
+launch() { riverctl spawn "$*"; }
+rbind()  { riverctl map "$@"; }
+rnbind() { riverctl map normal "$@"; }
+
 if [ -z "$(pidof pipewire)" ]; then
     pipewire &
     sleep 1
     pipewire-pulse &
 fi
 
-[ -z "$(pidof mpd)" ]   && mpd --no-daemon &
-[ -z "$(pidof dunst)" ] && dunst &
+# [ -z "$(pidof mpd)" ]   && mpd --no-daemon &
+# [ -z "$(pidof dunst)" ] && dunst &
+
+launch "$SCRIPTS/wallpaper.sh"
+launch "$SCRIPTS/waybar.sh"
+launch "lxqt-policykit-agent"
+launch "dbus-launch"
+launch "foot --server"
+[ -z "$(pidof mpd)" ]   && launch "mpd --no-daemon"
+[ -z "$(pidof dunst)" ] && launch "dunst"
 
 riverctl spawn-tagmask $ALL_TAGS
 
 luajit "$HOME/.config/river/init.lua"
 
-riverctl map normal Mod4       0 toggle-focused-tags $SCRATCH_TAG
-riverctl map normal Mod4+Shift 0 set-view-tags       $SCRATCH_TAG
-riverctl map normal Mod4+Shift S toggle-view-tags    $(( 1 << 30 ))
+## River binds
+rnbind Mod4 W         close
+rnbind Mod4 M         zoom
+rnbind Mod4 F         toggle-fullscreen
+rnbind Mod4 T         toggle-float
+rnbind Mod4 J         focus-view        next
+rnbind Mod4 K         attach-mode       bottom
+rnbind Mod4 L         attach-mode       top
+rnbind Mod4 Semicolon focus-view        previous
 
-riverctl map normal Mod4         Return spawn "footclient -- tmux"
-riverctl map normal Mod4         Space  spawn "wofi --show drun"
-riverctl map normal Mod4         B      spawn "killall -SIGUSR1 waybar"
-riverctl map normal Mod4         E      spawn "pcmanfm"
-riverctl map normal Mod4+Shift   B      spawn "$SCRIPTS/waybar.sh"
-riverctl map normal Mod4+Shift   Return spawn "footclient"
-riverctl map normal Mod1         P      spawn "$SCRIPTS/wallpaper.sh"
-riverctl map normal Mod1+Control Delete spawn "$SCRIPTS/rofi-logout-menu"
+## Floating window movement binds
+rbind -repeat normal Mod4+Control J         move left  25
+rbind -repeat normal Mod4+Control K         move down  25
+rbind -repeat normal Mod4+Control L         move up    25
+rbind -repeat normal Mod4+Control Semicolon move right 25
 
+## Floating window resize binds
+rbind -repeat normal Mod4+Shift J         resize horizontal "25"
+rbind -repeat normal Mod4+Shift K         resize vertical   "-25"
+rbind -repeat normal Mod4+Shift L         resize vertical   "25"
+rbind -repeat normal Mod4+Shift Semicolon resize horizontal "-25"
+
+## Change window position in stack
+rnbind Mod1 J         swap next
+rnbind Mod1 Semicolon swap previous
+
+## Scratchpad and sticky window binds
+rnbind Mod4       0 toggle-focused-tags $SCRATCHTAG
+rnbind Mod4+Shift 0 set-view-tags       $SCRATCHTAG
+rnbind Mod4+Shift S toggle-view-tags    $(( 1 << 30 ))
+
+## Application binds
+rnbind Mod4         Return spawn "footclient -- tmux"
+rnbind Mod4         Space  spawn "wofi --show drun"
+rnbind Mod4+Shift   Space  spawn "wofi --show run"
+rnbind Mod4         B      spawn "killall -SIGUSR1 waybar"
+rnbind Mod4         E      spawn "pcmanfm"
+rnbind Mod4+Shift   B      spawn "$SCRIPTS/waybar.sh"
+rnbind Mod4+Shift   Return spawn "footclient"
+rnbind Mod1         P      spawn "$SCRIPTS/wallpaper.sh"
+rnbind Mod1+Control Delete spawn "$SCRIPTS/rofi-logout-menu"
+
+## Tiling binds
+rnbind Mod4       Equal        send-layout-cmd $TILER "main-ratio $MAIN_RATIO"
+rnbind Mod4       bracketleft  send-layout-cmd $TILER "main-ratio $MAIN_LOW"
+rnbind Mod4       bracketright send-layout-cmd $TILER "main-ratio $MAIN_HIGH"
+rnbind Mod4       comma        send-layout-cmd $TILER "main-count +1"
+rnbind Mod4       period       send-layout-cmd $TILER "main-count -1"
+rnbind Mod4+Shift bar          send-layout-cmd $TILER "main-ratio 0.4"
+
+# Tiling location binds
+rnbind Mod4+Mod1 J         send-layout-cmd $TILER "main-location left"
+rnbind Mod4+Mod1 K         send-layout-cmd $TILER "main-location bottom"
+rnbind Mod4+Mod1 L         send-layout-cmd $TILER "main-location top"
+rnbind Mod4+Mod1 Semicolon send-layout-cmd $TILER "main-location right"
+
+# Granular resizing binds
+rnbind Mod1+Shift J         send-layout-cmd $TILER "main-ratio -0.01"
+rnbind Mod1+Shift Semicolon send-layout-cmd $TILER "main-ratio +0.01"
+
+## Workspace management
 for i in $(seq 1 9); do
-    riverctl map normal Mod4       "$i" spawn "$(declare -pf workspace); workspace -g $i"
-    riverctl map normal Mod1       "$i" spawn "$(declare -pf workspace); workspace -t $i"
-    riverctl map normal Mod4+Mod1  "$i" spawn "$(declare -pf workspace); workspace -m $i"
-    riverctl map normal Mod4+Shift "$i" spawn "$(declare -pf workspace); workspace -s $i"
+    rnbind Mod4       "$i" spawn "$(declare -pf workspace); workspace -g $i"
+    rnbind Mod1       "$i" spawn "$(declare -pf workspace); workspace -t $i"
+    rnbind Mod4+Mod1  "$i" spawn "$(declare -pf workspace); workspace -m $i"
+    rnbind Mod4+Shift "$i" spawn "$(declare -pf workspace); workspace -s $i"
 done
 
 for mode in normal locked; do
-    riverctl map $mode None XF86AudioRaiseVolume  spawn "$SCRIPTS/volume -i 5"
-    riverctl map $mode None XF86AudioLowerVolume  spawn "$SCRIPTS/volume -d 5"
-    riverctl map $mode None XF86AudioMute         spawn "$SCRIPTS/volume -m 0"
-    riverctl map $mode None XF86MonBrightnessUp   spawn "$SCRIPTS/brightness -i 2.5"
-    riverctl map $mode None XF86MonBrightnessDown spawn "$SCRIPTS/brightness -d 2.5"
+    rbind -repeat $mode None XF86AudioRaiseVolume  spawn "$SCRIPTS/volume -i 5"
+    rbind -repeat $mode None XF86AudioLowerVolume  spawn "$SCRIPTS/volume -d 5"
+    rbind -repeat $mode None XF86AudioMute         spawn "$SCRIPTS/volume -m 0"
+    rbind -repeat $mode None XF86MonBrightnessUp   spawn "$SCRIPTS/brightness -i 2.5"
+    rbind -repeat $mode None XF86MonBrightnessDown spawn "$SCRIPTS/brightness -d 2.5"
 done
+
+## Mouse bindings
+riverctl map-pointer normal Mod4 BTN_RIGHT resize-view
+riverctl map-pointer normal Mod4 BTN_LEFT  move-view
 
 riverctl default-layout "$TILER"
 exec rivertile -main-ratio $MAIN_RATIO -outer-padding 4 -view-padding 3

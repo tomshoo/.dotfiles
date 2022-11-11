@@ -11,7 +11,7 @@ tooltip {
 }
 
 window#waybar {
-    background-color: #9fbbf3;
+    background-color: #98c379;
     margin: 0;
     color: #06080a;
     transition-property: background-color;
@@ -93,7 +93,7 @@ window#waybar {
 
 #clock {
     padding: 0px 15px;
-    background-color: #9fbbf3;
+    background-color: #98c379;
     color: #06080a;
 }
 
@@ -132,15 +132,17 @@ window#waybar {
 #cpu {
     padding: 0px 15px;
     background-color: #1a1b2a;
-    color: #d8dee9;
+    color: #a0a8cd;
 }
 
 #memory {
     padding: 0px 15px;
     background-color: #1a1b2a;
+    color: #a0a8cd;
 }
 
 #backlight {
+    color: #d7a65f;
     background-color: #1a1b2a;
 }
 
@@ -151,24 +153,24 @@ window#waybar {
 }
 
 #network.disconnected {
-    background-color: #1b1b1b;
-    color: #4c666a;
+    background-color: #11121d;
+    color: #4a5057;
 }
 
 #pulseaudio {
-    background-color: #212234;
+    background-color: #1a1b2a;
     padding: 0px 15px;
-    color: #d8dee9;
+    color: #a485dd;
 }
 
 #pulseaudio.muted {
-    background-color: #1a1b2a;
+    background-color: #11121d;
     color: #4a5057;
 }
 
 #tray {
     padding: 5px 15px;
-    background-color: #9fbbf3;
+    background-color: rgba(0,0,0, 0.2);
 }
 
 #tray > .passive {
@@ -200,14 +202,14 @@ window#waybar {
 
 #custom-start {
     padding: 0px 20px 0px 10px;
-    background-color: #9fbbf3;
+    background-color: #98c379;
     color: #06080a;
 }
 
 #custom-power {
     padding: 0px 10px;
     font-size: 18px;
-    background-color: #9fbbf3;
+    background-color: #98c379;
     color: #06080a;
 }
 
