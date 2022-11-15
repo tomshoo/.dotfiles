@@ -39,6 +39,20 @@ workspace() {
 launch() { riverctl spawn "$*"; }
 rbind()  { riverctl map "$@"; }
 rnbind() { riverctl map normal "$@"; }
+input()  { riverctl input "$1" "$2" "$3"; }
+
+for props in tap "natural-scroll"; do
+    input "1739:32382:CUST0001:00_06CB:7E7E_Touchpad" "$props" "enabled"
+done
+
+FLOATING_APPS=(
+    "thunar"
+    "pcmanfm"
+    "Rofi"
+    "org.kde.dolphin"
+    "lxqt-policykit-agent"
+    "io.github.seadve.Mousai"
+)
 
 if [ -z "$(pidof pipewire)" ]; then
     pipewire &
@@ -46,16 +60,13 @@ if [ -z "$(pidof pipewire)" ]; then
     pipewire-pulse &
 fi
 
-# [ -z "$(pidof mpd)" ]   && mpd --no-daemon &
-# [ -z "$(pidof dunst)" ] && dunst &
-
-launch "$SCRIPTS/wallpaper.sh"
-launch "$SCRIPTS/waybar.sh"
-launch "lxqt-policykit-agent"
 launch "dbus-launch"
-launch "foot --server"
-[ -z "$(pidof mpd)" ]   && launch "mpd --no-daemon"
-[ -z "$(pidof dunst)" ] && launch "dunst"
+[ -z "$(pidof wbg)" ]                  && launch "$SCRIPTS/wallpaper.sh"
+[ -z "$(pidof waybar)" ]               && launch "$SCRIPTS/waybar.sh"
+[ -z "$(pidof lxqt-policykit-agent)" ] && launch "lxqt-policykit-agent"
+[ -z "$(pidof foot)" ]                 && launch "foot --server"
+[ -z "$(pidof mpd)" ]                  && launch "mpd --no-daemon"
+[ -z "$(pidof dunst)" ]                && launch "dunst"
 
 riverctl spawn-tagmask $ALL_TAGS
 
@@ -140,6 +151,11 @@ done
 ## Mouse bindings
 riverctl map-pointer normal Mod4 BTN_RIGHT resize-view
 riverctl map-pointer normal Mod4 BTN_LEFT  move-view
+
+for app in "${FLOATING_APPS[@]}"; do
+    riverctl float-filter-add app-id "$app"
+done
+
 
 riverctl default-layout "$TILER"
 exec rivertile -main-ratio $MAIN_RATIO -outer-padding 4 -view-padding 3

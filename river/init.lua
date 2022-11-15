@@ -67,15 +67,6 @@ local dbus_env = {
 --     "MOZ_ENABLE_WAYLAND"
 -- }
 
-local floating_apps = {
-    "thunar",
-    "pcmanfm",
-    "Rofi",
-    "org.kde.dolphin",
-    "lxqt-policykit-agent",
-    "io.github.seadve.Mousai"
-}
-
 -- GSettings configurations
 local gsettings = {
     ["org.gnome.desktop.wm.preferences"] = {
@@ -92,12 +83,12 @@ local gsettings = {
 }
 
 -- Input hardware configurations
-local device = {
-    ["1739:32382:CUST0001:00_06CB:7E7E_Touchpad"] = {
-        ["tap"]            = "enabled",
-        ["natural-scroll"] = "enabled"
-    }
-}
+-- local device = {
+--     ["1739:32382:CUST0001:00_06CB:7E7E_Touchpad"] = {
+--         ["tap"]            = "enabled",
+--         ["natural-scroll"] = "enabled"
+--     }
+-- }
 
 local border = {
     ["color-focused"]   = "0x7199ee",
@@ -139,23 +130,19 @@ cmap("Control+Shift", "Print", string.format([[grim -t png -g "$(slurp)" - | wl-
 )
 
 -- Handlers
-for dev, tab in pairs(device) do
-    if type(tab) == "table" then
-        for prop, value in pairs(tab) do
-            os.execute(string.format([[riverctl input '%s' '%s' '%s']], dev, prop, value))
-        end
-    end
-end
+-- for dev, tab in pairs(device) do
+--     if type(tab) == "table" then
+--         for prop, value in pairs(tab) do
+--             os.execute(string.format([[riverctl input '%s' '%s' '%s']], dev, prop, value))
+--         end
+--     end
+-- end
 
 -- Configure Gnome GTK settings
 for class, properties in pairs(gsettings) do
     for property, value in pairs(properties) do
         os.execute(string.format([[gsettings set %s %s %s]], class, property, value))
     end
-end
-
-for _, app in ipairs(floating_apps) do
-    os.execute(string.format([[riverctl float-filter-add app-id "%s"]], app))
 end
 
 for prop, value in pairs(border) do

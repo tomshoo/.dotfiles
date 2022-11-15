@@ -1,6 +1,7 @@
 * {
     font-family: JetBrainsMono Nerd Font, Helvetica, Arial, sans-serif;
     font-size: 12px;
+    padding: 2px;
 }
 
 tooltip {
@@ -11,16 +12,18 @@ tooltip {
 }
 
 window#waybar {
-    background-color: #98c379;
+    border-radius: 10px 10px 15px 15px;
+    background-color: #353945;
     margin: 0;
-    color: #06080a;
+    color: #ffffff;
     transition-property: background-color;
     transition-duration: .5s;
 }
 
 #tags {
-    padding: 0px;
-    box-shadow: 0px -4px 0px 0px #dde1e6;
+    padding: 0px 10px;
+    border-radius: 10px 0px 0px 10px;
+    background-color: #212234;
 }
 
 #tags button {
@@ -28,17 +31,17 @@ window#waybar {
     color: #ffffff;
     border-radius: 0px;
     padding: 0px 15px;
-    background-color: #353945;
+    background-color: #212234;
 }
 
 #tags button:hover {
-    color: #06080a;
-    background: rgba(0,0,0, 0.2);
+    /* color: #; */
+    background: rgba(0,0,0, 0.1);
     box-shadow: inset 0 -2px #4a5057;
 }
 
 #tags button.occupied:not(.focused):hover {
-    color: #06080a;
+    /* color: #06080a; */
     box-shadow: inset 0 -3px #4a5057;
 }
 
@@ -84,21 +87,23 @@ window#waybar {
 }
 
 .modules-left > widget:first-child > #custom-start {
-    margin-left: 10px;
+    margin-left: 15px;
 }
 
 .modules-right > widget:last-child > #custom-power {
-    margin-right: 10px;
+    margin-right: 15px;
 }
 
 #clock {
     padding: 0px 15px;
+    border-radius: 10px;
     background-color: #98c379;
     color: #06080a;
 }
 
 #battery {
     padding: 0px 15px;
+    border-radius: 0 10px 10px 0;
     background-color: #1a1b2a;
     color: #7199ee;
 }
@@ -137,6 +142,7 @@ window#waybar {
 
 #memory {
     padding: 0px 15px;
+    border-radius: 10px 0 0 10px;
     background-color: #1a1b2a;
     color: #a0a8cd;
 }
@@ -169,7 +175,9 @@ window#waybar {
 }
 
 #tray {
-    padding: 5px 15px;
+    padding: 5px 10px;
+    margin: 0px 4px;
+    border-radius: 10px;
     background-color: rgba(0,0,0, 0.2);
 }
 
@@ -184,6 +192,7 @@ window#waybar {
 
 #mpd {
     padding: 5px 15px;
+    border-radius: 0px 10px 10px 0px;
     background-color: #1a1b2a;
     color: #d8dee9;
 }
@@ -201,20 +210,26 @@ window#waybar {
 }
 
 #custom-start {
-    padding: 0px 20px 0px 10px;
-    background-color: #98c379;
-    color: #06080a;
+    padding: 0px 20px 0px 15px;
+    margin-right: 10px;
+    border-radius: 10px;
+    background-color: #11121d;
+    color: #95c561;
 }
 
 #custom-power {
-    padding: 0px 10px;
+    padding: 0px 15px;
+    margin-left: 5px;
+    border-radius: 10px;
     font-size: 18px;
-    background-color: #98c379;
-    color: #06080a;
+    background-color: #11121d;
+    color: #95c561;
 }
 
 #custom-warp {
     padding: 0px 15px;
+    margin: 0 5px;
+    border-radius: 10px;
     background-color: #282c34;
     color: #d8dee9;
 }

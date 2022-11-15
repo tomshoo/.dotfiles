@@ -1,5 +1,8 @@
 {
     "mode": "dock",
+    "margin-bottom": 5,
+    "height": 35,
+    "width": 1910,
     "position": "bottom",
     "modules-center": [
         "clock"
