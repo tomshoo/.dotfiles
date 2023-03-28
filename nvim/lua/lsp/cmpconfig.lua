@@ -1,4 +1,3 @@
-local M = {}
 local icons = {
     Text = " ",
     Method = " ",
@@ -88,13 +87,13 @@ local function generate_config(cmp)
 
                 kind.kind = " + [ " .. strings[2] .. " " .. strings[1] .. " ] "
                 kind.menu = ({
-                    nvim_lsp = "[ LSP ]",
-                    snippy   = "[ SNIPPY ]",
-                    buffer   = "[ BUFFER ]",
-                    path     = "[ PATH ]",
-                    nvim_lua = "[ VIM ]",
-                    crates   = "[ CRATES ]"
-                })[entry.source.name] .. " "
+                        nvim_lsp = "[ LSP ]",
+                        snippy   = "[ SNIPPY ]",
+                        buffer   = "[ BUFFER ]",
+                        path     = "[ PATH ]",
+                        nvim_lua = "[ VIM ]",
+                        crates   = "[ CRATES ]"
+                    })[entry.source.name] .. " "
 
                 return kind
             end,
@@ -123,16 +122,13 @@ local function event_setup(cmp)
     )
 end
 
-function M.setup()
-    local ok, cmp = pcall(require, 'cmp')
-    if not ok then
-        return false
-    end
-    local cfg = generate_config(cmp)
-    event_setup(cmp)
+local ok, cmp = pcall(require, 'cmp')
 
-    cmp.setup(cfg)
-    return true
+if not ok then
+    return nil
 end
 
-return M
+local cfg = generate_config(cmp)
+event_setup(cmp)
+
+cmp.setup(cfg)

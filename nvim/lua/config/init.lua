@@ -24,8 +24,6 @@ local function load_all()
         'config.treesitter',
         'config.session',
         'config.telescope',
-        'config.lsp',
-        'config.lsp_progress',
         'config.git',
         'config.autopairs',
         'config.nvimtree',

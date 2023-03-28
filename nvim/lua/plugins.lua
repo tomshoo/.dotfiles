@@ -21,7 +21,6 @@ vim.cmd [[
 local packer = require('packer')
 
 packer.init({
-
     display = {
         open_fn = function()
             return require('packer.util').float({ border = 'rounded' })
@@ -37,14 +36,12 @@ return packer.startup({
         use({ 'samjwill/nvim-unception' })
         use({ 'jghauser/mkdir.nvim' })
         use({ 'brenoprata10/nvim-highlight-colors' })
-        use({ 'famiu/bufdelete.nvim' })
         use({ 'godlygeek/tabular' })
         use({ 'xolox/vim-misc' })
         use({ 'numToStr/Comment.nvim' })
         use({ 'antoinemadec/FixCursorHold.nvim' })
         use({ 'rbgrouleff/bclose.vim' })
         use({ 'Darazaki/indent-o-matic' })
-        use({ 'bluz71/vim-nightfly-guicolors' })
         use({ 'lewis6991/gitsigns.nvim' })
         use({ 'folke/which-key.nvim' })
         use({ 'ahmedkhalf/project.nvim' })
@@ -66,11 +63,9 @@ return packer.startup({
         use({ 'ray-x/lsp_signature.nvim' })
         use({ 'jose-elias-alvarez/null-ls.nvim' })
         use({ 'aserowy/tmux.nvim' })
-        use({ 'marko-cerovac/material.nvim' })
-        use({ 'tiagovla/tokyodark.nvim' })
-        use({ 'folke/tokyonight.nvim' })
         use({ 'Shatur/neovim-ayu' })
         use({ 'j-hui/fidget.nvim' })
+        use({ 'navarasu/onedark.nvim' })
 
         use({ 'petertriho/nvim-scrollbar', requires = 'kevinhwang91/nvim-hlslens' })
         use({ 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' })
@@ -78,30 +73,40 @@ return packer.startup({
         use({ 'neovim/nvim-lspconfig', requires = 'williamboman/nvim-lsp-installer' })
         use({ 'lukas-reineke/indent-blankline.nvim', requires = 'nvim-treesitter/nvim-treesitter' })
 
-        use({ 'nvim-telescope/telescope.nvim', requires = {
-            { 'nvim-lua/plenary.nvim' },
-            { 'nvim-telescope/telescope-ui-select.nvim' },
-            { 'nvim-telescope/telescope-frecency.nvim', requires = 'tami5/sqlite.lua' }
-        } })
+        use({
+            'nvim-telescope/telescope.nvim',
+            requires = {
+                { 'nvim-lua/plenary.nvim' },
+                { 'nvim-telescope/telescope-ui-select.nvim' },
+                { 'nvim-telescope/telescope-frecency.nvim', requires = 'tami5/sqlite.lua' }
+            }
+        })
 
-        use({ 'hrsh7th/cmp-nvim-lsp', requires = {
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-path',
-            'hrsh7th/cmp-nvim-lua',
-            'hrsh7th/nvim-cmp',
-            'dcampos/nvim-snippy',
-            'dcampos/cmp-snippy',
-            'onsails/lspkind.nvim',
-            'saecki/crates.nvim',
-        } })
+        use({
+            'hrsh7th/cmp-nvim-lsp',
+            requires = {
+                'hrsh7th/cmp-buffer',
+                'hrsh7th/cmp-path',
+                'hrsh7th/cmp-nvim-lua',
+                'hrsh7th/nvim-cmp',
+                'dcampos/nvim-snippy',
+                'dcampos/cmp-snippy',
+                'onsails/lspkind.nvim',
+                'saecki/crates.nvim',
+            }
+        })
 
-        use({ 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate', requires = {
-            'yioneko/nvim-yati',
-            'nvim-treesitter/nvim-treesitter-context',
-            'nvim-treesitter/nvim-treesitter-textobjects',
-            'p00f/nvim-ts-rainbow',
-            'nvim-treesitter/playground'
-        } })
+        use({
+            'nvim-treesitter/nvim-treesitter',
+            run = ':TSUpdate',
+            requires = {
+                'yioneko/nvim-yati',
+                'nvim-treesitter/nvim-treesitter-context',
+                'nvim-treesitter/nvim-treesitter-textobjects',
+                'p00f/nvim-ts-rainbow',
+                'nvim-treesitter/playground'
+            }
+        })
 
         if PACKER_BOOTSTRAP then
             require('packer').sync()

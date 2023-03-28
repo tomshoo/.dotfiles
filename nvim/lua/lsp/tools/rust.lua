@@ -2,6 +2,21 @@ local M = {}
 
 _G.loaded_rust_tools = false
 
+local server_settings = {
+    ["rust-analyzer"] = {
+        checkOnSave = {
+            command = "clippy",
+            allTargets = false,
+        },
+        diagnostics = {
+            disabled = { "unresolved-import" }
+        },
+        cargo = {
+            loadOutDirsFromCheck = true
+        }
+    }
+}
+
 function M.mapper(bufnr)
     if not _M.loaded_rust_tools then
         return false
@@ -23,23 +38,12 @@ function M.setup()
     tool.setup {
         autoSetHints = true,
         server = {
-            settings = { ["rust-analyzer"] = {
-                checkOnSave = {
-                    command = "clippy",
-                    allTargets = false,
-                },
-                diagnostics = {
-                    disabled = { "unresolved-import" }
-                },
-                cargo = {
-                    loadOutDirsFromCheck = true
-                }
-            }
-            }
+            cmd = { "rustup", "run", "stable", "rust-analyzer" },
+            settings = server_settings
         },
         tools = {
-            parameter_hints_prefix = " <- ",
-            other_hints_prefix = " => ",
+            parameter_hints_prefix = "  : ",
+            other_hints_prefix = "  ; ",
             right_align = true
         }
     }

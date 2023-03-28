@@ -1,10 +1,10 @@
 local mappers   = {
-    require('config.lsp.tools.rust').mapper,
-    require('config.lsp.mappings'),
+    require('lsp.tools.rust').mapper,
+    require('lsp.mappings'),
 }
-local highlight = require('config.lsp.highlight_symbol')
-local sign      = require('config.lsp.signatures').setup()
-local fmt       = require('config.lsp.formatter').setup()
+local highlight = require('lsp.highlight_symbol')
+local sign      = require('lsp.signatures').setup()
+local fmt       = require('lsp.formatter').setup()
 local M         = {}
 
 function M.setup()
