@@ -1,66 +1,74 @@
-local L              = {}
+require('mason-null-ls').setup {}
+require('mason').setup {}
+require('mason-lspconfig').setup {}
+require('fidget').setup {}
+require('neodev').setup {}
 
-L.lua_ls             = {
+require 'lsp.completions'
+require 'lsp.rust'
+require 'lsp.null-ls'
+
+local lspconfig = require 'lspconfig'
+local signature = require 'lsp_signature'
+local navic     = require 'nvim-navic'
+
+local servers   = {}
+
+signature.setup {
+    always_trigger = true,
+    border         = 'none',
+    hint_prefix    = '> ',
+}
+
+servers.lua_ls = {
     settings = {
         Lua = {
-            runtime = { version = 'LuaJIT' },
             diagnostics = { globals = { 'vim' } },
-            telimitery = { enable = false }
-        }
+            telimitery  = { enable = false },
+        },
     }
 }
 
-L.pyright            = {}
-L.clangd             = {}
-L.bashls             = {}
-L.jsonls             = {}
-L.cssls              = {}
-L.vimls              = {}
-L.html               = {}
-L.gopls              = {}
 
-local cmpup          = require('lsp.cmpconfig')
-local ok, installer  = pcall(require, 'nvim-lsp-installer')
-local lok, lspconfig = pcall(require, 'lspconfig')
+servers.clangd               = {}
+servers.nil_ls               = {}
+servers.jedi_language_server = {}
 
-if ok then
-    installer.setup {
-        automatic_installation = true,
-    }
-end
-if not lok then
-    return false
-end
+for server, config in pairs(servers) do
+    config.capabilities = require('cmp_nvim_lsp').default_capabilities(
+        vim.lsp.protocol.make_client_capabilities()
+    )
 
-for server, config in pairs(L) do
-    if not cmpup then
-        goto continue
-    end
-
-    config.capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
     config.capabilities.textDocument.foldinRange = {
         dynamicRegistration = false,
-        lineFoldingOnly = true
+        lineFoldingOnly     = true,
     }
-
-    ::continue::
 
     lspconfig[server].setup(config)
 end
 
-require('lsp.tools').setup()
-require('lsp.lightbulb').setup()
-require('lsp.symbols').setup()
-require('lsp.progress').setup()
+vim.api.nvim_create_autocmd({ "LspAttach" }, {
+    group = vim.api.nvim_create_augroup('lspattach', { clear = true }),
+    callback = function(args)
+        local bufnr  = args.buf
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
 
-vim.cmd [[
-    highlight! DiagnosticLineNrError guibg=#51202A guifg=#FF0000 gui=bold
-    highlight! DiagnosticLineNrWarn guibg=#51412A guifg=#FFA500 gui=bold
-    highlight! DiagnosticLineNrInfo guibg=#1E535D guifg=#00FFFF gui=bold
-    highlight! DiagnosticLineNrHint guibg=#1E205D guifg=#0000FF gui=bold
+        require('lsp_signature').on_attach(signature, bufnr)
 
-    sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
-    sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticLineNrWarn
-    sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticLineNrInfo
-    sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticLineNrHint
-]]
+        require 'lsp.highlight' (client, bufnr)
+        require 'lsp.keymaps' (bufnr)
+
+        if client.server_capabilities.documentSymbolProvide then
+            navic.attach(client, bufnr)
+        end
+
+        if client.server_capabilities.documentFormattingProvider then
+            vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+                group = vim.api.nvim_create_augroup('autoformat', { clear = true }),
+                callback = function()
+                    vim.lsp.buf.format({ async = vim.fn.has('g:async_formatting') == 1 or false })
+                end
+            })
+        end
+    end
+})

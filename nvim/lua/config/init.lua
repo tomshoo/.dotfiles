@@ -1,49 +1,14 @@
-_G.__luacache_config = {
-    chunks = {
-        enable = true,
-        path = vim.fn.stdpath('cache') .. '/luacache_chunk'
-    },
-    modpaths = {
-        enabled = true,
-        path = vim.fn.stdpath('cache') .. '/luacache_modpaths'
-    }
-}
+require('hlslens').setup {}
+require('Comment').setup {}
+require('which-key').setup {}
 
-require('impatient')
+require('neogit').setup {}
+require('gitsigns').setup {}
 
-local function load_all()
-    for _, plug in ipairs({
-        'Comment',
-        'gitsigns',
-        'which-key',
-        'toggleterm',
-        'scrollbar',
-        'scrollbar.handlers.search',
-        'config.colorscheme',
-        'config.projects',
-        'config.treesitter',
-        'config.session',
-        'config.telescope',
-        'config.git',
-        'config.autopairs',
-        'config.nvimtree',
-        'config.lualine',
-        'config.bufferline',
-        'config.dashboard',
-        'config.indentguide',
-        'config.trouble',
-        'config.wilder',
-        'config.ufo',
-        'config.colorizer',
-        'config.surround',
-        'config.clipboard',
-        'config.tmux',
-    }) do
-        pcall(function()
-            require(plug).setup()
-        end)
-    end
-end
+require('nvim-surround').setup {}
+require('nvim-autopairs').setup {}
 
--- Load everything
-load_all()
+require 'config.treesitter'
+require 'config.telescope'
+require 'config.lualine'
+require 'config.wilder'
