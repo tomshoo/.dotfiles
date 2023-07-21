@@ -1,0 +1,14 @@
+function zsh_add_plugin() {
+    zsh_plugins_dir="$HOME/.local/share/zsh/plugins"
+    plugin="${1#*/}"
+    plugin_dir="$zsh_plugins_dir/$(echo "$1"|sed 's/\//--/')"
+
+    if [ -d "$plugin_dir" ]; then
+        if   [ -f "$plugin_dir/$plugin.zsh" ];        then source "$plugin_dir/$plugin.zsh"
+        elif [ -f "$plugin_dir/$plugin.plugin.zsh" ]; then source "$plugin_dir/$plugin.plugin.zsh"
+        fi
+    else
+        command git clone "https://github.com/$1.git" "$plugin_dir" &&
+        zsh_add_plugin "$1"
+    fi
+}

@@ -1,0 +1,26 @@
+function zsh_add_snippet() {
+    typeset -A providers
+    typeset providers[omz]="ohmyzsh/ohmyzsh"
+    typeset providers[fzf]="junegunn/fzf"
+
+    snip_dir="$HOME/.local/share/zsh/snippets"
+    snip_provider=$providers[$(echo "$1"|cut -d':' -f1)]
+    snippet="${1#*:}"
+    snip_file=$(echo $1|sed 's/\//--/g')
+    snip_url=
+
+    ! [ -d "$snip_dir" ] && mkdir --parent "$snip_dir"
+
+    if [ -f "$snip_dir/$snip_file" ]; then
+        source "$snip_dir/$snip_file"
+    else
+        if [ -z "$snip_provider" ]; then
+             snip_url="$1"
+        else snip_url="https://raw.githubusercontent.com/$snip_provider/master/$snippet"
+        fi
+
+        echo "fetching snippet from $snip_url"
+        command curl -sL "$snip_url" > "$snip_dir/$snip_file"
+        zsh_add_snippet "$1"
+    fi
+}

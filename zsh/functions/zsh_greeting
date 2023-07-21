@@ -1,0 +1,6 @@
+function zsh_greeting() {
+    if   (( $+commands[pfetch] ));      then pfetch
+    elif (( $+commands[neofetch] ));    then neofetch
+    elif (( $+commands[screenfetch] )); then screenfetch
+    fi
+}

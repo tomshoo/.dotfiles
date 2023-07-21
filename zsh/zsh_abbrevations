@@ -1,0 +1,32 @@
+typeset -a abbrevations
+abbrevations=()
+
+function abbrev() {
+    _name="$1"; shift
+    _command="$*"
+
+    [ -z "$_name" ]    && echo "required name of abbrevation on LHS" && return 1
+    [ -z "$_command" ] && echo "required command on RHS"             && return 1
+
+    alias "$_name"="$_command"
+    abbrevations+=("$_name")
+}
+
+function _expand_abbrevation() {
+    if [[ "$LBUFFER" =~ "\<(${(j:|:)abbrevations})\$" ]]; then
+        zle _expand_alias
+        zle expand-word
+    fi
+
+    zle magic-space
+}
+
+zle -N _expand_abbrevation
+
+function expand_alias_and_accept_line() {
+    _expand_abbrevation
+    zle .backward-delete-char
+    zle .accept-line
+}
+
+zle -N accept-line expand_alias_and_accept_line

@@ -1,0 +1,20 @@
+function zsh_add_completions() {
+    plugin="${1#*/}"
+    compdir="$HOME/.local/share/zsh/completions"
+    plugpth=$(echo $1|sed 's/\//--/')
+
+    if [ -d "$compdir/$plugpth" ]; then
+        completion_file_path=$(ls "$compdir/$plugpth/"_*)
+        fpath+="$(dirname "${completion_file_path}")"
+        if   [ -f "$compdir/$plugpth/$plugin.plugin.zsh" ]; then source "$compdir/$plugpth/$plugin.plugin.zsh"
+        elif [ -f "$compdir/$plugpth/$plugin.zsh" ];        then source "$compdir/$plugpth/$plugin.zsh"
+        fi
+    else
+        command git clone "https://github.com/$1.git" "$compdir/$plugpth"
+        fpath+=$(ls $compdir/$plugpth/_*)
+        [ -f "$ZDOTDIR/.zcompdump" ] && rm "$ZDOTDIR/.zcompdump"
+    fi
+
+    completion_file="$(basname "${completion_file_path}")"
+    [ "$2" = true ] && compinit "${completion_file:1}"
+}

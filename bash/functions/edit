@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+function edit() {
+    if [ -z "$EDITOR" ]; then vim "$@"
+    else "$EDITOR" "$@"
+    fi
+}

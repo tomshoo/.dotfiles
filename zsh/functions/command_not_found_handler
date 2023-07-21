@@ -1,0 +1,24 @@
+# vim:set ft=zsh:
+
+if ! (( $+commands[pkgfile] )); then
+    echo '[info]: installing pkgfile...'
+    sudo pacman -Syu pkgfile --noconfirm
+    sudo pkgfile --update
+
+    printf '\n\n'
+fi
+
+command_not_found_handler () {
+    local pkgs cmd="$1"
+    pkgs=(${(f)"$(pkgfile -b -v -- "$cmd" 2>/dev/null)"})
+    if [[ -n "$pkgs" ]]
+    then
+        printf '%s may be found in the following packages:\n' "$cmd"
+        printf '  %s\n' $pkgs[@]
+    else
+        printf 'zsh: command not found: %s\n' "$cmd"
+    fi >&2
+    return 127
+}
+
+command_not_found_handler "$@"

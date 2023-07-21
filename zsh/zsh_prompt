@@ -1,0 +1,18 @@
+autoload -Uz vcs_info
+autoload -Uz add-zsh-hook
+autoload -Uz colors && colors
+
+function prompt-info() {
+    [ -n "$IN_NIX_SHELL" ] && export nix_info="nix($IN_NIX_SHELL) "
+    vcs_info
+}
+
+
+add-zsh-hook precmd prompt-info
+
+__line_1="%F{yello}[$(whoami)]%f::%F{blue}%(4~|.../%2~|%~)%f"' %F{red}${vcs_info_msg_0_}%f'
+
+PROMPT="$__line_1"$'\n'"%F{green}%m%f $ "
+RPROMPT='%(?..%F{red}%?%f)'
+
+unset __line_1
