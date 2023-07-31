@@ -3,7 +3,7 @@
 waybar_pid=$(pidof waybar)
 
 for pid in ${waybar_pid}; do
-    kill $pid
+    kill "$pid"
 done
 
-waybar --config .config/river/waybar/config --style .config/river/waybar/style.css
+waybar --config ~/.config/river/waybar/config.jsonc --style ~/.config/river/waybar/style.css

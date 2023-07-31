@@ -51,51 +51,6 @@ end
 
 -- Main Config
 
--- Update environment variables for dbus
-local dbus_env = {
-    "XDG_CURRENT_DESKTOP",
-    "DISPLAY",
-    "WAYLAND_DISPLAY",
-    "SWAYSOCK",
-    "MOZ_ENABLE_WAYLAND"
-}
-
--- local systemd_env = {
---     "WAYLAND_DISPLAY",
---     "DISPLAY",
---     "XDG_CURRENT_DESKTOP",
---     "MOZ_ENABLE_WAYLAND"
--- }
-
--- GSettings configurations
-local gsettings = {
-    ["org.gnome.desktop.wm.preferences"] = {
-        ["button-layout"] = [[' ']]
-    },
-    ["org.gnome.desktop.interface"] = {
-        ["cursor-theme"] = "Breeze_Snow",
-        ["icon-theme"]   = "Papirus-Dark",
-        ["gtk-theme"]    = "Orchis-Dark-Compact",
-    },
-    ["org.gnome.desktop.default-applications.terminal"] = {
-        exec = "footclient"
-    }
-}
-
--- Input hardware configurations
--- local device = {
---     ["1739:32382:CUST0001:00_06CB:7E7E_Touchpad"] = {
---         ["tap"]            = "enabled",
---         ["natural-scroll"] = "enabled"
---     }
--- }
-
-local border = {
-    ["color-focused"]   = "0x7199ee",
-    ["color-unfocused"] = "0x000000",
-    width               = 1
-}
-
 -- Screenshot utilities
 cmap("Shift", "Print", string.format([[grim -g "$(slurp)" -t png && %s]],
     notifier({
@@ -139,16 +94,16 @@ cmap("Control+Shift", "Print", string.format([[grim -t png -g "$(slurp)" - | wl-
 -- end
 
 -- Configure Gnome GTK settings
-for class, properties in pairs(gsettings) do
-    for property, value in pairs(properties) do
-        os.execute(string.format([[gsettings set %s %s %s]], class, property, value))
-    end
-end
+-- for class, properties in pairs(gsettings) do
+--     for property, value in pairs(properties) do
+--         os.execute(string.format([[gsettings set %s %s %s]], class, property, value))
+--     end
+-- end
 
-for prop, value in pairs(border) do
-    os.execute(string.format([[riverctl border-%s %s]], prop, value))
-end
+-- for prop, value in pairs(border) do
+--     os.execute(string.format([[riverctl border-%s %s]], prop, value))
+-- end
 
 -- os.execute(string.format("systemctl --user import-environment %s", table.concat(systemd_env, ' ')))
 -- os.execute(string.format("dbus-update-activation-environment --systemd %s", table.concat(dbus_env, ' ')))
-os.execute(string.format("dbus-update-activation-environment %s", table.concat(dbus_env, ' ')))
+-- os.execute(string.format("dbus-update-activation-environment %s", table.concat(dbus_env, ' ')))
