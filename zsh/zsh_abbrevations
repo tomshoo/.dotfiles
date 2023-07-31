@@ -1,4 +1,4 @@
-typeset -a abbrevations
+typeset -aU abbrevations
 abbrevations=()
 
 function abbrev() {

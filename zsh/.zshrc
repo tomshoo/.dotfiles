@@ -22,15 +22,14 @@ setopt hash_cmds
 setopt hash_executables_only
 setopt prompt_subst
 
-unsetopt beep
+function __load_file()   { [ -r "$1" ] && source "$1"; }
 
-function __has_command() { command -v "$1" &> /dev/null; }
-function __load_file()   { [ -f "$1" ] && source "$1" }
-
+__load_file "/etc/profile.d/vte.sh"
 __load_file "$ZDOTDIR/zsh_vcs"
 __load_file "$ZDOTDIR/zsh_abbrevations"
 __load_file "$ZDOTDIR/zsh_prompt"
 __load_file "$ZDOTDIR/zsh_aliases"
+
 [[ -n "$(command ls -A "$ZDOTDIR/functions")" ]] && autoload -Uz "$ZDOTDIR/functions/"*
 
 if (( $+functions[zsh_add_snippet] )); then

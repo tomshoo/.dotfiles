@@ -3,16 +3,28 @@ autoload -Uz add-zsh-hook
 autoload -Uz colors && colors
 
 function prompt-info() {
-    [ -n "$IN_NIX_SHELL" ] && export nix_info="nix($IN_NIX_SHELL) "
     vcs_info
-}
 
+    if [ -n "$RANGER_LEVEL" ]; then export ranger_info="ranger($RANGER_LEVEL)"; else unset ranger_info; fi
+    if [ -n "$IN_NIX_SHELL" ]; then export nix_info="nix($IN_NIX_SHELL) "; else unset nix_info; fi
+    if ! [ -w "$(pwd)" ]; then export read_only=RO; else unset read_only; fi
+}
 
 add-zsh-hook precmd prompt-info
 
-__line_1="%F{yello}[$(whoami)]%f::%F{blue}%(4~|.../%2~|%~)%f"' %F{red}${vcs_info_msg_0_}%f'
 
-PROMPT="$__line_1"$'\n'"%F{green}%m%f $ "
+## Execute this to show all colors available
+# ```zsh
+# for c in {0..7}; do
+#   b=$((c+8))
+#   print -P - "%F{$c}$c%f -> %F{$b}$b%f"
+# done
+# ```
+
+
+__line_1='%F{yellow}$(whoami)%f:%F{9}${read_only}%f:%F{14}${ranger_info}[%(4~|.../%2~|%~)]%f %F{red}${vcs_info_msg_0_}%f'
+
+PROMPT=$'\n'"$__line_1"$'\n''%F{12}${nix_info}%f%F{green}%m%f %(?.%F{cyan}$%f.%F{9}$%f) '
 RPROMPT='%(?..%F{red}%?%f)'
 
 unset __line_1

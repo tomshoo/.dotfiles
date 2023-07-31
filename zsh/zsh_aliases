@@ -3,9 +3,12 @@ unalias run-help
 
 alias clear-history='echo > ~/.zsh_history'
 alias grep='grep --color=auto'
+alias ls='exa'
+alias open='xdg-open'
 
 abbrev update-grub   'sudo grub-mkconfig -o /boot/grub/grub.cfg'
 abbrev update-initrd 'sudo mkinitcpio -P'
+abbrev pacupdate     'sudo pacman -Syu'
 
 function help() { run-help "$@" 2>&1 | bat --plain --language=man; }
 function edit() { if [ -z "$EDITOR" ]; then command vim "$@"; else command "$EDITOR" "$@"; fi; }

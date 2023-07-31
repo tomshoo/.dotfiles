@@ -1,4 +1,7 @@
 function zsh_greeting() {
+    (( $+IN_NIX_SHELL )) && return
+    (( $+RANGER_LEVEL )) && return
+
     if   (( $+commands[pfetch] ));      then pfetch
     elif (( $+commands[neofetch] ));    then neofetch
     elif (( $+commands[screenfetch] )); then screenfetch
