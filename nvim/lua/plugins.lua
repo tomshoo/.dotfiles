@@ -27,14 +27,15 @@ local plugins = {
     'christoomey/vim-tmux-navigator',
     'gelguy/wilder.nvim',
     'folke/which-key.nvim',
+    'nvim-tree/nvim-tree.lua',
 
     'mbbill/undotree',
     'TimUntersberger/neogit',
     'lewis6991/gitsigns.nvim',
-
     'kyazdani42/nvim-web-devicons',
     'romgrk/barbar.nvim',
     'nvim-lualine/lualine.nvim',
+    'dbeniamine/cheat.sh-vim',
 
     'windwp/nvim-autopairs',
     'kylechui/nvim-surround',
@@ -47,10 +48,11 @@ local plugins = {
     'jose-elias-alvarez/null-ls.nvim',
     'ray-x/lsp_signature.nvim',
     'simrat39/rust-tools.nvim',
+    'p00f/clangd_extensions.nvim',
     'folke/trouble.nvim',
     'folke/neodev.nvim',
     'SmiteshP/nvim-navic',
-    { 'j-hui/fidget.nvim', tag = 'legacy' },
+    { 'j-hui/fidget.nvim',                      tag = 'legacy' },
 
     'hrsh7th/nvim-cmp',
     'dcampos/nvim-snippy',
@@ -68,10 +70,11 @@ local plugins = {
     'nvim-telescope/telescope.nvim',
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope-ui-select.nvim',
-    'nvim-telescope/telescope-frecency.nvim',
-    'kkharji/sqlite.lua',
+    { 'nvim-telescope/telescope-frecency.nvim', requires = { 'kkharji/sqlite.lua' } },
+    'cljoly/telescope-repo.nvim',
 
     'sainnhe/sonokai',
+    'direnv/direnv.vim'
 }
 
 return packer.startup({

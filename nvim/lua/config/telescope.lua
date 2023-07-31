@@ -19,9 +19,14 @@ telescope.setup {
         frecency      = {
             ignore_patterns = { '*.git/', '*/t(e)?mp(orary)?/*', '*cache*' },
             show_unindexd   = false,
-        }
+        },
+        repo          = {
+            settings = { auto_lcd = true },
+            list     = { search_dirs = { "~/Projects", "~/.dotfiles" } }
+        },
     },
 }
 
 telescope.load_extension 'ui-select'
 telescope.load_extension 'frecency'
+telescope.load_extension 'repo'

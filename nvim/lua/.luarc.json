@@ -43,6 +43,7 @@
         "/home/tomshoo/.local/share/nvim/site/pack/packer/start/which-key.nvim/lua",
         "/home/tomshoo/.local/share/nvim/site/pack/packer/start/wilder.nvim/lua",
         "/home/tomshoo/.config/nvim/lua",
+        "${3rd}/luv/library",
         "${3rd}/luv/library"
     ]
 }

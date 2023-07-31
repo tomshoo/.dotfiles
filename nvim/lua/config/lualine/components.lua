@@ -3,15 +3,10 @@ local components = {}
 
 components.lsp = {
     function()
-        local names = {}
+        local names   = {}
+        local clients = vim.lsp.get_active_clients({ bufnr = vim.fn.bufnr() })
 
-        for _, client in ipairs(vim.lsp.get_active_clients {
-            bufnr = vim.fn.bufnr()
-        }) do
-            table.insert(
-                names,
-                string.len(client.name) <= 15 and client.name or "...")
-        end
+        for _, client in ipairs(clients) do table.insert(names, client.name) end
 
         return conditions.hide_in_width()
             and '[' .. table.concat(names, ':') .. ']'
@@ -24,7 +19,7 @@ components.lsp = {
 components.fileformat = {
     'fileformat',
     icons_enabled = false,
-    fmt = string.upper,
+    fmt           = string.upper,
 }
 
 components.mixed_indent = {
@@ -57,24 +52,28 @@ components.mixed_indent = {
             max_count = 1e3
         }).total
 
-        if space_indent_cnt > tab_indent_cnt then
-            return vim.fn.mode() ~= 'i' and '' .. tab_indent or ''
-        else
-            return vim.fn.mode() ~= 'i' and '' .. space_indent or ''
-        end
+        return (space_indent_cnt > tab_indent_cnt)
+            and ('MI:%d'):format(tab_indent)
+            or ('MI:%d'):format(space_indent)
     end,
-    cond = conditions.hide_in_width
+    cond = conditions.hide_in_width,
 }
 
 components.trailing_space = {
     function()
-        local space = vim.fn.search([[\s\+$]], 'nwc')
-        return (vim.fn.mode() ~= 'i'
-                and space ~= 0
-                and ' ' .. space)
+        local trailing_space_cnt = vim.fn.search([[\s\+$]], 'nwc')
+
+        return trailing_space_cnt ~= 0
+            and ('TR:%d'):format(trailing_space_cnt)
             or ''
     end,
-    cond = conditions.hide_in_width
+    cond = function()
+        return conditions.hide_in_width() and vim.fn.mode() ~= 'i'
+    end
 }
+
+components.window_number = function()
+    return vim.api.nvim_win_get_number(0)
+end
 
 return components

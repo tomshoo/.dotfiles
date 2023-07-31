@@ -1,11 +1,11 @@
 require('mason-null-ls').setup {}
 require('mason').setup {}
 require('mason-lspconfig').setup {}
-require('fidget').setup {}
 require('neodev').setup {}
 
 require 'lsp.completions'
 require 'lsp.rust'
+require 'lsp.clangd'
 require 'lsp.null-ls'
 
 local lspconfig = require 'lspconfig'
@@ -30,7 +30,7 @@ servers.lua_ls = {
 }
 
 
-servers.clangd               = {}
+servers.bashls               = { filetypes = { "sh", "bash" } }
 servers.nil_ls               = {}
 servers.jedi_language_server = {}
 

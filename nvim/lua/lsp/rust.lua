@@ -2,7 +2,7 @@ local rt = require 'rust-tools'
 
 local server_settings = {
     ['rust-analyzer'] = {
-        checkOnSave = {
+        check = {
             command    = 'clippy',
             allTargets = false,
         },

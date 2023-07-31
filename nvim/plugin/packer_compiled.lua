@@ -89,6 +89,16 @@ _G.packer_plugins = {
     path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/barbar.nvim",
     url = "https://github.com/romgrk/barbar.nvim"
   },
+  ["cheat.sh-vim"] = {
+    loaded = true,
+    path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/cheat.sh-vim",
+    url = "https://github.com/dbeniamine/cheat.sh-vim"
+  },
+  ["clangd_extensions.nvim"] = {
+    loaded = true,
+    path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/clangd_extensions.nvim",
+    url = "https://github.com/p00f/clangd_extensions.nvim"
+  },
   ["cmp-buffer"] = {
     loaded = true,
     path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/cmp-buffer",
@@ -118,6 +128,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/crates.nvim",
     url = "https://github.com/Saecki/crates.nvim"
+  },
+  ["direnv.vim"] = {
+    loaded = true,
+    path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/direnv.vim",
+    url = "https://github.com/direnv/direnv.vim"
   },
   ["fidget.nvim"] = {
     loaded = true,
@@ -204,6 +219,11 @@ _G.packer_plugins = {
     path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/nvim-surround",
     url = "https://github.com/kylechui/nvim-surround"
   },
+  ["nvim-tree.lua"] = {
+    loaded = true,
+    path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/nvim-tree.lua",
+    url = "https://github.com/nvim-tree/nvim-tree.lua"
+  },
   ["nvim-treesitter"] = {
     loaded = true,
     path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
@@ -258,6 +278,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/telescope-frecency.nvim",
     url = "https://github.com/nvim-telescope/telescope-frecency.nvim"
+  },
+  ["telescope-repo.nvim"] = {
+    loaded = true,
+    path = "/home/tomshoo/.local/share/nvim/site/pack/packer/start/telescope-repo.nvim",
+    url = "https://github.com/cljoly/telescope-repo.nvim"
   },
   ["telescope-ui-select.nvim"] = {
     loaded = true,

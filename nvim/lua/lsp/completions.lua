@@ -11,7 +11,7 @@ comp.setup {
     enabled = function()
         local ctx = require 'cmp.config.context'
         return (vim.api.nvim_get_mode().mode == 'c')
-            or not (ctx.in_treesitter_capture ('comment') or ctx.in_syntax_group('Comment'))
+            or not (ctx.in_treesitter_capture('comment') or ctx.in_syntax_group('Comment'))
     end,
 
     mapping = comp.mapping.preset.insert {
@@ -43,11 +43,11 @@ comp.setup {
     },
 
     sources = {
-        {name = 'snippy'},
-        {name = 'nvim_lsp'},
-        {name = 'path'},
-        {name = 'nvim_lua'},
-        {name = 'crates'},
+        { name = 'snippy' },
+        { name = 'nvim_lsp' },
+        { name = 'path' },
+        { name = 'nvim_lua' },
+        { name = 'crates' },
     },
 
     snippet = {
