@@ -13,8 +13,8 @@ truncate_dirname() {
 
 make_tmux_session() {
     if [[ -n "$TMUX" ]]; then
-        tmux new-session -s -d "$session"
-        tmux switch-session -t "$session"
+        tmux new-session -d -s "$session"
+        tmux switch-client -t "$session"
     else
         tmux new-session -s "$session"
     fi
