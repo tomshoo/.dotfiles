@@ -152,6 +152,9 @@ for mode in normal locked; do
     rbind -repeat $mode None XF86AudioMute         spawn "$SCRIPTS/volume -m 0"
     rbind -repeat $mode None XF86MonBrightnessUp   spawn "$SCRIPTS/brightness -i 2.5"
     rbind -repeat $mode None XF86MonBrightnessDown spawn "$SCRIPTS/brightness -d 2.5"
+
+    rbind $mode None XF86AudioPlay  spawn "playerctl play-pause"
+    rbind $mode None XF86AudioPause spawn "playerctl play-pause"
 done
 
 ## Mouse bindings
