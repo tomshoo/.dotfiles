@@ -112,10 +112,10 @@ rnbind Mod4+Shift S toggle-view-tags    $(( 1 << 30 ))
 
 ## Application binds
 rnbind Mod4         Return spawn "kitty"
-rnbind Mod4         Space  spawn "wofi --show drun"
-rnbind Mod4+Shift   Space  spawn "wofi --show run"
+rnbind Mod4         Space  spawn "$SCRIPTS/drun.sh"
+rnbind Mod4+Shift   Space  spawn "bemenu-run"
 rnbind Mod4         B      spawn "killall -SIGUSR1 waybar"
-rnbind Mod4         E      spawn "pcmanfm"
+rnbind Mod4         E      spawn "thunar"
 rnbind Mod4+Shift   B      spawn "$SCRIPTS/waybar.sh"
 rnbind Mod4+Shift   Return spawn "kitty"
 rnbind Mod1         P      spawn "$SCRIPTS/wallpaper.sh"
@@ -136,8 +136,8 @@ rnbind Mod4+Mod1 K send-layout-cmd $TILER "main-location top"
 rnbind Mod4+Mod1 L send-layout-cmd $TILER "main-location right"
 
 # Granular resizing binds
-rnbind Mod1+Shift J         send-layout-cmd $TILER "main-ratio -0.01"
-rnbind Mod1+Shift Semicolon send-layout-cmd $TILER "main-ratio +0.01"
+rnbind Mod1+Shift H send-layout-cmd $TILER "main-ratio -0.01"
+rnbind Mod1+Shift L send-layout-cmd $TILER "main-ratio +0.01"
 
 ## Workspace management
 for i in $(seq 1 9); do
