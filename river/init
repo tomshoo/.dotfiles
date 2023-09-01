@@ -68,11 +68,11 @@ if [ -z "$(pidof pipewire)" ]; then
 fi
 
 launch "dbus-launch"
-[ -z "$(pidof wbg)" ]                  && launch "$SCRIPTS/wallpaper.sh"
-[ -z "$(pidof waybar)" ]               && launch "$SCRIPTS/waybar.sh"
-[ -z "$(pidof lxqt-policykit-agent)" ] && launch "lxqt-policykit-agent"
-[ -z "$(pidof mpd)" ]                  && launch "mpd --no-daemon"
-[ -z "$(pidof dunst)" ]                && launch "dunst"
+
+! pidof swww-daemon          && launch "swww init" && "$SCRIPTS/wallpaper.sh"
+! pidof waybar               && launch "$SCRIPTS/waybar.sh"
+! pidof lxqt-policykit-agent && launch "lxqt-policykit-agent"
+! pidof mako                 && launch "mako"
 
 riverctl spawn-tagmask $ALL_TAGS
 
