@@ -1,14 +1,14 @@
 #!/bin/bash
-#
+
 riverctl map normal Mod4+Mod1 Q exit
 
 export XDG_CURRENT_DESKTOP=river
 
 export MAIN_RATIO="0.55"
-export MAIN_HIGH="0.75"
-export MAIN_LOW="0.25"
-export SCRIPTS="$HOME/.config/river/scripts"
-export TILER="rivertile"
+export  MAIN_HIGH="0.75"
+export   MAIN_LOW="0.25"
+export    SCRIPTS="$HOME/.config/river/scripts"
+export      TILER="rivertile"
 
 activation_vars=(
     WAYLAND_DISPLAY
@@ -17,31 +17,15 @@ activation_vars=(
     MOZ_ENABLE_WAYLAND
 )
 
+floating_apps=(
+    "thunar"
+    "lxqt-policykit-agent"
+    "io.github.seadve.Mousai"
+    "blueman-manager"
+)
+
 export SCRATCHTAG=$(( 1 << 31 ))
 ALL_TAGS=$(( (( 1 << 32 ) - 1) ^ (SCRATCHTAG + ( 1 << 30 )) ))
-
-workspace() {
-    while getopts g:m:s:t: flag; do
-        case "${flag}" in
-        g)  tag_id=$(( (1 << (OPTARG - 1)) + (1 << 30) ))
-            riverctl set-focused-tags "${tag_id}"
-            echo $tag_id > ~/.cache/rivertag
-            ;;
-        m)  tag_id=$(( 1 << (OPTARG - 1) ))
-            riverctl toggle-view-tags $tag_id
-            ;;
-        s)  tag_id=$(( 1 << (OPTARG - 1) ))
-            riverctl set-view-tags $tag_id
-            ;;
-        t)  tag_id=$(( 1 << (OPTARG - 1) ))
-            riverctl toggle-focused-tags "${tag_id}"
-            ;;
-        *) echo "Usage: $0 -[g|m|s]"; exit 1 ;;
-        esac
-    done
-}
-
-workspace="$(declare -pf workspace)"
 
 launch() { riverctl spawn "$*"; }
 rbind()  { riverctl map "$@"; }
@@ -51,21 +35,6 @@ input()  { riverctl input "$1" "$2" "$3"; }
 for props in tap "natural-scroll"; do
     input "pointer-1739-32382-CUST0001:00_06CB:7E7E_Touchpad" "$props" "enabled"
 done
-
-floating_apps=(
-    "thunar"
-    "pcmanfm"
-    "Rofi"
-    "org.kde.dolphin"
-    "lxqt-policykit-agent"
-    "io.github.seadve.Mousai"
-)
-
-if [ -z "$(pidof pipewire)" ]; then
-    pipewire &
-    sleep 1
-    pipewire-pulse &
-fi
 
 launch "dbus-launch"
 
@@ -141,10 +110,10 @@ rnbind Mod1+Shift L send-layout-cmd $TILER "main-ratio +0.01"
 
 ## Workspace management
 for i in $(seq 1 9); do
-    rnbind Mod4       "$i" spawn "$workspace; workspace -g $i"
-    rnbind Mod1       "$i" spawn "$workspace; workspace -t $i"
-    rnbind Mod4+Mod1  "$i" spawn "$workspace; workspace -m $i"
-    rnbind Mod4+Shift "$i" spawn "$workspace; workspace -s $i"
+    rnbind Mod4       "$i" spawn "$SCRIPTS/workspace.sh -g $i"
+    rnbind Mod1       "$i" spawn "$SCRIPTS/workspace.sh -t $i"
+    rnbind Mod4+Mod1  "$i" spawn "$SCRIPTS/workspace.sh -m $i"
+    rnbind Mod4+Shift "$i" spawn "$SCRIPTS/workspace.sh -s $i"
 done
 
 for mode in normal locked; do
@@ -166,14 +135,17 @@ for app in "${floating_apps[@]}"; do
     riverctl float-filter-add app-id "$app"
 done
 
-
 dbus-update-activation-environment --systemd "${activation_vars[@]}"
 systemctl --user import-environment "${activation_vars[@]}"
 
 gsettings set org.gnome.desktop.wm.preferences button-layout ' '
-gsettings set org.gnome.desktop.interface cursor-theme "Adwaita"
-gsettings set org.gnome.desktop.interface icon-theme   "Papirus-Dark"
-gsettings set org.gnome.desktop.interface gtk-theme    "Adw-dark"
+gsettings set org.gnome.desktop.interface      cursor-theme "Adwaita"
+gsettings set org.gnome.desktop.interface      icon-theme   "Papirus-Dark"
+gsettings set org.gnome.desktop.interface      gtk-theme    "adw-gtk3-dark"
+
+riverctl border-color-focused   0x1A85F6
+riverctl border-color-unfocused 0x000000
+riverctl border-width           1
 
 riverctl default-layout "$TILER"
-exec rivertile -main-ratio $MAIN_RATIO -outer-padding 4 -view-padding 3
+! pidof rivertile && exec rivertile -main-ratio $MAIN_RATIO -outer-padding 0 -view-padding 0

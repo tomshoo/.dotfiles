@@ -1,71 +1,43 @@
 * {
     font-family: JetBrainsMono Nerd Font, Helvetica, Arial, sans-serif;
     font-size: 12px;
-    padding: 2px;
 }
 
 tooltip {
     padding: 10px;
     border-radius: 5px;
-    color: #a0a8cd;
-    background-color: #282c34;
+    color: #dadada;
+    background-color: #141b1e;
 }
 
 window#waybar {
-    border-radius: 10px 10px 15px 15px;
-    background-color: #353945;
+    background-color: #141b1e;
     margin: 0;
-    color: #ffffff;
-    transition-property: background-color;
-    transition-duration: .5s;
+    color: #b3b9b8;
 }
 
 #tags {
     padding: 0px 10px;
-    border-radius: 10px 0px 0px 10px;
-    background-color: #212234;
 }
 
 #tags button {
     all: unset;
-    color: #ffffff;
-    border-radius: 0px;
     padding: 0px 15px;
-    background-color: #212234;
-}
-
-#tags button:hover {
-    /* color: #; */
-    background: rgba(0,0,0, 0.1);
-    box-shadow: inset 0 -2px #4a5057;
-}
-
-#tags button.occupied:not(.focused):hover {
-    /* color: #06080a; */
-    box-shadow: inset 0 -3px #4a5057;
 }
 
 #tags button.occupied {
-    color: #a0a8cd;
-    box-shadow: inset 0 -3px #4a5057;
+    color: #dadada;
+    box-shadow: inset 0 -1px #b3b9b8;
 }
 
 #tags button.focused {
     color: #ffffff;
-    background-color: #1a1b2a;
-}
-
-#mode {
-    background-color: #64727D;
-    border-bottom: 3px solid #ffffff;
+    box-shadow: inset 0 -2px #b3b9b8;
 }
 
 #clock,
 #battery,
 #cpu,
-#custom-start,
-#custom-power,
-#custom-warp,
 #memory,
 #disk,
 #temperature,
@@ -77,7 +49,7 @@ window#waybar {
 #mode,
 #idle_inhibitor,
 #mpd {
-    padding: 0px 15px;
+    padding: 5px 15px;
     color: #ffffff;
 }
 
@@ -95,38 +67,30 @@ window#waybar {
 }
 
 #clock {
-    padding: 0px 15px;
-    border-radius: 10px;
-    background-color: #98c379;
-    color: #06080a;
+    background-color: #8ccf7e;
+    color: #232a2d;
 }
 
 #battery {
-    padding: 0px 15px;
-    border-radius: 0 10px 10px 0;
-    background-color: #1a1b2a;
-    color: #7199ee;
+    color: #67b0e8;
+    background-color: #232a2d;
 }
 
 #battery.charging, #battery.plugged {
-    color: #95c561;
-    background-color: #1b2a30;
+    color: #8ccf7e;
 }
 
 @keyframes blink {
-    to {
-        background-color: #ffffff;
-        color: #06080a;
-    }
+    to { color: #232a2d; }
 }
 
 #battery.warning:not(.charging) {
-    color: #f6955b;
+    color: #e5c76b;
 }
 
 #battery.critical:not(.charging) {
     background-color: #fe6d85;
-    color: #d7a65f;
+    color: #e57474;
     animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: linear;
@@ -134,51 +98,20 @@ window#waybar {
     animation-direction: alternate;
 }
 
-#cpu {
-    padding: 0px 15px;
-    background-color: #1a1b2a;
-    color: #a0a8cd;
-}
-
-#memory {
-    padding: 0px 15px;
-    border-radius: 10px 0 0 10px;
-    background-color: #1a1b2a;
-    color: #a0a8cd;
-}
-
 #backlight {
-    color: #d7a65f;
-    background-color: #1a1b2a;
+    color: #e5c76b;
 }
 
 #network {
-    padding: 0px 15px;
-    background-color: #1a1b2a;
-    color: #38a89d;
-}
-
-#network.disconnected {
-    background-color: #11121d;
-    color: #4a5057;
+    color: #6cbfbf;
 }
 
 #pulseaudio {
-    background-color: #1a1b2a;
-    padding: 0px 15px;
-    color: #a485dd;
+    color: #c47fd5;
 }
 
 #pulseaudio.muted {
-    background-color: #11121d;
     color: #4a5057;
-}
-
-#tray {
-    padding: 5px 10px;
-    margin: 0px 4px;
-    border-radius: 10px;
-    background-color: rgba(0,0,0, 0.2);
 }
 
 #tray > .passive {
@@ -187,49 +120,5 @@ window#waybar {
 
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
-    background-color: #fe6d85;
-}
-
-#mpd {
-    padding: 5px 15px;
-    border-radius: 0px 10px 10px 0px;
-    background-color: #1a1b2a;
-    color: #d8dee9;
-}
-
-#mpd.disconnected {
-    background-color: #773440;
-}
-
-#mpd.stopped {
-    background-color: #353945;
-}
-
-#mpd.paused {
-    background-color: #4a5057;
-}
-
-#custom-start {
-    padding: 0px 20px 0px 15px;
-    margin-right: 10px;
-    border-radius: 10px;
-    background-color: #11121d;
-    color: #95c561;
-}
-
-#custom-power {
-    padding: 0px 15px;
-    margin-left: 5px;
-    border-radius: 10px;
-    font-size: 18px;
-    background-color: #11121d;
-    color: #95c561;
-}
-
-#custom-warp {
-    padding: 0px 15px;
-    margin: 0 5px;
-    border-radius: 10px;
-    background-color: #282c34;
-    color: #d8dee9;
+    background-color: #e57474;
 }

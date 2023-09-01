@@ -1,197 +1,70 @@
 {
     "mode": "dock",
-    "margin-bottom": 5,
-    "position": "top",
+    "position": "bottom",
     "modules-center": [
-        "clock"
+        "river/window"
     ],
     "modules-left": [
-        "custom/start",
+        "clock",
         "river/tags",
-        "mpd",
         "tray"
     ],
     "modules-right": [
-        "memory",
-        "cpu",
-        "custom/warp",
         "network",
         "pulseaudio",
         "backlight",
         "battery",
-        "custom/power"
     ],
     "river/tags": {
-        "tag-labels": [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9"
-        ]
-    },
-    "keyboard-state": {
-        "capslock": true,
-        "format": "{name} {icon}",
-        "format-icons": {
-            "locked": "",
-            "unlocked": ""
-        }
-    },
-    "wlr/workspaces": {
-        "sort-by-coordinates": true,
-        "sort-by-name": true,
-        "on-click": "activate",
-        "format": "{icon}",
-        "format-icons": {
-            "default": "",
-            "active": "",
-            "urgent": ""
-        }
-    },
-    "wlr/taskbar": {
-        "format": "{icon}",
-        "on-click": "activate",
-        "icon-theme": "Vimix-Beryl-dark"
+        "tag-labels": [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
     },
     "tray": {
         "spacing": 10
     },
     "clock": {
         "timezone": "Asia/Kolkata",
-        "format": "  {:%a, %b %d, %H:%M}",
+        "format": "{:%a, %b %d, %H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><big>{calendar}</big></tt>",
-        "format-alt": "  {:%A, %B %d, %Y, %H:%M}"
-    },
-    "cpu": {
-        "interval": 5,
-        "format": " {usage:3}% {avg_frequency:5} GHz",
-        "tooltip": false
-    },
-    "memory": {
-        "interval": 5,
-        "format": " {:3}%"
-    },
-    "temperature": {
-        // "thermal-zone": 2,
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
-        // "format-critical": "{temperatureC}°C {icon}",
-        "critical-threshold": 80,
-        "format": "{temperatureC}°C {icon}",
-        "format-icons": [
-            "",
-            "",
-            ""
-        ]
+        "format-alt": "{:%A, %B %d, %Y, %H:%M}"
     },
     "backlight": {
-        "format": "  {percent}%",
-        "on-scroll-up": "brightnessctl set 1%-",
-        "on-scroll-down": "brightnessctl set +1%"
-        //"format-icons": ["", "", "", "", "", "", "", "", ""]
+        "format": "{icon} {percent}%",
+        "format-icons": ["", "", "", "", "", "", "", "", ""],
+        "tooltip": false,
     },
     "battery": {
         "states": {
-            // "good": 95,
             "warning": 30,
             "critical": 15
         },
         "format": "{icon} {capacity}%",
         "format-charging": " {capacity}%",
-        "format-plugged": "ﮣ {capacity}%",
-        "format-icons": [
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "interval": 15
+        "format-plugged": "󰚥 {capacity}%",
+        "format-icons": [ "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹" ],
+        "interval": 5
     },
     "network": {
         "format-wifi": "  {bandwidthDownBytes:4} {signalStrength:3}%",
-        "format-ethernet": "  {ipaddr}/{cidr}",
-        "tooltip-format": "  {ifname} via {gwaddr}",
-        "tooltip-format-wifi": "{ifname} {essid} via {gwaddr} ip: {ipaddr}",
-        "format-linked": "  {ifname} (No IP)",
-        "format-disconnected": "",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+        "format-ethernet": "󰈀  {ipaddr}/{cidr}",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "tooltip": false,
     },
     "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
         "format": " {icon} {volume}%  {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": "婢  {format_source}",
+        "format-bluetooth-muted": "󰝟 {icon} {format_source}",
+        "format-muted": "󰖁 {format_source}",
         "format-source": " {volume}%",
         "format-source-muted": "",
         "format-icons": {
             "headphone": "",
             "default": [
-                "奄",
-                "奔",
-                "墳"
+                "󰕿",
+                "󰖀",
+                "󰕾",
             ]
         },
         "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
-    },
-    "custom/start": {
-        "format": "",
-        "on-click": "wofi --show drun",
-        "tooltip": false
-    },
-    "custom/power": {
-        "format": "襤",
-        "on-click": "~/.config/river/scripts/rofi-logout-menu",
-        "tooltip": false
-    },
-    "custom/warp": {
-        "exec": "~/.local/bin/mywarp --show-icon",
-        "interval": 2,
-        "format": {},
-        "exec-on-event": true,
-        "on-click": "~/.local/bin/mywarp --toggle",
-        "tooltip": false
-    },
-    "mpd": {
-        "format": "{stateIcon} {consumeIcon} {randomIcon} {repeatIcon} {singleIcon} ",
-        "format-disconnected": "   ",
-        "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon} <span color='#f53c3c'></span>  ",
-        "interval": 2,
-        "consume-icons": {
-            "on": "" // Icon shows only when "consume" is on
-        },
-        "random-icons": {
-            "off": "<span color=\"#f53c3c\"></span> ", // Icon grayed out when "random" is off
-            "on": ""
-        },
-        "repeat-icons": {
-            "on": ""
-        },
-        "single-icons": {
-            "on": ""
-        },
-        "state-icons": {
-            "paused": "",
-            "playing": ""
-        },
-        "tooltip-format": "MPD (connected)",
-        "tooltip-format-disconnected": "MPD (disconnected)",
-        "on-click-middle": "mpc toggle",
-        "on-click": "mpc prev",
-        "on-click-right": "mpc next",
-        "on-scroll-down": "mpc stop",
-        "on-scroll-up": "mpc update",
-        "smooth-scrolling-threshold": 1
     }
 }
