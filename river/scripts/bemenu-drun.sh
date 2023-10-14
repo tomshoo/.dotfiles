@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+if bemenu_pids="$(pidof bemenu)"; then
+    for pid in $bemenu_pids; do kill -9 "$pid"; done
+fi
+
 typeset -A desktop_apps
 desktop_apps=()
 
@@ -27,4 +31,7 @@ selection="$(for app in "${!desktop_apps[@]}"; do echo "$app"; done|bemenu)"
 [ -z "$selection" ] && exit 0
 
 dfile="${desktop_apps["$selection"]}"
-awk '/^Exec=/ {sub("^Exec=", ""); gsub(" ?%[cDdFfikmNnUuv]", ""); exit system($0)}' "$dfile"
+
+awk                                                                                 \
+    '/^Exec=/ {sub("^Exec=", ""); gsub(" ?%[cDdFfikmNnUuv]", ""); exit system($0)}' \
+    "$dfile"

@@ -1,14 +1,20 @@
 #!/bin/bash
 
-riverctl map normal Mod4+Mod1 Q exit
+super=Mod4
+alt=Mod1
+pointer="pointer-1739-32382-CUST0001:00_06CB:7E7E_Touchpad"
 
-export XDG_CURRENT_DESKTOP=river
+riverctl map normal $super+$alt Q exit
+riverctl set-repeat 40 300
 
-export MAIN_RATIO="0.55"
-export  MAIN_HIGH="0.75"
-export   MAIN_LOW="0.25"
-export    SCRIPTS="$HOME/.config/river/scripts"
-export      TILER="rivertile"
+export XDG_CURRENT_DESKTOP=river                                                                                                                                                          \
+       BEMENU_OPTS='--ignorecase --list 10 --prompt application --no-overlap --fn "Hack Nerd Font Mono 10" --tb #67b0e8 --tf #141b1e --nb #161616 --ab #161616 --hb #67b0e8 --hf #161616'
+
+export MAIN_RATIO=0.55                       \
+       MAIN_LOW=0.4                          \
+       MAIN_HIGH=0.6                         \
+       SCRIPTS="$HOME/.config/river/scripts" \
+       TILER=rivertile
 
 activation_vars=(
     WAYLAND_DISPLAY
@@ -19,8 +25,10 @@ activation_vars=(
 
 floating_apps=(
     "thunar"
+    "terminal.Scratchpad"
     "lxqt-policykit-agent"
     "io.github.seadve.Mousai"
+    "org.qbittorrent.qBittorrent"
     "blueman-manager"
 )
 
@@ -28,108 +36,121 @@ export SCRATCHTAG=$(( 1 << 31 ))
 ALL_TAGS=$(( (( 1 << 32 ) - 1) ^ (SCRATCHTAG + ( 1 << 30 )) ))
 
 launch() { riverctl spawn "$*"; }
-rbind()  { riverctl map "$@"; }
 rnbind() { riverctl map normal "$@"; }
+rbind()  { riverctl map "$@"; }
 input()  { riverctl input "$1" "$2" "$3"; }
 
-for props in tap "natural-scroll"; do
-    input "pointer-1739-32382-CUST0001:00_06CB:7E7E_Touchpad" "$props" "enabled"
+scratch_term() {
+    kitty                            \
+        --class=terminal.Scratchpad  \
+        -o remember_window_size=no   \
+        -o initial_window_width=960  \
+        -o initial_window_height=640 \
+        "$@"
+}
+
+for prop in tap "natural-scroll"; do
+    input $pointer "$prop" "enabled"
 done
 
 launch "dbus-launch"
 
-! pidof swww-daemon          && launch "swww init" && "$SCRIPTS/wallpaper.sh"
+! pidof swww-daemon          && launch "$SCRIPTS/wallpaper.sh ~/.local/share/backgrounds/RDT_20230812_1657476965832482621316325.jpg"
 ! pidof waybar               && launch "$SCRIPTS/waybar.sh"
 ! pidof lxqt-policykit-agent && launch "lxqt-policykit-agent"
 ! pidof mako                 && launch "mako"
 
 riverctl spawn-tagmask $ALL_TAGS
 
-luajit "$HOME/.config/river/init.lua"
-
 ## River binds
-rnbind Mod4 W close
-rnbind Mod4 M zoom
-rnbind Mod4 F toggle-fullscreen
-rnbind Mod4 T toggle-float
+rnbind $super W close
+rnbind $super M zoom
+rnbind $super F toggle-fullscreen
+rnbind $super T toggle-float
 
-rnbind Mod4 H focus-view  previous
-rnbind Mod4 J attach-mode bottom
-rnbind Mod4 K attach-mode top
-rnbind Mod4 L focus-view  next
+rnbind $super H focus-view  previous
+rnbind $super J attach-mode bottom
+rnbind $super K attach-mode top
+rnbind $super L focus-view  next
 
 ## Floating window movement binds
-rbind -repeat normal Mod4+Control H move left  25
-rbind -repeat normal Mod4+Control J move down  25
-rbind -repeat normal Mod4+Control K move up    25
-rbind -repeat normal Mod4+Control L move right 25
+rbind -repeat normal $super+Control H move left  25
+rbind -repeat normal $super+Control J move down  25
+rbind -repeat normal $super+Control K move up    25
+rbind -repeat normal $super+Control L move right 25
 
 ## Floating window resize binds
-rbind -repeat normal Mod4+Shift H resize horizontal  "25"
-rbind -repeat normal Mod4+Shift J resize vertical   "-25"
-rbind -repeat normal Mod4+Shift K resize vertical    "25"
-rbind -repeat normal Mod4+Shift L resize horizontal "-25"
+rbind -repeat normal $super+Shift H resize horizontal  "25"
+rbind -repeat normal $super+Shift J resize vertical   "-25"
+rbind -repeat normal $super+Shift K resize vertical    "25"
+rbind -repeat normal $super+Shift L resize horizontal "-25"
 
 ## Change window position in stack
-rnbind Mod1 H swap next
-rnbind Mod1 L swap previous
+rnbind $alt H swap next
+rnbind $alt L swap previous
 
 ## Scratchpad and sticky window binds
-rnbind Mod4       0 toggle-focused-tags $SCRATCHTAG
-rnbind Mod4+Shift 0 set-view-tags       $SCRATCHTAG
-rnbind Mod4+Shift S toggle-view-tags    $(( 1 << 30 ))
+rnbind $super       0 toggle-focused-tags $SCRATCHTAG
+rnbind $super+Shift 0 set-view-tags       $SCRATCHTAG
+rnbind $super+Shift S toggle-view-tags    $(( 1 << 30 ))
 
 ## Application binds
-rnbind Mod4         Return spawn "kitty"
-rnbind Mod4         Space  spawn "$SCRIPTS/drun.sh"
-rnbind Mod4+Shift   Space  spawn "bemenu-run"
-rnbind Mod4         B      spawn "killall -SIGUSR1 waybar"
-rnbind Mod4         E      spawn "thunar"
-rnbind Mod4+Shift   B      spawn "$SCRIPTS/waybar.sh"
-rnbind Mod4+Shift   Return spawn "kitty"
-rnbind Mod1         P      spawn "$SCRIPTS/wallpaper.sh"
-rnbind Mod1+Control Delete spawn "$SCRIPTS/rofi-logout-menu"
+rnbind $super        Return spawn "kitty"
+rnbind $super+Shift  Return spawn "$(declare -pf scratch_term); scratch_term"
+rnbind $super        Space  spawn "export BEMENU_OPTS='$BEMENU_OPTS'; $SCRIPTS/bemenu-drun.sh"
+rnbind $super+Shift  Space  spawn "export BEMENU_OPTS='$BEMENU_OPTS'; bemenu-run --prompt shell"
+rnbind $super        B      spawn "killall -SIGUSR1 waybar"
+rnbind $super        E      spawn "thunar"
+rnbind $super+Shift  E      spawn "$(declare -pf scratch_term); scratch_term -- lf"
+rnbind $super+Shift  B      spawn "$SCRIPTS/waybar.sh"
+
+rnbind $alt         P      spawn "$SCRIPTS/wallpaper.sh"
+rnbind $alt+Control Delete spawn "export BEMENU_OPTS='$BEMENU_OPTS'; $SCRIPTS/bemenu-session.sh"
 
 ## Tiling binds
-rnbind Mod4       Equal        send-layout-cmd $TILER "main-ratio $MAIN_RATIO"
-rnbind Mod4       bracketleft  send-layout-cmd $TILER "main-ratio $MAIN_LOW"
-rnbind Mod4       bracketright send-layout-cmd $TILER "main-ratio $MAIN_HIGH"
-rnbind Mod4       comma        send-layout-cmd $TILER "main-count +1"
-rnbind Mod4       period       send-layout-cmd $TILER "main-count -1"
-rnbind Mod4+Shift bar          send-layout-cmd $TILER "main-ratio 0.4"
+rnbind $super  Equal        send-layout-cmd $TILER "main-ratio $MAIN_RATIO"
+rnbind $super  bracketleft  send-layout-cmd $TILER "main-ratio $MAIN_LOW"
+rnbind $super  bracketright send-layout-cmd $TILER "main-ratio $MAIN_HIGH"
+rnbind $super  comma        send-layout-cmd $TILER "main-count +1"
+rnbind $super  period       send-layout-cmd $TILER "main-count -1"
+rnbind $super  backslash    send-layout-cmd $TILER "main-ratio 0.5"
 
 # Tiling location binds
-rnbind Mod4+Mod1 H send-layout-cmd $TILER "main-location left"
-rnbind Mod4+Mod1 J send-layout-cmd $TILER "main-location bottom"
-rnbind Mod4+Mod1 K send-layout-cmd $TILER "main-location top"
-rnbind Mod4+Mod1 L send-layout-cmd $TILER "main-location right"
+rnbind $super+$alt H send-layout-cmd $TILER "main-location left"
+rnbind $super+$alt J send-layout-cmd $TILER "main-location bottom"
+rnbind $super+$alt K send-layout-cmd $TILER "main-location top"
+rnbind $super+$alt L send-layout-cmd $TILER "main-location right"
 
 # Granular resizing binds
-rnbind Mod1+Shift H send-layout-cmd $TILER "main-ratio -0.01"
-rnbind Mod1+Shift L send-layout-cmd $TILER "main-ratio +0.01"
+rnbind $alt+Shift H send-layout-cmd $TILER "main-ratio -0.01"
+rnbind $alt+Shift L send-layout-cmd $TILER "main-ratio +0.01"
 
 ## Workspace management
-for i in $(seq 1 9); do
-    rnbind Mod4       "$i" spawn "$SCRIPTS/workspace.sh -g $i"
-    rnbind Mod1       "$i" spawn "$SCRIPTS/workspace.sh -t $i"
-    rnbind Mod4+Mod1  "$i" spawn "$SCRIPTS/workspace.sh -m $i"
-    rnbind Mod4+Shift "$i" spawn "$SCRIPTS/workspace.sh -s $i"
+for i in {1..9}; do
+    rnbind $super       "$i" spawn "$SCRIPTS/workspace.sh -g $i"
+    rnbind $alt         "$i" spawn "$SCRIPTS/workspace.sh -t $i"
+    rnbind $super+$alt  "$i" spawn "$SCRIPTS/workspace.sh -m $i"
+    rnbind $super+Shift "$i" spawn "$SCRIPTS/workspace.sh -s $i"
 done
 
 for mode in normal locked; do
-    rbind -repeat $mode None XF86AudioRaiseVolume  spawn "$SCRIPTS/volume -i 5"
-    rbind -repeat $mode None XF86AudioLowerVolume  spawn "$SCRIPTS/volume -d 5"
-    rbind -repeat $mode None XF86AudioMute         spawn "$SCRIPTS/volume -m 0"
-    rbind -repeat $mode None XF86MonBrightnessUp   spawn "$SCRIPTS/brightness -i 2.5"
-    rbind -repeat $mode None XF86MonBrightnessDown spawn "$SCRIPTS/brightness -d 2.5"
+    rbind -repeat $mode None XF86AudioRaiseVolume  spawn "$SCRIPTS/volume.sh -i 5"
+    rbind -repeat $mode None XF86AudioLowerVolume  spawn "$SCRIPTS/volume.sh -d 5"
+    rbind -repeat $mode None XF86AudioMute         spawn "$SCRIPTS/volume.sh -m 0"
+    rbind -repeat $mode None XF86MonBrightnessUp   spawn "$SCRIPTS/brightness.sh -i 2.5"
+    rbind -repeat $mode None XF86MonBrightnessDown spawn "$SCRIPTS/brightness.sh -d 2.5"
 
     rbind $mode None XF86AudioPlay  spawn "playerctl play-pause"
     rbind $mode None XF86AudioPause spawn "playerctl play-pause"
 done
 
+# shellcheck disable=SC2016
+rnbind None+Shift Print spawn 'grim -g "$(slurp)" -t png - | swappy -f -'
+rnbind None       Print spawn 'grim -t png - | swappy -f -'
+
 ## Mouse bindings
-riverctl map-pointer normal Mod4 BTN_RIGHT resize-view
-riverctl map-pointer normal Mod4 BTN_LEFT  move-view
+riverctl map-pointer normal $super BTN_RIGHT resize-view
+riverctl map-pointer normal $super BTN_LEFT  move-view
 
 for app in "${floating_apps[@]}"; do
     riverctl float-filter-add app-id "$app"
@@ -147,5 +168,7 @@ riverctl border-color-focused   0x1A85F6
 riverctl border-color-unfocused 0x000000
 riverctl border-width           1
 
+pidof "$TILER" && exit 0
+
 riverctl default-layout "$TILER"
-! pidof rivertile && exec rivertile -main-ratio $MAIN_RATIO -outer-padding 0 -view-padding 0
+exec "$TILER" -main-ratio $MAIN_RATIO -outer-padding 2 -view-padding 2

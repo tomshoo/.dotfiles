@@ -6,57 +6,56 @@
 tooltip {
     padding: 10px;
     border-radius: 5px;
-    color: #d8dee9;
-    background-color: #262626;
+    color: #dadada;
+    background-color: #141b1e;
 }
 
 window#waybar {
-    background-color: #161616;
+    background-color: #141b1e;
     margin: 0;
-    color: #d8dee9;
+    color: #b3b9b8;
 }
 
 #tags {
     padding: 0px 10px;
-    margin: 5px;
-    border-radius: 5px;
-    background-color: #262626;
 }
 
 #tags button {
     all: unset;
-    padding: 5px 15px;
+    padding: 0px 15px;
 }
 
 #tags button.occupied {
-    color: #d8dee9;
+    color: #dadada;
     box-shadow: inset 0 -1px #b3b9b8;
 }
 
 #tags button.focused {
     color: #ffffff;
-    box-shadow: inset 0 -2px #3ddbd9;
+    box-shadow: inset 0 -2px #b3b9b8;
 }
 
 #clock,
 #battery,
 #backlight,
 #network,
-#pulseaudio {
-    padding: 5px 15px;
-    color: #d8dee9;
-    background-color: #262626;
-    margin: 5px 0px 5px 0px;
-}
-
+#pulseaudio,
 #tray {
-    margin: 5px;
-    padding: 5px 10px;
+    padding: 5px 15px;
+    color: #ffffff;
 }
 
 #window,
 #workspaces {
     margin: 0px 0px;
+}
+
+.modules-left > widget:first-child > #custom-start {
+    margin-left: 15px;
+}
+
+.modules-right > widget:last-child > #custom-power {
+    margin-right: 15px;
 }
 
 #clock {
@@ -65,8 +64,8 @@ window#waybar {
 }
 
 #battery {
-    border-radius: 0 5px 5px 0;
-    margin-right: 5px;
+    color: #67b0e8;
+    background-color: #232a2d;
 }
 
 #battery.charging, #battery.plugged {
@@ -91,8 +90,16 @@ window#waybar {
     animation-direction: alternate;
 }
 
+#backlight {
+    color: #e5c76b;
+}
+
 #network {
-    border-radius: 5px 0 0 5px;
+    color: #6cbfbf;
+}
+
+#pulseaudio {
+    color: #c47fd5;
 }
 
 #pulseaudio.muted {
