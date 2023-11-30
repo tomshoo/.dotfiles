@@ -3,36 +3,14 @@ require('mason').setup {}
 require('mason-lspconfig').setup {}
 require('neodev').setup {}
 
-require 'lsp.completions'
-require 'lsp.rust'
-require 'lsp.clangd'
-require 'lsp.null-ls'
+require 'load.lsp.rust'
+require 'load.lsp.clangd'
+require 'load.lsp.null-ls'
 
 local lspconfig = require 'lspconfig'
 local signature = require 'lsp_signature'
 local navic     = require 'nvim-navic'
-
-local servers   = {}
-
-signature.setup {
-    always_trigger = true,
-    border         = 'none',
-    hint_prefix    = '> ',
-}
-
-servers.lua_ls = {
-    settings = {
-        Lua = {
-            diagnostics = { globals = { 'vim' } },
-            telimitery  = { enable = false },
-        },
-    }
-}
-
-
-servers.bashls               = { filetypes = { "sh", "bash" } }
-servers.nil_ls               = {}
-servers.jedi_language_server = {}
+local servers   = require 'load.lsp.servers'
 
 for server, config in pairs(servers) do
     config.capabilities = require('cmp_nvim_lsp').default_capabilities(
@@ -55,8 +33,8 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
 
         require('lsp_signature').on_attach(signature, bufnr)
 
-        require 'lsp.highlight' (client, bufnr)
-        require 'lsp.keymaps' (bufnr)
+        require 'load.lsp.highlight' (client, bufnr)
+        require 'load.lsp.keymaps' (bufnr)
 
         if client.server_capabilities.documentSymbolProvide then
             navic.attach(client, bufnr)

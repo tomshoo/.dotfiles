@@ -1,89 +1,64 @@
-local fn = vim.fn
-local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-    PACKER_BOOTSTRAP = fn.system {
-        'git', 'clone', '--depth', '1',
-        'https://github.com/wbthomason/packer.nvim',
-        install_path
-    }
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system {
+        "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable",
+        lazypath }
 end
 
-vim.cmd [[packadd packer.nvim]]
+vim.opt.rtp:prepend(lazypath)
 
-vim.cmd [[
-augroup packer_user_config
-  autocmd!
-  autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-augroup end
-]]
+require('lazy').setup {
+    { 'folke/which-key.nvim',      opts = {} },
+    { 'kylechui/nvim-surround',    opts = {}, event = 'InsertEnter' },
+    { 'windwp/nvim-autopairs',     opts = {}, event = 'InsertEnter' },
+    { 'kevinhwang91/nvim-hlslens', opts = {} },
+    { 'numToStr/Comment.nvim',     opts = {} },
+    { 'lewis6991/gitsigns.nvim',   opts = {} },
 
-local packer = require('packer')
+    {
+        'j-hui/fidget.nvim',
+        opts = {},
+        tag  = 'legacy'
+    },
 
-local plugins = {
-    'wbthomason/packer.nvim',
+    require 'load.lualine',
+    require 'load.nvim-tree',
+    require 'load.aerial',
+    require 'load.neorg',
+    require 'load.treesitter',
+    require 'load.telescope',
+    require 'load.colorscheme',
+    require 'load.completions',
+
+
+    { 'kyazdani42/nvim-web-devicons', lazy = false },
+    'nvim-lua/plenary.nvim',
+    'folke/zen-mode.nvim',
+    'direnv/direnv.vim',
     'antoinemadec/FixCursorHold.nvim',
-    'kevinhwang91/nvim-hlslens',
     'godlygeek/tabular',
     'christoomey/vim-tmux-navigator',
-    'gelguy/wilder.nvim',
-    'folke/which-key.nvim',
-    'nvim-tree/nvim-tree.lua',
+    'norcalli/bclose.vim',
+    'SmiteshP/nvim-navic',
 
     'mbbill/undotree',
-    'TimUntersberger/neogit',
-    'lewis6991/gitsigns.nvim',
-    'kyazdani42/nvim-web-devicons',
-    'romgrk/barbar.nvim',
-    'nvim-lualine/lualine.nvim',
-    'dbeniamine/cheat.sh-vim',
 
-    'windwp/nvim-autopairs',
-    'kylechui/nvim-surround',
-    'numToStr/Comment.nvim',
+    {
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            'williamboman/mason.nvim',
+            'williamboman/mason-lspconfig.nvim',
+            'jay-babu/mason-null-ls.nvim',
+            'jose-elias-alvarez/null-ls.nvim',
+            'ray-x/lsp_signature.nvim',
+            'simrat39/rust-tools.nvim',
+            'p00f/clangd_extensions.nvim',
+            'folke/trouble.nvim',
+            'folke/neodev.nvim',
+        }
+    },
 
-    'williamboman/mason.nvim',
-    'williamboman/mason-lspconfig.nvim',
-    'neovim/nvim-lspconfig',
-    'jay-babu/mason-null-ls.nvim',
-    'jose-elias-alvarez/null-ls.nvim',
-    'ray-x/lsp_signature.nvim',
-    'simrat39/rust-tools.nvim',
-    'p00f/clangd_extensions.nvim',
-    'folke/trouble.nvim',
-    'folke/neodev.nvim',
-    'SmiteshP/nvim-navic',
-    { 'j-hui/fidget.nvim',                      tag = 'legacy' },
-
-    'hrsh7th/nvim-cmp',
-    'dcampos/nvim-snippy',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-nvim-lua',
-    'dcampos/cmp-snippy',
-    'Saecki/crates.nvim',
-
-    'nvim-treesitter/nvim-treesitter',
-    'nvim-treesitter/nvim-treesitter-context',
-    'nvim-treesitter/nvim-treesitter-textobjects',
-
-    'nvim-telescope/telescope.nvim',
-    'nvim-lua/plenary.nvim',
-    'nvim-telescope/telescope-ui-select.nvim',
-    { 'nvim-telescope/telescope-frecency.nvim', requires = { 'kkharji/sqlite.lua' } },
-    'cljoly/telescope-repo.nvim',
-
-    'sainnhe/sonokai',
-    'direnv/direnv.vim'
+    performance = {
+        rtp = { path = { lazypath .. '/nvim-treesitter/' }, }
+    }
 }
-
-return packer.startup({
-    function(use)
-        for _, plugin in ipairs(plugins) do
-            use(plugin)
-        end
-        if PACKER_BOOTSTRAP then
-            packer.sync()
-        end
-    end
-})

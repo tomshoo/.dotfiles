@@ -1,6 +1,4 @@
-local nvim_tree = require 'nvim-tree'
-
-nvim_tree.setup {
+local config = {
     disable_netrw        = true,
     hijack_netrw         = true,
     auto_reload_on_write = true,
@@ -45,4 +43,9 @@ nvim_tree.setup {
             show          = { folder_arrow = false }
         }
     }
+}
+
+return {
+    'nvim-tree/nvim-tree.lua',
+    opts = config,
 }

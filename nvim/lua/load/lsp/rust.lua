@@ -1,12 +1,15 @@
 local rt = require 'rust-tools'
 
 local server_settings = {
+    standalone        = true,
     ['rust-analyzer'] = {
-        check = {
+        cachePriming = true,
+        check        = {
             command    = 'clippy',
             allTargets = false,
         },
-    }
+        diagnostics  = { disabled = { 'inactive-code' } }
+    },
 }
 
 rt.setup {
@@ -20,6 +23,6 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
     pattern = { '*.rs' },
     callback = function(args)
         local bufnr = args.buf
-        map('n', '<leader>e', rt.expand_macro.expand_macro, { desc = "Expand macros", buffer = bufnr })
+        mapkey('n', '<leader>e', rt.expand_macro.expand_macro, { desc = "Expand macros", buffer = bufnr })
     end
 })

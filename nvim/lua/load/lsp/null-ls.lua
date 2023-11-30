@@ -6,4 +6,5 @@ nls.setup { sources = {
     fmt.autopep8,
     diag.shellcheck,
     diag.fish,
+    diag.mypy,
 } }

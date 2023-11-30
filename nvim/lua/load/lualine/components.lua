@@ -1,5 +1,24 @@
-local conditions = require('config.lualine.conditions')
+local conditions = require('load.lualine.conditions')
 local components = {}
+
+components.mode = {
+    'mode',
+    fmt = function(str)
+        return ('[' .. string.sub(str, 1, 3):lower() .. ']')
+    end
+}
+
+components.diff = {
+    'diff',
+    source = function()
+        local gitdiff = vim.b.gitsigns_status_dict
+        return gitdiff and {
+            added    = gitdiff.added,
+            removed  = gitdiff.removed,
+            modified = gitdiff.changed,
+        } or nil
+    end
+}
 
 components.lsp = {
     function()
@@ -13,13 +32,25 @@ components.lsp = {
             or string.format('[+%d]', #names)
     end,
     cond = conditions.lsp_is_active,
-    icon = ' '
+    icon = ' '
 }
 
 components.fileformat = {
     'fileformat',
     icons_enabled = false,
     fmt           = string.upper,
+}
+
+components.filename = {
+    'filename',
+    newfile_status = true,
+    path           = 1,
+
+    symbols        = {
+        unamed   = '[unamed]',
+        newfile  = '[new]',
+        readonly = '[ro]'
+    }
 }
 
 components.mixed_indent = {
