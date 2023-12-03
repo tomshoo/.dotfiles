@@ -1,0 +1,70 @@
+{
+    // asd
+    "modules-left": [
+        "hyprland/workspaces",
+        "hyprland/window",
+        "tray"
+    ],
+    "modules-center": [
+    ],
+    "modules-right": [
+        "network",
+        "pulseaudio",
+        "backlight",
+        "clock",
+        "battery",
+    ],
+    "hyprland/workspaces": {
+        "persistent-workspaces": { "*": 4 }
+    },
+    "hyprland/window": {
+        "format": "{title}"
+    },
+    "tray": {
+        "spacing": 20,
+        "icon-size": 15
+    },
+    "clock": {
+        "timezone": "Asia/Kolkata",
+        "format": "{:%a, %b %d, %H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><big>{calendar}</big></tt>",
+        "format-alt": "{:%A, %B %d, %Y, %H:%M}"
+    },
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": ["", "", "", "", "", "", "", "", ""],
+        "tooltip": false,
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": "󰚥 {capacity}%",
+        "format-icons": [ "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹" ],
+        "interval": 5
+    },
+    "network": {
+        "format-wifi": "  {essid} {bandwidthDownBytes:4} {signalStrength:3}%",
+        "format-ethernet": "󰈀  {ipaddr}/{cidr}",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "tooltip": true,
+        "tooltip-format": "{ifname}:{essid}:{ipaddr}"
+    },
+    "pulseaudio": {
+        "format": " {icon} {volume}%  {format_source}",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": "󰝟 {icon} {format_source}",
+        "format-muted": "󰖁 {format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "default": [ "󰕿", "󰖀", "󰕾" ]
+        },
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+    }
+}

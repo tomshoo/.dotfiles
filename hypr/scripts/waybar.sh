@@ -3,7 +3,7 @@
 waybar_pid=$(pidof waybar)
 
 for pid in ${waybar_pid}; do
-    kill -SIGKILL $pid
+    kill "$pid"
 done
 
-waybar --config $HOME/.config/hypr/waybar/config --style $HOME/.config/hypr/waybar/style.css
+waybar --config ~/.config/hypr/waybar/config.jsonc --style ~/.config/hypr/waybar/style.css
