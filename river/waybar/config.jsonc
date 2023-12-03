@@ -1,14 +1,12 @@
 {
     "mode": "dock",
-    "position": "bottom",
-    "modules-center": [
-        "river/window",
-    ],
+    "position": "top",
     "modules-left": [
         "river/tags",
-        "tray"
+        "river/window"
     ],
     "modules-right": [
+        "tray",
         "network",
         "pulseaudio",
         "backlight",
@@ -16,7 +14,7 @@
         "battery",
     ],
     "river/window": {
-        "max-length": 80,
+        "max-length": 100,
     },
     "tray": {
         "spacing": 20,
@@ -45,9 +43,9 @@
         "interval": 5
     },
     "network": {
-        "format-wifi": "  {bandwidthDownBytes:4} {signalStrength:3}%",
+        "format-wifi": "  {essid} {signalStrength:3}%",
         "format-ethernet": "󰈀  {ipaddr}/{cidr}",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "format-alt": "{ifname} [down:{bandwidthDownBytes}|up:{bandwidthUpBytes}] {ipaddr}/{cidr}",
         "tooltip": false,
     },
     "pulseaudio": {
