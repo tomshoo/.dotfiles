@@ -22,9 +22,11 @@ add-zsh-hook precmd prompt-info
 # ```
 
 
-__line_1='%F{yellow}$(whoami)%f:%F{9}${read_only}%f:%F{14}${ranger_info}[%(4~|.../%2~|%~)]%f %F{red}${vcs_info_msg_0_}%f'
-
-PROMPT=$'\n'"$__line_1"$'\n''%F{12}${nix_info}%f%F{green}%m%f %(?.%F{cyan}$%f.%F{9}$%f) '
+# __line_1='%F{yellow}$(whoami)%f:%F{9}${read_only}%f:%F{14}${ranger_info}[%(4~|.../%2~|%~)]%f %F{red}${vcs_info_msg_0_}%f'
+#
+# PROMPT=$'\n'"$__line_1"$'\n''%F{12}${nix_info}%f%F{green}%m%f %(?.%F{cyan}$%f.%F{9}$%f) '
+# RPROMPT='%(?..%F{red}%?%f)'
+#
+# unset __line_1
+PROMPT=$'\n'"%F{cyan}$(whoami)%f"' %F{12}${nix_info}%f%F{14}${ranger_info}[%(4~|.../%2~|%~)]%f %F{red}${vcs_info_msg_0_}%f%(?.%F{cyan}󰄾%f.%F{9}$%f) '
 RPROMPT='%(?..%F{red}%?%f)'
-
-unset __line_1

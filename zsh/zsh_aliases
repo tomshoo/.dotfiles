@@ -1,19 +1,30 @@
+# shellcheck disable=SC2154
+# shellcheck disable=SC2016
+
 autoload -Uz run-help
-unalias run-help
+(( $+aliases[run-help] )) && unalias run-help
 
 alias clear-history='echo > ~/.zsh_history'
 alias grep='grep --color=auto'
-alias ls='exa'
+alias ls='eza'
+alias cat='bat -p'
 alias open='xdg-open'
+alias tree='eza -T'
 
 abbrev update-grub   'sudo grub-mkconfig -o /boot/grub/grub.cfg'
 abbrev update-initrd 'sudo mkinitcpio -P'
-abbrev pacupdate     'sudo pacman -Syu'
+abbrev pacup         'sudo pacman -Syu'
+abbrev pacrm         'sudo pacman -Rsuncd'
+abbrev paclean       'sudo pacman -Rsuncd $(pacman -Qtdq)'
 
 function help() { run-help "$@" 2>&1 | bat --plain --language=man; }
-function edit() { if [ -z "$EDITOR" ]; then command vim "$@"; else command "$EDITOR" "$@"; fi; }
-function fzf()  { if [ -n "$TMUX" ]; then command fzf "$@"; else command fzf-tmux "$@"; fi }
+function ed()   { "${EDITOR:-vim}" "$@"; }
 
 if (( $+commands[bat] )); then
-    function man() { command man "$@" | bat -l man -p; }
+    export MANROFFOPT='-c'
+    export MANPAGER='sh -c "col -bx | bat -l man -p"'
+fi
+
+if [[ $TERM =~ .*kitty.* ]]; then
+    alias icat='kitty +kitten icat'
 fi
