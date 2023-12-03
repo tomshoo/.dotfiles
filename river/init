@@ -1,20 +1,22 @@
 #!/bin/bash
+# shellcheck disable=SC2016
 
 super=Mod4
 alt=Mod1
 pointer="pointer-1739-32382-CUST0001:00_06CB:7E7E_Touchpad"
 
-riverctl map normal $super+$alt Q exit
+riverctl map normal $super+Control Q exit
 riverctl set-repeat 40 300
 
-export XDG_CURRENT_DESKTOP=river                                                                                                                                                          \
-       BEMENU_OPTS='--ignorecase --list 10 --prompt application --no-overlap --fn "Hack Nerd Font Mono 10" --tb #67b0e8 --tf #141b1e --nb #161616 --ab #161616 --hb #67b0e8 --hf #161616'
+export XDG_CURRENT_DESKTOP=river \
+       MOZ_ENABLE_WAYLAND=1
 
 export MAIN_RATIO=0.55                       \
        MAIN_LOW=0.4                          \
        MAIN_HIGH=0.6                         \
        SCRIPTS="$HOME/.config/river/scripts" \
-       TILER=rivertile
+       TILER=rivertile                       \
+       BEMENU_OPTS='--ignorecase --list 10 --prompt application --no-overlap --fn "Hack Nerd Font Mono 10" --tb #67b0e8 --tf #141b1e --nb #161616 --ab #161616 --hb #67b0e8 --hf #161616'
 
 activation_vars=(
     WAYLAND_DISPLAY
@@ -35,10 +37,9 @@ floating_apps=(
 export SCRATCHTAG=$(( 1 << 31 ))
 ALL_TAGS=$(( (( 1 << 32 ) - 1) ^ (SCRATCHTAG + ( 1 << 30 )) ))
 
-launch() { riverctl spawn "$*"; }
-rnbind() { riverctl map normal "$@"; }
-rbind()  { riverctl map "$@"; }
-input()  { riverctl input "$1" "$2" "$3"; }
+launch() { riverctl spawn "$*";           }
+rnbind() { riverctl map normal "$@";      }
+rbind()  { riverctl map "$@";             }
 
 scratch_term() {
     kitty                            \
@@ -50,7 +51,7 @@ scratch_term() {
 }
 
 for prop in tap "natural-scroll"; do
-    input $pointer "$prop" "enabled"
+    riverctl input "$pointer" "$prop" enabled
 done
 
 launch "dbus-launch"
@@ -59,6 +60,7 @@ launch "dbus-launch"
 ! pidof waybar               && launch "$SCRIPTS/waybar.sh"
 ! pidof lxqt-policykit-agent && launch "lxqt-policykit-agent"
 ! pidof mako                 && launch "mako"
+! pidof blueman-applet       && launch "blueman-applet"
 
 riverctl spawn-tagmask $ALL_TAGS
 
@@ -68,10 +70,11 @@ rnbind $super M zoom
 rnbind $super F toggle-fullscreen
 rnbind $super T toggle-float
 
-rnbind $super H focus-view  previous
 rnbind $super J attach-mode bottom
 rnbind $super K attach-mode top
-rnbind $super L focus-view  next
+
+rnbind $alt       Tab focus-view next
+rnbind $alt+Shift Tab focus-view previous
 
 ## Floating window movement binds
 rbind -repeat normal $super+Control H move left  25
@@ -90,30 +93,30 @@ rnbind $alt H swap next
 rnbind $alt L swap previous
 
 ## Scratchpad and sticky window binds
-rnbind $super       0 toggle-focused-tags $SCRATCHTAG
-rnbind $super+Shift 0 set-view-tags       $SCRATCHTAG
-rnbind $super+Shift S toggle-view-tags    $(( 1 << 30 ))
+rnbind None         F12 toggle-focused-tags $SCRATCHTAG
+rnbind $super+Shift 0   set-view-tags       $SCRATCHTAG
+rnbind $super+Shift S   toggle-view-tags    $(( 1 << 30 ))
 
 ## Application binds
-rnbind $super        Return spawn "kitty"
-rnbind $super+Shift  Return spawn "$(declare -pf scratch_term); scratch_term"
-rnbind $super        Space  spawn "export BEMENU_OPTS='$BEMENU_OPTS'; $SCRIPTS/bemenu-drun.sh"
-rnbind $super+Shift  Space  spawn "export BEMENU_OPTS='$BEMENU_OPTS'; bemenu-run --prompt shell"
-rnbind $super        B      spawn "killall -SIGUSR1 waybar"
-rnbind $super        E      spawn "thunar"
-rnbind $super+Shift  E      spawn "$(declare -pf scratch_term); scratch_term -- lf"
-rnbind $super+Shift  B      spawn "$SCRIPTS/waybar.sh"
+rnbind $super       Return spawn "kitty"
+rnbind $super+Shift Return spawn "$(declare -pf scratch_term); scratch_term"
+rnbind $super       Space  spawn "export BEMENU_OPTS='$BEMENU_OPTS'; $SCRIPTS/bemenu-drun.sh"
+rnbind $super       R      spawn "export BEMENU_OPTS='$BEMENU_OPTS'; bemenu-run --prompt shell"
+rnbind $super       B      spawn "killall -SIGUSR1 waybar"
+rnbind $super       E      spawn "thunar"
+rnbind $super+Shift E      spawn "$(declare -pf scratch_term); scratch_term -- lf"
+rnbind $super+Shift B      spawn "$SCRIPTS/waybar.sh"
 
 rnbind $alt         P      spawn "$SCRIPTS/wallpaper.sh"
 rnbind $alt+Control Delete spawn "export BEMENU_OPTS='$BEMENU_OPTS'; $SCRIPTS/bemenu-session.sh"
 
 ## Tiling binds
-rnbind $super  Equal        send-layout-cmd $TILER "main-ratio $MAIN_RATIO"
-rnbind $super  bracketleft  send-layout-cmd $TILER "main-ratio $MAIN_LOW"
-rnbind $super  bracketright send-layout-cmd $TILER "main-ratio $MAIN_HIGH"
-rnbind $super  comma        send-layout-cmd $TILER "main-count +1"
-rnbind $super  period       send-layout-cmd $TILER "main-count -1"
-rnbind $super  backslash    send-layout-cmd $TILER "main-ratio 0.5"
+rnbind $super Equal        send-layout-cmd $TILER "main-ratio $MAIN_RATIO"
+rnbind $super bracketleft  send-layout-cmd $TILER "main-ratio $MAIN_LOW"
+rnbind $super bracketright send-layout-cmd $TILER "main-ratio $MAIN_HIGH"
+rnbind $super comma        send-layout-cmd $TILER "main-count +1"
+rnbind $super period       send-layout-cmd $TILER "main-count -1"
+rnbind $super backslash    send-layout-cmd $TILER "main-ratio 0.5"
 
 # Tiling location binds
 rnbind $super+$alt H send-layout-cmd $TILER "main-location left"
@@ -130,13 +133,15 @@ for i in {1..9}; do
     rnbind $super       "$i" spawn "$SCRIPTS/workspace.sh -g $i"
     rnbind $alt         "$i" spawn "$SCRIPTS/workspace.sh -t $i"
     rnbind $super+$alt  "$i" spawn "$SCRIPTS/workspace.sh -m $i"
-    rnbind $super+Shift "$i" spawn "$SCRIPTS/workspace.sh -s $i"
+    rnbind $super+Shift "$i" spawn "$SCRIPTS/workspace.sh -S $i"
+    rnbind $alt+Shift   "$i" spawn "$SCRIPTS/workspace.sh -s $i"
 done
 
 for mode in normal locked; do
-    rbind -repeat $mode None XF86AudioRaiseVolume  spawn "$SCRIPTS/volume.sh -i 5"
-    rbind -repeat $mode None XF86AudioLowerVolume  spawn "$SCRIPTS/volume.sh -d 5"
-    rbind -repeat $mode None XF86AudioMute         spawn "$SCRIPTS/volume.sh -m 0"
+    rbind -repeat $mode None XF86AudioRaiseVolume spawn "$SCRIPTS/volume.sh -i 5"
+    rbind -repeat $mode None XF86AudioLowerVolume spawn "$SCRIPTS/volume.sh -d 5"
+    rbind -repeat $mode None XF86AudioMute        spawn "$SCRIPTS/volume.sh -m 0"
+
     rbind -repeat $mode None XF86MonBrightnessUp   spawn "$SCRIPTS/brightness.sh -i 2.5"
     rbind -repeat $mode None XF86MonBrightnessDown spawn "$SCRIPTS/brightness.sh -d 2.5"
 
@@ -144,7 +149,6 @@ for mode in normal locked; do
     rbind $mode None XF86AudioPause spawn "playerctl play-pause"
 done
 
-# shellcheck disable=SC2016
 rnbind None+Shift Print spawn 'grim -g "$(slurp)" -t png - | swappy -f -'
 rnbind None       Print spawn 'grim -t png - | swappy -f -'
 
@@ -164,7 +168,7 @@ gsettings set org.gnome.desktop.interface      cursor-theme "Adwaita"
 gsettings set org.gnome.desktop.interface      icon-theme   "Papirus-Dark"
 gsettings set org.gnome.desktop.interface      gtk-theme    "adw-gtk3-dark"
 
-riverctl border-color-focused   0x1A85F6
+riverctl border-color-focused   0x67B0E8
 riverctl border-color-unfocused 0x000000
 riverctl border-width           1
 
