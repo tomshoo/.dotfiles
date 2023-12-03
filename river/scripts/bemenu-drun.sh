@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if bemenu_pids="$(pidof bemenu)"; then
-    for pid in $bemenu_pids; do kill -9 "$pid"; done
+if pidof bemenu > /dev/null 2>&1; then
+    exit 0
 fi
 
 typeset -A desktop_apps
@@ -20,18 +20,16 @@ for search_path in "${search_paths[@]}"; do
     name=$(basename "${app/.desktop/}")
     terminal="$(grep "^Terminal=" "$app")"
     terminal="${terminal#Terminal=}"
+    cmd="$(grep "^Exec=" "$app" | head -n1)"
+    cmd="${cmd/Exec=/}"
+    cmd="${cmd//%[cDdFfikmNnUuv]/}"
+    echo "$name -- ${cmd}"
 
     if [ -z "$terminal" ] || [ "$terminal" = false ]; then
-      desktop_apps["$name"]="$app"
+      desktop_apps["$name"]="$cmd"
     fi
   done
 done
 
 selection="$(for app in "${!desktop_apps[@]}"; do echo "$app"; done|bemenu)"
-[ -z "$selection" ] && exit 0
-
-dfile="${desktop_apps["$selection"]}"
-
-awk                                                                                 \
-    '/^Exec=/ {sub("^Exec=", ""); gsub(" ?%[cDdFfikmNnUuv]", ""); exit system($0)}' \
-    "$dfile"
+exec "$selection"
