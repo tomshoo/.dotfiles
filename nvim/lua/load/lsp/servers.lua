@@ -30,16 +30,19 @@ servers.zls           = {
     }
 }
 
-servers.pyright       = {
-    settings = {
-        python = {
-            analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = "workspace",
-                useLibraryCodeForTypes = true,
-            }
-        }
-    }
-}
+
+servers.jedi_language_server = {}
+
+-- servers.pyright       = {
+--     settings = {
+--         python = {
+--             analysis = {
+--                 autoSearchPaths = true,
+--                 diagnosticMode = "workspace",
+--                 useLibraryCodeForTypes = true,
+--             }
+--         }
+--     }
+-- }
 
 return servers
