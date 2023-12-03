@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# WARN: not posix compliant
+
+script_name="$(basename "$0")"
+
+if [[ -n "$ZELLIJ" ]]; then
+    printf 'error: %s: cannot launch script from inside zellij\n' "$script_name" >&2
+    exit 1
+fi
+
+truncate_dirname() {
+    printf '%s' "$(echo "$1"|rev|cut -d/ -f-2|rev)"
+}
+
+make_zellij_session() {
+    local session_name
+
+    session_name="$(truncate_dirname "$session_dirname")"
+    session_name="${session_name//\//:}"
+    session_name="${session_name//\./_}"
+
+    zellij attach --create "$session_name"
+}
+
+session_select() {
+    local session_name
+    session_name="$(zellij list-sessions -ns | fzf)"
+    zellij attach "$session_name"
+}
+
+declare session_dirname
+declare help_message="usage: $script_name [-ilh] [-s session_name]
+
+    -i            select directory interactively
+    -l            select an active zellij session
+    -h            display this help message
+    -s <dirname>  open zellij in <dirname>
+"
+
+while getopts :s:ilh opt; do
+    case "$opt" in
+    s) session_dirname="$OPTARG"                                  ;;
+    i) session_dirname="$(zoxide query --interactive)" || exit $? ;;
+    l) session_select && exit 0                                   ;;
+
+    h) printf '%s' "$help_message" && exit 0;;
+
+    ?) printf "error: %s: unknown argument '%s' \n" "$script_name" "$OPTARG"
+       printf 'usage: %s [-ilh] [-s session_name]\n' "$script_name"
+       exit 2 ;;
+    esac
+done
+
+session_dirname="${session_dirname:-$PWD}"
+
+if [[ "$session_dirname" = "$PWD" ]]; then
+    make_zellij_session || exit $?
+else
+    if ! [[ -d "$session_dirname" ]] && cd_path="$(zoxide query "$session_dirname" 2>/dev/null)"; then
+        session_dirname="$cd_path"
+    fi
+
+    if pushd "$session_dirname" 2>/dev/null; then
+        pwd
+        make_zellij_session      || exit $?
+        popd                     || exit $?
+    else
+        echo "error: $script_name: no such directory '$session_dirname'"
+        exit 1
+    fi
+fi
