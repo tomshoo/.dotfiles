@@ -2,6 +2,7 @@
 # WARN: This script has no posix compliance
 
 connect_tmux_session() {
+    local session="${session//./_}"
     tmux has-session -t "$session" &> /dev/null \
     && if [[ -n "$TMUX" ]]; then tmux switch-client -t "$session";
                             else tmux attach-session -t "$session"; fi
@@ -12,6 +13,7 @@ truncate_dirname() {
 }
 
 make_tmux_session() {
+    local session="${session//./_}"
     if [[ -n "$TMUX" ]]; then
         tmux new-session -d -s "$session"
         tmux switch-client -t "$session"
@@ -20,35 +22,41 @@ make_tmux_session() {
     fi
 }
 
-interactive=false
-session="$(truncate_dirname "$PWD")"
-
-while getopts :is: opt; do
-    case "$opt" in
-    i) interactive=true  ;;
-    s) session="$OPTARG" ;;
-    ?)  printf "error: unknown argument '%s'\n" "$OPTARG"
-
-        # shellcheck disable=SC2016
-        [[ "$OPTARG" = s ]] && printf 'hint: maybe you meant `%s -s session_name`\n' "$(basename "$0")"
-        printf 'usage: %s [-i] [-s session_name]\n' "$(basename "$0")"
-        exit 1 ;;
-    esac
-done
-
-connect_tmux_session && exit 0
-
-if "$interactive"; then
-    returncode=0
+interactive_select() {
+    exitcode=0
     sessiondir="$(zoxide query --interactive)" || exit $?
     pushd "$sessiondir"                        || exit $?
 
     session="$(truncate_dirname "$sessiondir")"
-    connect_tmux_session || make_tmux_session || returncode=$?
+    connect_tmux_session || make_tmux_session || exitcode=$?
 
-    popd || exit $returncode
-    exit $returncode
-fi
+    popd || exit $exitcode
+    exit $exitcode
+}
+
+session_select() {
+    session=$(tmux list-session -F \#S) || exit 0
+    session=$(echo "$session" | fzf)
+    connect_tmux_session || exit $?
+
+    exit 0;
+}
+
+session="$(truncate_dirname "$PWD")"
+
+while getopts :ils: opt; do
+    case "$opt" in
+    i) interactive_select ;;
+    s) session="$OPTARG"  ;;
+    l) session_select     ;;
+    ?) scriptname="$(basename "$0")"
+       printf "%s: error: unknown argument '%s'\n" "$scriptname" "$OPTARG"
+       printf 'usage: %s [-i] [-s session_name]\n' "$scriptname"
+       exit 2 ;;
+    esac
+done
+
+connect_tmux_session && exit 0
 
 if [[ "$session" = "$(truncate_dirname "$PWD")" ]]; then
     make_tmux_session || exit $?
