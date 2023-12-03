@@ -1,8 +1,5 @@
 local function setup()
-    local ok, onedark = pcall(require, 'onedark')
-
-    onedark.setup { style = 'darker' }
-    onedark.load()
+    local ok, _ = pcall(vim.cmd.colorscheme, 'catppuccin-mocha')
 
     if not ok then
         vim.cmd.colorscheme 'elflord'
@@ -10,7 +7,8 @@ local function setup()
 end
 
 return {
-    'navarasu/onedark.nvim',
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
     config = setup,
-    lazy   = false,
 }

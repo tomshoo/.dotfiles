@@ -22,8 +22,8 @@ local config = {
         lualine_b = { 'filetype', 'encoding', components.fileformat },
         lualine_c = { 'location', 'progress', components.diff },
         lualine_x = { 'aerial', 'diagnostics', components.lsp },
-        lualine_y = { components.window_number, 'mode' },
-        lualine_z = { 'branch' }
+        lualine_y = { 'branch' },
+        lualine_z = { components.window_number, 'mode' },
     },
     inactive_sections = {
         lualine_a = {},
