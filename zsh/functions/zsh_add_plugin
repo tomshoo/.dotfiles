@@ -8,7 +8,7 @@ function zsh_add_plugin() {
         elif [ -f "$plugin_dir/$plugin.plugin.zsh" ]; then source "$plugin_dir/$plugin.plugin.zsh"
         fi
     else
-        command git clone "https://github.com/$1.git" "$plugin_dir" &&
+        command git clone "https://github.com/$1.git" "$plugin_dir" --depth 1 &&
         zsh_add_plugin "$1"
     fi
 }

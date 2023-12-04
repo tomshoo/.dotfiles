@@ -10,7 +10,7 @@ function zsh_add_completions() {
         elif [ -f "$compdir/$plugpth/$plugin.zsh" ];        then source "$compdir/$plugpth/$plugin.zsh"
         fi
     else
-        command git clone "https://github.com/$1.git" "$compdir/$plugpth"
+        command git clone "https://github.com/$1.git" "$compdir/$plugpth" --depth 1
         fpath+=$(ls $compdir/$plugpth/_*)
         [ -f "$ZDOTDIR/.zcompdump" ] && rm "$ZDOTDIR/.zcompdump"
     fi

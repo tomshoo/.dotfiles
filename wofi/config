@@ -1,9 +1,0 @@
-hide_scroll=false
-height=50%
-width=40%
-prompt=Search...
-lines=15
-location=2
-term=footclient
-insensitive=true
-allow_images=true

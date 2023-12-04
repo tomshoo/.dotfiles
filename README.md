@@ -1,21 +1,9 @@
-# myDotFiles
+# Dotfiles
 
-My Dotfiles and configuration for arch linux
+This repository is a collection of my configuration files for Arch Linux, that may or 
+may not work on other Linux distributions.
 
-These are my configurations and themes for my setup of arch linux, and nothing else.
-
-## Apps used
-
-- Alacritty
-- [Picom](https://github.com/jonaburg/picom/)
-- [Betterlockscreen](https://github.com/betterlockscreen/betterlockscreen)
-- Light
-- Pamixer
-- Xclip
-- [Swaybg](https://github.com/swaywm/swaybg)
-- [Waybar](https://github.com/Alexays/Waybar/)
-- [Foot](https://codeberg.org/dnkl/foot/)
-- [Dunst](https://github.com/dunst-project/dunst)
-
-**Nvim uses [Packer](https://github.com/wbthomason/packer.nvim) for plugin management.**
-**Tmux uses [TPM](https://github.com/tmux-plugins/tpm) for plugin management.**
+I prefer using [home-manager](https://nix-community.github.io/home-manager/index.html)
+to auto symlink my configurations, but none of these configurations are tightly
+coupled with either `home-manager` or `nix` as a whole, except the shell loading
+some environment variables here and there.

@@ -5,6 +5,8 @@ export EDITOR=nvim
 export BASH_DOT_DIR="$HOME/.config/bash"
 export BASH_PLUG_DIR="$BASH_DOT_DIR/plugins"
 
+[[ -f ~/.bash_extras ]] && source ~/.bash_extras
+
 __nix_channel_home="$HOME/.nix-defexpr/channels"
 if [[ -n "$NIX_PATH" ]] && echo "$NIX_PATH" | grep -vq "$__nix_channel_home"; then
     export NIX_PATH="$NIX_PATH:$__nix_channel_home"
@@ -26,7 +28,7 @@ fi
 # shellcheck disable=SC2086
 has_command autoload && autoload $(IFS=:; echo $FPATH)
 
-has_command zoxide   && eval "$(zoxide init bash --cmd zd)"
+has_command zoxide   && eval "$(zoxide init bash --cmd cd)"
 has_command direnv   && eval "$(direnv hook bash)"
 has_command starship && echo "$SHELL" | grep bash -q && eval "$(starship init bash)" || PS1='[\u@\h \W]\$ '
 

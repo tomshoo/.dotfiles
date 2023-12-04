@@ -1,0 +1,12 @@
+# vim:set ft=dosini
+
+background-color=#262626ff
+text-color=#d8dee9ff
+
+border-size=1
+border-color=#67b0e8ff
+
+progress-color=source #67b0e8ff
+
+[app-name="com.desktop.River"]
+default-timeout=500

@@ -7,7 +7,7 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-require('lazy').setup {
+local plugins = {
     { 'folke/which-key.nvim',      opts = {} },
     { 'kylechui/nvim-surround',    opts = {}, event = 'InsertEnter' },
     { 'windwp/nvim-autopairs',     opts = {}, event = 'InsertEnter' },
@@ -62,3 +62,7 @@ require('lazy').setup {
         rtp = { path = { lazypath .. '/nvim-treesitter/' }, }
     }
 }
+
+require('lazy').setup(plugins, {
+    lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json'
+})

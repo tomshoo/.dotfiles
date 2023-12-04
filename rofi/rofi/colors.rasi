@@ -1,8 +1,0 @@
-* {
-    bg-color: #2b2b2b;
-    bg-color-alt: #1b1b1b;
-    bg-sel: #2f3436;
-    fg-color: #d8dee9;
-    fg-color-alt: #aeb3bb;
-    fg-sel: #88c0d0;
-}

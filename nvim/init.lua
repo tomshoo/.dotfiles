@@ -64,8 +64,8 @@ augroup NumberLine
 augroup END
 ]]
 
+require 'keymaps'
 require 'plugins'
 require 'load.lsp'
-require 'keymaps'
 require 'autocmds'
 require 'commands'

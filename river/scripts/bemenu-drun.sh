@@ -4,32 +4,57 @@ if pidof bemenu > /dev/null 2>&1; then
     exit 0
 fi
 
-typeset -A desktop_apps
-desktop_apps=()
+TERMINAL="${TERMINAL:-kitty}"
 
-search_paths=(
-  /usr/share/applications
-  /var/lib/flatpak/exports/share/applications
-  "$HOME/.local/share/applications"
-)
+typeset -A desktop_apps term_open
+desktop_apps=()
+term_open=()
+
+search_paths=()
+if [[ -n "$XDG_DATA_DIRS" ]]; then
+    # shellcheck disable=SC2086
+    for data_dir in $(IFS=:; echo $XDG_DATA_DIRS);
+    do [[ -d "$data_dir/applications" ]] && search_paths+=("$data_dir/applications"); done
+else
+    search_paths+=(
+      /usr/share/applications
+      /var/lib/flatpak/exports/share/applications
+      "$HOME/.local/share/applications"
+    )
+fi
+
 
 for search_path in "${search_paths[@]}"; do
-  [ -z "$(ls -A "$search_path")" ] && continue
+    applicationfiles=$(find "$search_path" -name '*.desktop' -printf '%p:')
+    # shellcheck disable=SC2086
+    for app in $(IFS=:; echo $applicationfiles); do
+        [[ -z "$app" ]] && continue
 
-  for app in "$search_path"/*.desktop; do
-    name=$(basename "${app/.desktop/}")
-    terminal="$(grep "^Terminal=" "$app")"
-    terminal="${terminal#Terminal=}"
-    cmd="$(grep "^Exec=" "$app" | head -n1)"
-    cmd="${cmd/Exec=/}"
-    cmd="${cmd//%[cDdFfikmNnUuv]/}"
-    echo "$name -- ${cmd}"
+        terminal="$(grep '^Terminal=' "$app")"
+        terminal="${terminal#Terminal=}"
 
-    if [ -z "$terminal" ] || [ "$terminal" = false ]; then
-      desktop_apps["$name"]="$cmd"
-    fi
-  done
+        [[ -z "$terminal" ]] && terminal=false
+
+        cmd="$(grep '^Exec=' "$app" | head -n1)"
+        cmd="$(sed -e 's/^Exec=//g ; s/%[cDdFfikmNnUuv]//g' <<< ${cmd})"
+
+        [[ -z "$cmd" ]] && continue
+
+        appname="$(basename "${app/.desktop/}")"
+
+        echo "$appname -- $cmd"
+        desktop_apps["$appname"]="$cmd"
+        term_open["$appname"]="$terminal"
+    done
 done
 
 selection="$(for app in "${!desktop_apps[@]}"; do echo "$app"; done|bemenu)"
-exec "$selection"
+[[ -z "$selection" ]] && exit 0
+
+echo "${term_open["$selection"]} -- ${desktop_apps["$selection"]} "
+
+if [[ "${term_open["$selection"]}" = true ]]; then
+    exec "$TERMINAL" -- bash -c "${desktop_apps["$selection"]}"
+else
+    exec bash -c "${desktop_apps[$selection]}"
+fi

@@ -47,6 +47,6 @@ local config = {
 }
 
 return {
-    'nvim-lualin/lualine.nvim',
+    'nvim-lualine/lualine.nvim',
     opts = config,
 }

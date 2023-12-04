@@ -26,6 +26,10 @@ initial_window_width  100c
 ## }}}
 
 ## Color {{{
+#
+# BEGIN_KITTY_THEME
+# Alabaster Dark
 include current-theme.conf
 # END_KITTY_THEME
+#
 ## }}}
