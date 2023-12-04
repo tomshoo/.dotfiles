@@ -98,6 +98,7 @@ components.trailing_space = {
             and ('TR:%d'):format(trailing_space_cnt)
             or ''
     end,
+
     cond = function()
         return conditions.hide_in_width() and vim.fn.mode() ~= 'i'
     end
@@ -106,5 +107,11 @@ components.trailing_space = {
 components.window_number = function()
     return vim.api.nvim_win_get_number(0)
 end
+
+components.buffers = {
+    'buffers',
+    show_filename_only = false,
+    mode = 2,
+}
 
 return components

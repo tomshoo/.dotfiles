@@ -21,9 +21,9 @@ local config = {
         lualine_a = { components.filename },
         lualine_b = { 'filetype', 'encoding', components.fileformat },
         lualine_c = { 'location', 'progress', components.diff },
-        lualine_x = { 'aerial', 'diagnostics', components.lsp },
+        lualine_x = { 'diagnostics', components.lsp },
         lualine_y = { 'branch' },
-        lualine_z = { components.window_number, 'mode' },
+        lualine_z = { 'mode' },
     },
     inactive_sections = {
         lualine_a = {},
@@ -32,6 +32,15 @@ local config = {
         lualine_x = { 'location' },
         lualine_y = {},
         lualine_z = {}
+    },
+
+    tabline = {
+        lualine_a = { components.window_number },
+        lualine_b = { components.buffers },
+        lualine_c = { 'aerial' },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = { 'tabs' },
     },
 
     extensions = { help, 'nvim-tree', 'trouble' },
