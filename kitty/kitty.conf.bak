@@ -1,0 +1,31 @@
+## Fonts {{{
+font_size         10.0
+font_family       JetBrainsMono NFM Regular
+bold_font         JetBrainsMono NFM Bold
+italic_font       JetBrainsMono NFM Italic
+bold_italic_font  auto
+disable_ligatures cursor
+modify_font       cell_height +1px
+box_drawing_scale 0.001, 1, 1.5, 2
+## }}}
+
+## Clipboard {{{
+strip_trailing_spaces smart
+## }}}
+
+## Bell {{{
+enable_audio_bell    no
+visual_bell_duration 0.0
+## }}}
+
+## Window {{{
+background_opacity    0.95
+remember_window_size  no
+initial_window_height 24c
+initial_window_width  100c
+## }}}
+
+## Color {{{
+include current-theme.conf
+# END_KITTY_THEME
+## }}}
