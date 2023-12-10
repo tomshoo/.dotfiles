@@ -15,14 +15,15 @@ if [[ -n "$XDG_DATA_DIRS" ]]; then
     # shellcheck disable=SC2086
     for data_dir in $(IFS=:; echo $XDG_DATA_DIRS);
     do [[ -d "$data_dir/applications" ]] && search_paths+=("$data_dir/applications"); done
+    echo 1
 else
     search_paths+=(
       /usr/share/applications
       /var/lib/flatpak/exports/share/applications
       "$HOME/.local/share/applications"
     )
+    echo 2
 fi
-
 
 for search_path in "${search_paths[@]}"; do
     applicationfiles=$(find "$search_path" -name '*.desktop' -printf '%p:')

@@ -1,10 +1,8 @@
 # --------------------------------------------- #
 
 ## Setup XDG Base Directory specification
-export HM_SESSION_VARS=~/.nix-profile/etc/profile.d/hm-session-vars.sh
-[[ -r "$HM_SESSION_VARS" ]] && source "$HM_SESSION_VARS"
 
-export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.nix-profile/share"
+export XDG_DATA_DIRS="/usr/share:/usr/local/share:$XDG_DATA_DIRS"
 
 path+=("$HOME/.local/bin" "$HOME/.cargo/bin")
 [[ -d "$XDG_CONFIG_HOME/emacs/bin" ]] && path+=("$XDG_CONFIG_HOME/emacs/bin")

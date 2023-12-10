@@ -3,7 +3,7 @@ snippet main
 
 
 	def main() -> int:
-	    # code
+	    ${1:# code}
 	    return 0
 
 
@@ -12,5 +12,10 @@ snippet main
 
 snippet def
 	def ${1:function}(${2:*args}, ${3:**kwargs}) -> ${4:None}:
-	    ${4:# code}
-	    return ${0}
+	    ${5:# code}
+	    return ${0: None}
+
+snippet class
+	class ${1:class_name}:
+	    def __init__(self, ${2:*args}) -> None:
+	        ${0:pass}

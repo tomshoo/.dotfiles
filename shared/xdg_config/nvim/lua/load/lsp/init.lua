@@ -9,7 +9,6 @@ require 'load.lsp.null-ls'
 
 local lspconfig = require 'lspconfig'
 local signature = require 'lsp_signature'
-local navic     = require 'nvim-navic'
 local servers   = require 'load.lsp.servers'
 
 for server, config in pairs(servers) do
@@ -35,10 +34,6 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
 
         require 'load.lsp.highlight' (client, bufnr)
         require 'load.lsp.keymaps' (bufnr)
-
-        if client.server_capabilities.documentSymbolProvide then
-            navic.attach(client, bufnr)
-        end
 
         if client.server_capabilities.documentFormattingProvider then
             vim.api.nvim_create_autocmd({ "BufWritePre" }, {

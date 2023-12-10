@@ -1,0 +1,28 @@
+format       = """$directory$character"""
+right_format = "$status$all"
+
+[character]
+success_symbol = "[\\$](bold green)"
+error_symbol   = "[*](bold red)"
+
+[status]
+disabled = false
+format   = "[$common_meaning$signal_name $status]($style) "
+
+[directory]
+format          = "[$read_only]($read_only_style)[$path]($style) "
+read_only_style = "bold red"
+read_only       = "[ro] "
+
+[nix_shell]
+symbol      = "* "
+unknown_msg = "unknown"
+
+[git_status]
+modified  = "~"
+untracked = "?"
+deleted   = "-"
+stashed   = "*"
+
+[git_branch]
+format = "[$symbol$branch(:$remote_branch)]($style) "

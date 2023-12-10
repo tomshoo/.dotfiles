@@ -39,7 +39,6 @@ local plugins = {
     'godlygeek/tabular',
     'christoomey/vim-tmux-navigator',
     'norcalli/bclose.vim',
-    'SmiteshP/nvim-navic',
 
     'mbbill/undotree',
 
@@ -56,13 +55,12 @@ local plugins = {
             'folke/trouble.nvim',
             'folke/neodev.nvim',
         }
-    },
-
-    performance = {
-        rtp = { path = { lazypath .. '/nvim-treesitter/' }, }
     }
 }
 
 require('lazy').setup(plugins, {
-    lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json'
+    lockfile    = vim.fn.stdpath('data') .. '/lazy-lock.json',
+    performance = {
+        rtp = { path = { lazypath .. '/nvim-treesitter/' }, }
+    }
 })
