@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2086
 
 if [[ ! -d profile ]] || test -z "$(ls -d profile/*/)"; then
     echo "error: no profiles found..." >&2
@@ -11,7 +12,7 @@ create-link() {
     src=$1
 
     printf '%s => %s\n' "$src" "$target"
-    if [[ $force = false ]]; then linkargs='-sfi'; else linkargs='-sf'; fi
+    [[ $force = false ]] && linkargs='-sfi' || linkargs='-sf'
     ln $linkargs "$src" "$target"
 }
 
@@ -25,10 +26,13 @@ setup-fs() {
     ! [[ -d "$target_fs/.local/bin" ]] && mkdir -p "$target_fs/.local/bin"
 
     link-path() {
-        for package in "$1"/*; do
+        packages=$(find "$1" -maxdepth 1 -not -wholename "$1" -printf '%p:')
+        [[ "$target_fs" = "$2" ]]       &&
+            target_dir="$target_fs"     ||
             target_dir="$target_fs/$2/"
-            package_path="$(realpath "$package")"
 
+        for package in $(IFS=:; echo $packages); do
+            package_path="$(realpath "$package")"
             create-link "$package_path" "$target_dir"
         done
     }
@@ -36,6 +40,7 @@ setup-fs() {
     pushd "$source_fs" &>/dev/null || exit 1
     [[ -d xdg_config ]] && [[ -n "$(ls -A xdg_config)" ]] && link-path xdg_config .config
     [[ -d bin ]]        && [[ -n "$(ls -A bin)" ]]        && link-path bin        .local/bin
+    [[ -d home ]]       && [[ -n "$(ls -A home)" ]]       && link-path home       ~
     popd               &>/dev/null || exit 1
 }
 
